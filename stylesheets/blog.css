@@ -1,0 +1,113 @@
+body {
+  text-align: center;
+  background-color: #472C1C;
+  background-image: url("../imgs/layout/flowerytile.jpg");
+  font-family: 'Didact Gothic', sans-serif;
+}
+
+section#main-pane {
+  margin: auto;
+  padding: 0px;
+  background-color: white;
+  width: 1050px;
+  border-color: #DFBD76;
+  border-top: 0px;
+}
+
+main {
+  background-color: white;
+  padding: 25px;
+}
+
+ul.site-sections {
+  font-size: 1.5em;
+  margin-top: .5em;
+}
+
+.site-sections li {
+  list-style-type: none;
+  display: inline-block;
+  margin: 0px;
+  padding: .5em;
+  background-color: #454545;
+}
+
+ul.site-sections li:first-child {
+  border-top-left-radius: 1em;
+}
+
+ul.site-sections li:last-child {
+  border-top-right-radius: 1em;
+}
+
+.site-sections li.selected {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+header {
+  background-color: black;
+  color: white;
+}
+
+header h3 {
+  padding-top: 1em;
+  color: lightgray;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+header h2 {
+  background-color: gray;
+}
+
+ul.breadcrumbs {
+  background-color: lightgray;
+  text-align: left;
+}
+
+.breadcrumbs li {
+  list-style-type: none;
+  display: inline-block;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+main {
+
+}
+
+h1 {
+background-color: white;
+color: black;
+}
+
+main h1 {
+  float: left;
+  text-align: right;
+  font-size: 3em;
+  width: 200px;
+  background-color: white;
+}
+
+#content {
+  margin-left: 200px;
+  margin-right: 25px;
+}
+
+span.breakout {
+  text-align: center;
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 1.5em;
+  font-style: italic;
+}
+
+footer li {
+  list-style-type: none;
+  display: inline-block;
+  margin-bottom: 2.5em;
+}
