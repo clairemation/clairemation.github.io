@@ -116,6 +116,10 @@ figure {
   margin: 1.75em;
 }
 
+figure img {
+  border: 1px solid black;
+}
+
 figcaption {
   font-size: 0.8em;
 }
