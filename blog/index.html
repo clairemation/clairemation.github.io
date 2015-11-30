@@ -3,45 +3,61 @@
 <html>
 
   <head>
-    <meta charset=utf-8>
-    <title>Claire's Phase 0 Blog: Template</title>
+
+    <meta charset="utf-8">
+
+
+    <link href='https://fonts.googleapis.com/css?family=Didact+Gothic|Skranji' rel='stylesheet' type='text/css'>
+
+    <link type="text/css" rel="stylesheet" href="../stylesheets/default.css">
+
+    <link type="text/css" rel="stylesheet" href="../stylesheets/blog.css">
+
+    <title>Claire's Phase 0 Blog</title>
+
   </head>
 
-  <body style = "text-align: center">
+  <body>
+
+    <section id="main-pane">
 
     <header>
-      <h3><a href="../index.html">* Claire's Blog *</a></h3>
-      <nav>
-        About |
-        Blog |
-        Projects |
-        Other Stuff
-      </nav>
+      <h3><a href="../index.html">* Claire's DBC Phase 0 Site *</a></h3>
+      <ul class="site-sections">
+        <li><a href="#">About</a></li><li class="selected">Blog</li><li><a href="#">Projects</a></li><li><a href="#">Other</a></li>
+      </ul>
+
+      <ul class="breadcrumbs">
+        <li><a href="index.html">Home</a> ></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+
       <h1>Claire's Phase 0 Blog</h1>
-      <a href="../index.html">Home</a> > Blog
+
     </header>
 
     <main>
 
-     <section>
-        <div style="display: inline-block; width: 200px; margin: 20px; text-align: right; vertical-align: text-top">
-          Latest:
-          <h2><a href="git.html">Be a Git About Version Control</a></h2>
-        </div>
-        <div style="display: inline-block; margin: 20px; text-align: left; vertical-align: text-top">
+      <div id="update">
+        Latest:
+        <h2><a href="git.html">Be a Git About Version Control</a></h2>
+      </div>
+
+      <nav>
         Entries:
-          <h4><a href="git.html">1. Version Control</a></h4>
-        </div>
-      </section>
+        <a href="git.html">1. Version Control</a>
+      </nav>
 
       <p>Check back every week for new articles about coding and what I'm learning in DBC!</p>
 
     </main>
 
-    <footer style="text-align: right; margin: 20px">
+    <footer>
         <a href="mailto:clairemation@gmail.com"><img src="../imgs/social/email.png" alt="Email"></a>
         <a href="http://github.com/clairemation"><img src="../imgs/social/github.png" alt="GitHub"></a>
       </footer>
+
+    </section>
 
   </body>
 
