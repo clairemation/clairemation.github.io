@@ -82,12 +82,21 @@ nav h1 {
 
 }
 
-section#copy {
+
+section.copy {
   width: 800px;
   margin: auto;
   column-count: 3;
   -webkit-column-count: 3;
   -moz-column-count: 3;
+  text-align: left;
+  vertical-align: text-top;
+}
+
+p.copy-single-column {
+  float:left;
+  width: 10em;
+  margin: auto;
   text-align: left;
   vertical-align: text-top;
 }
@@ -110,6 +119,7 @@ p {
   text-align: justify;
   text-justify: inter-word;
   padding: .25em;
+  max-width: 500px;
 }
 
 figure {
@@ -122,4 +132,16 @@ figure img {
 
 figcaption {
   font-size: 0.8em;
+}
+
+.special {
+  font-style: italic;
+}
+
+.code {
+  margin: 3px;
+  padding: 2px;
+  font-family: Courier, serif;
+  font-weight: lighter;
+  background-color: linen;
 }

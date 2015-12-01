@@ -90,6 +90,7 @@ main h1 {
   font-size: 3em;
   width: 200px;
   background-color: white;
+  text-shadow: 3px 3px lightgray;
 }
 
 #content {
@@ -97,13 +98,35 @@ main h1 {
   margin-right: 25px;
 }
 
+p {
+  text-indent: 1.5em;
+}
+
+p:first-of-type {
+  text-indent: 0px;
+}
+
+p:first-of-type::first-letter {
+  font-size: 2em;
+  float: left;
+  font-weight: bolder;
+  margin-top: -0.25em;
+  text-shadow: 3px 3px lightgray;
+  }
+
 span.breakout {
   text-align: center;
   display: block;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-  font-size: 1.5em;
+  font-size: 2em;
   font-style: italic;
+  background: linear-gradient(left, brown, white)
+}
+
+strong {
+  font-weight: bold;
+  color: maroon;
 }
 
 footer li {

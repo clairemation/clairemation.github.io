@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 
+<html>
+
 <head>
 
   <meta charset="UTF-8">
@@ -10,11 +12,27 @@
 
   <link type="text/css" rel="stylesheet" href="../stylesheets/blog.css">
 
-  <meta charset="utf-8">
-
-  <title>Claire's Phase 0 Blog: Be a Git About Version Control</title>
+  <title>Claire's Phase 0 Blog: Padding Your Stats</title>
 
   <link rel="stylesheet" type="text/css" href="your-stylesheet-link-here.css">
+
+  <script type="text/javascript">
+    function border(element){
+      element.style.outline ='3px dotted red';
+    }
+
+    function unborder(element) {
+      element.style.outline ='0px';
+    }
+  </script>
+
+  <style>
+    #hover:hover {
+      outline: 2px red dotted;
+    }
+  </style>
+
+
 </head>
 
 <body>
@@ -22,7 +40,7 @@
   <section id="main-pane">
 
     <header>
-      <h3><a href="http://clairemation.github.io"> * Claire's DBC Phase 0 Site * </a></h3>
+      <h3><a href="../index.html"> * Claire's DBC Phase 0 Site * </a></h3>
 
       <ul class="site-sections">
         <li><a href="#">About</a></li><li class="selected">Blog</li><li><a href="#">Projects</a></li><li><a href="#">Other</a></li>
@@ -31,33 +49,78 @@
       <h2><a href="index.html">Claire's Phase 0 Blog</a></h2>
 
       <ul class="breadcrumbs">
-        <li><a href="index.html">Home</a> ></li>
-        <li><a href="#">Blog</a> ></li>
-        <li><a href="#">Entry 2</a></li>
+        <li><a href="../index.html">Home</a> ></li>
+        <li><a href="index.html">Blog</a> ></li>
+        <li>Entry 2</li>
       </ul>
 
       </header>
 
       <main>
 
-          <h1>Padding Your Accomplishments</h1>
+          <h1>Padding Your Stats</h1>
 
           <section id="content">
 
-            <figure id="title-image"><img alt="Funny image" src="../imgs/padding.jpg"><figcaption>An HTML element.</figcaption></figure>
+            <figure id="title-image"><img alt="Funny image" src="../imgs/padding.jpg"><figcaption>An HTML element demonstrating proper safety practices.</figcaption></figure>
 
-            <section id = "copy">
+            <section class = "copy" id="hover">
 
-            <p></p>
+              <p>HTML pages are made up of a collection of <span class="special">elements</span>. The title on the left—that's a <span class="code">header</span> element. This paragraph is a <span class="code">paragraph</span> element.</p>
 
-            <span class="breakout">Wow! Fun breakout sentence!</span>
+              <p>Actually, that <span class="code">paragraph</span> (and this one too) is a <span class="code">paragraph</span> element inside of a <span class="code">section</span> element. Elements can live inside other elements! This particular <span class="code">section</span> is invisible—roll over the text to see it!</strong>
 
-            <p>Odio malesuada nunc est. Rutrum eros. Nulla ac torquent wisi ante blandit elementum, quis condimentum dapibus libero mauris. Erat class amet dapibus id ut, gravida ac purus et eu, wisi luctus magna orci, quam risus mauris libero pellentesque libero ipsum, auctor amet amet. Vel fames lacus, magna primis ridiculus ut.</p>
+              <p>As you can see, elements and their adjustable attributes are a powerful tool for page layout. You can get even more control over the page by using your elements' <span class="code">padding</span>, <span class="code">border</span>, and <span class="code">margin</span> attributes.</p>
 
-            <p>Ut fermentum faucibus ullamcorper, iaculis pede. Nulla adipiscing orci litora turpis, ac morbi justo magna. Diam nulla ea neque cras urna, morbi non, vel vitae condimentum, morbi egestas laoreet a sagittis amet congue. Porttitor amet euismod viverra velit adipiscing fusce, donec dui, vitae lobortis mauris volutpat suspendisse lacinia curabitur. Praesent pede, mauris vestibulum proin. Mi risus, odio maecenas blandit erat massa, felis nec quam nulla nascetur, faucibus vitae, enim suspendisse lacinia. Nulla nibh viverra feugiat sapien, lectus nulla nec facilisis, aliquet est. Deleniti enim pede amet congue ac suscipit, potenti interdum vitae ut suscipit risus semper, velit laoreet in, eu pulvinar ac viverra ullamco. Pulvinar fermentum. Libero vivamus fringilla erat.
-            </p>
+            </section>
+
+            <figure id="title-image"><img alt="Funny image" src="../imgs/russiandolls.jpg"><figcaption>HTML elements can contain multitudes.</figcaption></figure>
+
+              <p class="copy-single-column">Padding, border, and margin all control how much space comes between and element and its surroundings. But what's the difference between them?
+              </p>
+
+              <div style="width: 150px; margin-top: 2em; margin-right:50px; display:inline-block;">
+
+                <div style="width:50px; height:50px; background-color:black; margin:2em 0px 0px 0px; float:left;"></div>
+
+                <span style="font-size: 0.5em; height:40px;">Odio malesuada nunc est. Rutrum eros. Nulla ac torquent wisi ante blandit elementum, quis condimentum dapibus libero mauris. Erat class amet dapibus id ut, gravida ac purus et eu, wisi luctus magna orci</span>
+
+                <span style="clear:left;">No padding, border, or margin</span>
+
+              </div>
+
+              <div style="width: 150px; margin-top: 2em; margin-right:50px; display:inline-block">
+
+                <div style="width:50px; height:50px; background-color:black; margin:2em 25px 0px 0px; float:left;"></div>
+
+                <span style="font-size: 0.5em; height:40px;">Odio malesuada nunc est. Rutrum eros. Nulla ac torquent wisi ante blandit elementum, quis condimentum dapibus libero mauris. Erat class amet dapibus id ut, gravida ac purus et eu, wisi luctus magna orci</span>
+
+                <span style="clear:left;">25px margin</span>
+
+              </div>
+
+              <div style="width: 150px; margin-top: 2em; display:inline-block">
+
+                <div style="width:50px; height:50px; background-color:black; margin:2em 0px 0px 0px; padding: 25px; float:left;"></div>
+
+                <span style="font-size: 0.5em; height:40px;">Odio malesuada nunc est. Rutrum eros. Nulla ac torquent wisi ante blandit elementum, quis condimentum dapibus libero mauris. Erat class amet dapibus id ut, gravida ac purus et eu, wisi luctus magna orci</span>
+
+                <span style="clear:both;">25px padding</span>
+
+              </div>
+
+              <section>
+                <img src="../imgs/boxbasic.png" style="float:left;">
+
+                <p>At the core of this multilayered treat is the content itself. The border is the line between what's considered "inside" the element and what's "outside."</p>
+                <p style="clear:left;">Padding increases the space between <em>the content and the border</em>—which may make the element grow to accomodate it, if there isn't enough room.</p>
+                <p>Margin increases the space between <em>the border and the surrounding elements</em>—which may push the element or its neighbor apart.</p>
+
+              </section>
+
+
+
           </section>
-        </section>
 
         </main>
 
@@ -65,18 +128,19 @@
 
           <ul>
             <li>
-              <a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png"></a>
+              <a href="mailto:clairemation@gmail.com"><img src="../imgs/social/email.png"></a>
             </li>
             <li>
-              <a href="#"><img src="imgs/social/linkedin.png"></a>
+              <a href="#"><img src="../imgs/social/linkedin.png"></a>
             </li>
             <li>
-              <a href="http://github.com/clairemation"><img src="imgs/social/github.png"></a>
+              <a href="http://github.com/clairemation"><img src="../imgs/social/github.png"></a>
             </li>
             <li>
-              <img src="imgs/social/twitter.png">
+              <img src="../imgs/social/twitter.png">
             </li>
           </ul>
+        </footer>
 
         </section>
 
