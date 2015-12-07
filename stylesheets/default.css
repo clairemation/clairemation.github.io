@@ -86,9 +86,13 @@ nav h1 {
 section.copy {
   width: 800px;
   margin: auto;
+  margin-top: 3em;
+  margin-bottom: 3em;
   column-count: 3;
   -webkit-column-count: 3;
   -moz-column-count: 3;
+  column-fill: auto
+  -moz-column-fill: auto;
   text-align: left;
   vertical-align: text-top;
 }
@@ -136,6 +140,23 @@ figcaption {
 
 .special {
   font-style: italic;
+}
+
+.figure {
+  display: inline-block;
+  padding-top: .5em;
+  text-align: left;
+  font-family: "Courier New", Courier, monospace;
+}
+
+ol {
+  list-style-type: decimal;
+  list-style-position: inside;
+}
+
+ol li {
+  list-style-type: decimal;
+  display: list-item;
 }
 
 .code {
