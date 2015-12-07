@@ -24,7 +24,7 @@ ul.site-sections {
   margin-top: .5em;
 }
 
-.site-sections li {
+ul.site-sections li {
   list-style-type: none;
   display: inline-block;
   margin: 0px;
@@ -40,7 +40,7 @@ ul.site-sections li:last-child {
   border-top-right-radius: 1em;
 }
 
-.site-sections li.selected {
+ul.site-sections li.selected {
   font-style: italic;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -98,6 +98,10 @@ main h1 {
   margin-right: 25px;
 }
 
+figure img {
+  max-height: 300px;
+}
+
 p {
   text-indent: 1.5em;
 }
@@ -111,6 +115,8 @@ p:first-of-type::first-letter {
   float: left;
   font-weight: bolder;
   margin-top: -0.25em;
+  margin-right: .15
+  em;
   text-shadow: 3px 3px lightgray;
   }
 
@@ -134,3 +140,7 @@ footer li {
   display: inline-block;
   margin-bottom: 2.5em;
 }
+
+.copy p:last-child {
+  padding-bottom: 1em;
+  }
