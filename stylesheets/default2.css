@@ -8,11 +8,20 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     background: transparent;
 }
 
+html, body {
+  padding: 0px
+  margin: 0px;
+  border: 0px;
+  height: 100%;
+}
+
 body {
   text-align: center;
   background-color: #472C1C;
   background-image: url("../imgs/layout/flowerytile.jpg");
-  font-family: 'Didact Gothic', 'Open Sans', sans-serif;
+  font-family: 'Didact Gothic', sans-serif;
+  font-size: 1.1em;
+  /* -webkit-font-smoothing: antialiased; */
 }
 
 section#main-pane {
@@ -22,7 +31,7 @@ section#main-pane {
   padding: 82px 0px 2em 0px;
   background-color: white;
   background-image: url("../imgs/layout/paramount_electrum_400.jpg");
-  background-repeat: repeat-x;
+  background-repeat: round;
   border: 2px solid #472C1C;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
@@ -81,11 +90,11 @@ section.copy {
   margin-top: 3em;
   margin-bottom: 3em;
   column-count: 3;
-  -webkit-column-count: 3;
+  /* -webkit-column-count: 3; */
   -moz-column-count: 3;
   column-fill: auto
   -moz-column-fill: auto;
-  text-align: left;
+  /* text-align: left; */
   vertical-align: text-top;
 }
 
@@ -103,9 +112,9 @@ hr {
 }
 
 footer {
-  position: relative;
-  right: 5em;
-  top: 2em;
+  position: absolute;
+  right: 30px;
+  top: 92px;
   text-align: right;
   margin-bottom: 2em;
 }
@@ -115,7 +124,8 @@ p {
   text-align: justify;
   text-justify: inter-word;
   padding: .25em;
-  max-width: 500px;
+  max-width: 32em;
+  margin: auto;
 }
 
 figure {
@@ -128,6 +138,7 @@ figure img {
 
 figcaption {
   font-size: 0.8em;
+  -webkit-font-smoothing: antialiased;
 }
 
 .special {
@@ -138,6 +149,7 @@ figcaption {
   display: inline-block;
   padding-top: .5em;
   text-align: left;
+  margin: auto;
   font-family: "Courier New", Courier, monospace;
 }
 
