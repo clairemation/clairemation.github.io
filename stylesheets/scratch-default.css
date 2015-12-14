@@ -8,11 +8,19 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     background: transparent;
 }
 
+html, body {
+  padding: 0px
+  margin: 0px;
+  border: 0px;
+  height: 100%;
+}
+
 body {
   text-align: center;
   background-color: #472C1C;
   background-image: url("../imgs/layout/flowerytile.jpg");
-  font-family: 'Didact Gothic', 'Open Sans', sans-serif;
+  font-family: 'Didact Gothic', sans-serif;
+  font-size: 1.1em;
 }
 
 section#main-pane {
