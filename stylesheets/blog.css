@@ -2,12 +2,13 @@ body {
   text-align: center;
   background-color: #472C1C;
   background-image: url("../imgs/layout/flowerytile.jpg");
-  font-family: 'Didact Gothic', sans-serif;
+  font-family: 'Open Sans', 'Didact Gothic', sans-serif;
 }
 
 section#main-pane {
+  position: relative;
   margin: auto;
-  padding: 0;
+  padding: 0px;
   background-color: white;
   width: 1050px;
   border-color: #DFBD76;
@@ -15,12 +16,12 @@ section#main-pane {
 }
 
 main {
-  background-color: white;
+  /*background-color: white;*/
   padding: 25px;
 }
 
 ul.site-sections {
-  font-size: 1.5em;
+  font-size: 1.1em;
   margin-top: .5em;
 }
 
@@ -46,13 +47,30 @@ ul.site-sections li.selected {
 }
 
 header {
-  background-color: black;
-  color: white;
+  background-color: white;
+  -webkit-font-smoothing: antialiased;
+  text-align: center;
+margin-bottom: .5em;
+}
+
+header div#photo {
+  float: left;
+  background-image: url("../imgs/layout/headshot5-new-small.jpg");
+  background-size: cover;
+  width: 100px;
+  height: 100px;
+  border: 4px solid black;
+  position: relative;
+  top: 30px;
+  border-radius: 50%;
+  left: 30px;
+  z-index: 1;
 }
 
 header h3 {
-  padding-top: 1em;
-  color: lightgray;
+  /* padding-top: 1em; */
+  color: black;
+  -webkit-font-smoothing: antialiased;
 }
 
 h2 {
@@ -60,12 +78,25 @@ h2 {
 }
 
 header h2 {
-  background-color: gray;
+  background-color: black;
+  text-align: center;
+  /* position: relative; */
+}
+
+h2 a {
+    color: white;
 }
 
 ul.breadcrumbs {
   background-color: lightgray;
   text-align: left;
+  position: relative;
+}
+
+ul.breadcrumbs:before {
+     content: "";
+    width: 115px;
+    display: inline-block;
 }
 
 .breadcrumbs li {
@@ -82,7 +113,6 @@ main {
 h1 {
 background-color: white;
 color: black;
-hyphens: auto;
 }
 
 main h1 {
@@ -96,38 +126,8 @@ main h1 {
 
 #content {
   margin-left: 200px;
-  padding-left: 2em;
   margin-right: 25px;
-}
-
-#content img {
-  max-width: 400px;
-}
-
-section.copy {
-  width: 800px;
-  margin: auto;
-  /*margin-top: 3em;*/
-  margin-bottom: 3em;
-  column-count: inherit;
-  -webkit-column-count: inherit;
-  -moz-column-count: inherit;
-
-  text-align: left;
-  vertical-align: text-top;
-}
-
-code {
-/*background-color: linen;*/
-/*width: 50%;*/
-white-space: pre;
-}
-
-code.codeblock {
-  display: inline-block;
-  text-align: left;
-  vertical-align: text-top;
-  margin: 1em;
+  max-width: 50em;
 }
 
 figure img {
@@ -145,7 +145,7 @@ p:first-of-type {
 p:first-of-type::first-letter {
   font-size: 2em;
   float: left;
-  font-weight: bolder;
+  font-weight: lighter;
   margin-top: -0.25em;
   margin-right: .15
   em;
@@ -167,16 +167,20 @@ strong {
   color: maroon;
 }
 
+footer {
+    position: absolute;
+    right: 30px;
+    top: 69px;
+    text-align: right;
+    margin-bottom: 2em;
+}
+
 footer li {
   list-style-type: none;
   display: inline-block;
-  margin-bottom: 2.5em;
+  /* margin-bottom: 2.5em; */
 }
 
 .copy p:last-child {
   padding-bottom: 1em;
   }
-
-.row-pics img {
-  width: auto;
-}
