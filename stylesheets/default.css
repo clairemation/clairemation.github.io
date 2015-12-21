@@ -111,9 +111,9 @@ footer {
 }
 
 p {
-  text-indent: 1em;
-  text-align: justify;
-  text-justify: inter-word;
+  /*text-indent: 1em;*/
+  /*text-align: justify;
+  text-justify: inter-word;*/
   padding: .25em;
   max-width: 500px;
 }
