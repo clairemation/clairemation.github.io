@@ -4,6 +4,12 @@
   /*float: left;*/
 }
 
+ul.breadcrumbs:before {
+     content: none;
+    width: 115px;
+    display: inline-block;
+}
+
 h1 {
   text-shadow: 3px 3px lightgray;
 }
