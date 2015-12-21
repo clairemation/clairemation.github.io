@@ -152,7 +152,7 @@ p:first-of-type::first-letter {
   text-shadow: 3px 3px lightgray;
   }
 
-span.breakout {
+.breakout {
   text-align: center;
   display: block;
   margin-top: 0.5em;
@@ -184,3 +184,4 @@ footer li {
 .copy p:last-child {
   padding-bottom: 1em;
   }
+
