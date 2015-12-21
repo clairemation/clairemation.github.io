@@ -1,0 +1,46 @@
+#headshot {
+  display: inline-block;
+  border: 1px gray solid;
+  /*float: left;*/
+}
+
+h1 {
+  text-shadow: 3px 3px lightgray;
+}
+
+iframe {
+  display: block;
+  margin: .5em auto 1em auto;
+}
+
+aside {
+  margin: 1em;
+  width: 200px;
+  display: inline-block;
+  border-width: 5px 1px 1px 1px;
+  border-style: solid;
+  border-color: maroon;
+  border-radius: 5px;
+  padding: .25em;
+  /*position: absolute;*/
+  float: right;
+  /*position: fixed;
+  top: 200px;
+  right: 10%;
+  /*top: 0px;*/*/
+}
+
+.content {
+  display: inline-block;
+
+}
+
+aside ul {
+  font-weight: bolder;
+}
+
+aside li {
+  list-style-type: none;
+  font-weight: normal;
+  text-align: left;
+}
