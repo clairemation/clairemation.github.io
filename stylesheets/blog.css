@@ -1,7 +1,8 @@
 body {
   text-align: center;
   background-image: url("../imgs/layout/flowerytile.jpg");
-  font-family: 'Martel Sans', 'Didact Gothic', sans-serif;
+  font-family: 'Asul', 'Didact Gothic', sans-serif;
+  letter-spacing: .1px;
   /*font-weight: lighter;*/
 }
 
@@ -15,6 +16,8 @@ section#main-pane {
   border-top: 0px;
   border-radius: 0;
 }
+
+
 
 main {
   /*background-color: white;*/
@@ -31,7 +34,7 @@ ul.site-sections li {
   display: inline-block;
   margin: 0px;
   padding: .5em;
-  /*background-color: #757575;*/
+  background-color: linen;
 }
 
 ul.site-sections li:first-child {
@@ -48,10 +51,15 @@ ul.site-sections li.selected {
 }
 
 header {
-  background-color: blanchedalmond;
+  background-color: slategray;
   -webkit-font-smoothing: antialiased;
   text-align: center;
-margin-bottom: .5em;
+  margin-bottom: .5em;
+  color: gray;
+}
+
+header a, header a:visited {
+  color: gray;
 }
 
 header div#photo {
@@ -61,7 +69,7 @@ header div#photo {
   width: 100px;
   height: 100px;
   border: 2px solid black;
-  box-shadow: 0px 0px 0px 5px brown;
+  /*box-shadow: 0px 0px 0px 10px slategray;*/
 
   position: absolute;
   top: 40px;
@@ -85,27 +93,32 @@ header h2 {
   color: white;
   text-decoration: underline;
   font-family: "Diehl Deco";
-  background-color: brown;
+  background-color: rosybrown;
   text-align: center;
   border-top: 2px solid black;
   border-bottom: 2px solid black;
   /* position: relative; */
 }
 
-header h2 a {
+header h2 a, header h2 a:visited {
     color: white;
 }
 
 ul.breadcrumbs {
   background-color: linen;
+  color: gray;
   text-align: left;
   position: relative;
   font-weight: bold;
-  font-size: 0.75em
+  font-size: 0.75em;
 }
 
-ul.breadcrumbs:before {
-     content: "";
+ul.breadcrumbs a, ul.breadcrumbs a:visited {
+  color: gray;
+}
+
+ul.breadcrumbs::before {
+    content: "";
     width: 115px;
     display: inline-block;
 }
@@ -115,6 +128,14 @@ ul.breadcrumbs:before {
   display: inline-block;
   margin-left: 1em;
   margin-right: 1em;
+}
+
+.breadcrumbs li a, .breadcrumbs li a:visited {
+  color: #bbbbbb
+}
+
+.breadcrumbs li.prior a, .breadcrumbs li.prior a:visited {
+  color: gray;
 }
 
 main {
@@ -149,7 +170,7 @@ figure img {
 }
 
 p {
-  text-indent: 1.5em;
+  margin-top: .75em;
 }
 
 p:first-of-type {
@@ -189,6 +210,11 @@ footer {
     margin-bottom: 2em;
 }
 
+footer ul img {
+  border: 2px solid black;
+  border-radius: 50%;
+}
+
 footer li {
   list-style-type: none;
   display: inline-block;
@@ -200,7 +226,7 @@ footer li {
   }
 
 code {
-  font-family: 'PT Mono'
+  font-family: 'Inconsolata'
 
 }
 
