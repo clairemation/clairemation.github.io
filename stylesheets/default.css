@@ -120,8 +120,8 @@ footer {
 }
 
 p {
-  text-indent: 1em;
-  text-align: justify;
+  /*text-indent: 1em;*/
+  text-align: left;
   text-justify: inter-word;
   padding: .25em;
   max-width: 32em;
@@ -150,7 +150,7 @@ figcaption {
   padding-top: .5em;
   text-align: left;
   margin: auto;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Inconsolata", Courier, monospace;
 }
 
 ol {
