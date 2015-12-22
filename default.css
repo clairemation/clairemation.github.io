@@ -80,11 +80,11 @@ section.copy {
   margin: auto;
   margin-top: 3em;
   margin-bottom: 3em;
-  column-count: 3;
+  /*column-count: 3;
   -webkit-column-count: 3;
   -moz-column-count: 3;
   column-fill: auto
-  -moz-column-fill: auto;
+  -moz-column-fill: auto;*/
   text-align: left;
   vertical-align: text-top;
 }
