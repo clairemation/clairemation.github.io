@@ -1,7 +1,7 @@
 /* latin */
 @font-face {
   font-family: 'Diehl Deco';
-  src: url("../fonts/diehldeco-webfont.woff") format('woff');
+  src: url("../fonts/diehldeco-webfont.woff") format('woff'), url("../fonts/diehldeco-webfont.tff") format('tff;')
 }
 
 /* latin */
