@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+
+<script>
+var keydownHandler = function(event) {
+  document.getElementById("thing").innerHTML = "The key you just pressed is something";
+}
+
+document.addEventListener('keydown', keydownHandler(event), false);
+
+
+</script>
+
+<p id="thing">The key you just pressed is: </p>
+
+
+</body>
+</html>
