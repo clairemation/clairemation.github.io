@@ -30,12 +30,7 @@ var map = {
 
 var createHtmlMap = function() {
 
-  //make table
-  var table = document.createElement("TABLE");
-  table.setAttribute("id", "field");
-  document.body.appendChild(table);
-
-  //make rows
+ //make rows
   for (var i = 0; i < 15; i++) {
     var row = document.createElement("TR");
     document.getElementById("field").appendChild(row);
@@ -143,10 +138,10 @@ var createHtmlMap = function() {
   var crystals = {
     image: '&#11042;',
     coords: [
-      {y: 1, x: 17},
-      {y: 1, x: 23},
-      {y: 4, x: 4}
-          ]
+      {y: 1, x: 17, visible: true},
+      {y: 1, x: 23, visible: true},
+      {y: 7, x: 4, visible: true}
+          ],
   }
 
 
@@ -183,27 +178,35 @@ var placeObjects = function() {
 
   //place crystals
   for (var i in crystals.coords){
-    y = crystals.coords[i].y;
-    x = crystals.coords[i].x;
-    document.getElementById("field").rows[y].cells[x].innerHTML = "<div class = 'crystal'>" + crystals.image + "</div>";
+    if (crystals.coords[i].visible) {
+      y = crystals.coords[i].y;
+      x = crystals.coords[i].x;
+      document.getElementById("field").rows[y].cells[x].innerHTML = "<div class = 'crystal'>" + crystals.image + "</div>";
+    }
   }
 }
 
   //------------------------------------------
 
   var gameOverHandler = function() {
-    clearInterval(tick);
-    document.getElementById("shade").style.display = "block";
-    document.getElementById("gameOverWindow").style.display = "block";
-
-    // })
-
+    ampersand.image = "&#9729;";
+    document.getElementsByClassName("buttons")[0].style.display = "none";
+    document.getElementById("hero").style.color = "#000000";
+    var ending = setTimeout(function(){
+      clearInterval(tick);
+      document.getElementById("shade").style.display = "block";
+      document.getElementById("gameOverWindow").style.display = "block";
+    }, 1200);
   }
 
   //------------------------------------------
 
   var winHandler = function() {
-    //TODO
+    setTimeout(function(){
+      clearInterval(tick);
+      document.getElementById("shade").style.display = "block";
+      document.getElementById("winWindow").style.display = "block";
+    }, 2000);
   }
 
   //------------------------------------------
@@ -233,6 +236,23 @@ var press = function(direction) {
       }
     }
 
+    for (var position in crystals.coords) {
+      if (ampersand.x == crystals.coords[position].x && ampersand.y == crystals.coords[position].y) {
+        crystals.coords[position].visible = false;
+        totalCrystals -= 1;
+
+        //shiny effect
+        var shiny = setInterval (function(){
+          document.getElementById("hero").style.textShadow = "0px 0px 10px hsl(0, 0%, 100%)";
+          document.getElementById("message").style.textShadow = "0px 0px 10px hsl(0, 0%, 100%)";
+        }, 50);
+        setTimeout(function(){
+          clearInterval(shiny)
+        }, 1200);
+
+        if (totalCrystals <= 0) {winHandler()}
+      }
+    }
     // placeObjects();
 
 } //function main
@@ -252,4 +272,5 @@ var advanceFrame = function() {
   }
   clearField();
   placeObjects();
+  document.getElementById("message").innerHTML = "Collect " + totalCrystals + " crystals!";
 }
