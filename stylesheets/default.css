@@ -166,7 +166,6 @@ ol li {
 .code {
   margin: 3px;
   padding: 2px;
-  font-family: Courier, serif;
-  font-weight: lighter;
-  background-color: linen;
+  font-family: monospace;
+  font-weight: 200;
 }

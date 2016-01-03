@@ -1,7 +1,8 @@
 body {
   text-align: center;
   background-image: url("../imgs/layout/flowerytile.jpg");
-  font-family: 'Asul', 'Didact Gothic', sans-serif;
+  font-family: 'Avenir Next', 'Didact Gothic', sans-serif;
+  font-weight: 400;
   letter-spacing: .1px;
   /*font-weight: lighter;*/
 }
@@ -51,14 +52,16 @@ ul.site-sections li.selected {
 }
 
 header {
-  background-color: slategray;
+  background-color: linen;
   -webkit-font-smoothing: antialiased;
   text-align: center;
   margin-bottom: .5em;
   color: gray;
+  font-family: 'Diehl Deco';
 }
 
 header a, header a:visited {
+  text-decoration: none;
   color: gray;
 }
 
@@ -92,7 +95,7 @@ h2 {
 header h2 {
   color: white;
   text-decoration: underline;
-  font-family: "Diehl Deco";
+  /*font-family: "Diehl Deco";*/
   background-color: rosybrown;
   text-align: center;
   border-top: 2px solid black;
@@ -143,10 +146,8 @@ main {
 }
 
 h1 {
-background-color: white;
-color: black;
-font-weight: bold;
-font-family: "Diehl Deco"
+font-family: 'Diehl Deco';
+font-weight: 800;
 }
 
 main h1 {
@@ -156,7 +157,7 @@ main h1 {
   font-size: 3em;
   width: 200px;
   background-color: white;
-  text-shadow: 3px 3px lightgray;
+  text-shadow: 2px 2px lightgray;
 }
 
 #content {
@@ -179,12 +180,11 @@ p:first-of-type {
 
 p:first-of-type::first-letter {
   font-size: 2em;
+  font-weight: 700;
   float: left;
-  font-weight: lighter;
   margin-top: -0.3em;
-  margin-right: .2
-  em;
-  text-shadow: 3px 3px lightgray;
+  margin-right: .1em;
+  text-shadow: 2px 2px lightgray;
   }
 
 .breakout {
