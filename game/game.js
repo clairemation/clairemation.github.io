@@ -1,4 +1,4 @@
-// environment variables------------------------------------------
+// environment variables-----------------------------------------
 var totalCrystals = 3;
 var message = "";
 
