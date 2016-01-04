@@ -2,17 +2,28 @@ ul.breadcrumbs {
   background-color: black;
 }
 
+header {
+  font-family: inherit;
+}
+
 header   h1 {
   background-color: white;
+}
+
+header h3, header h3 a, header h3 a:visited {
+  padding-top: .5em;
+  font-family: 'Diehl Deco';
+  font-weight: bolder;
+  color: black;
 }
 
 ul.breadcrumbs::before {
   width: 130px;
 }
 
-h1 {
-  font-family: Lato;
-  font-weight: 200;
+h1, h1 a, h1 a:visited {
+  font-family: 'Diehl Deco';
+  /*font-weight: 200;*/
   padding-top: .25em;
 }
 
@@ -21,7 +32,29 @@ header h3, header h3 a, header h3a:visited {
   margin-bottom: 0;
 }
 
-ul.site-sections: {
-  margin-top: .1em;
+ul.site-sections {
+  display: inline-block;
+  width: 55%;
+  margin-top: 0;
+  margin-bottom: .5em;
   padding-top: 0;
+  background-color: gray;
+  box-shadow: 0px 0px 0px 20px linen inset;
+  border-radius: 1.5em;
+  }
+
+ul.site-sections li {
+  background: linen;
+}
+
+  ul.site-sections li:last-child {
+    border-top-right-radius: 2em;
+    border-bottom-right-radius: 2em;
+    /*border-right: 2px solid black;*/
+  }
+
+  ul.site-sections li:first-child {
+    border-bottom-left-radius: 2em;
+    border-top-left-radius: 2em;
+    /*border-left: 2px solid black;*/
   }
