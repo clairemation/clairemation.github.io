@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <link type="text/css" rel="stylesheet" href="../stylesheets/fonts.css">
+  <link type="text/css" rel="stylesheet" href="../stylesheets/default.css">
+  <link type="text/css" rel="stylesheet" href="../stylesheets/blog.css">
+
+
+  <title>Claire's Phase 0 Blog: Show Some Class</title>
+
+
+
+
+</head>
+
+<body>
+
+  <section id="main-pane">
+
+    <header>
+      <div id="photo"></div>
+
+      <ul class="site-sections">
+        <li><a href="#">About</a></li><li class="selected">Blog</li><li><a href="#">Projects</a></li><li><a href="#">Other</a></li>
+      </ul>
+
+      <ul class="breadcrumbs">
+        <li class="prior"><a href="../index.html">Home</a> ></li>
+        <li class="prior"><a href="index.html">Blog</a> ></li>
+        <li><a href="git.html">1: Git & GitHub</a></li>
+        <li><a href="css-concepts.html">2: CSS Positioning</a></li>
+        <li><a href="array-hashes.html">3: Arrays & Hashes</a></li>
+        <li><a href="enumerable-methods.html">4: Enumerables</a></li>
+        <li>5: Classes</li>
+      </ul>
+
+      </header>
+
+      <main>
+
+          <h1>Collect&shying Rubies</h1>
+
+          <section id="content">
+
+            <section class = "copy">
+
+
+
+<p>Okay, I don’t have time this week to be funny. Believe it or not, humor does take a while to develop. After all, what's the most important part <span style="white-space: nowrap;">of humor?<span style="display: inline-block; position: relative; left: -2em; transform:rotate(6deg); font-weight: bold; text-shadow: 0 0 2px white;">Timing!</span></span></p>
+
+<p>Har har. That's all you get.</p>
+
+<p>So here is a (very) quick primer on a couple different ways to iterate through collection objects in Ruby vs. JavaScript.</p>
+
+<p>Imagine iterating through, say, an array in Ruby. You can do a for loop:</p>
+
+<code>for i in 0..array.length {
+  do_something (array[i])
+}</code>
+
+<p>Here, i stands for a number, which you plug into array as an index to access the element you need.</p>
+
+<p>But that's annoying when you also have enumerators and can just do this:</p>
+
+<code>array.each {|x| x.do_something}</code>
+
+<p>Here, the element itself from array gets passed into x. You can take out the middleman of having to call it from the array by its index. And it's clearer to the reader that what we want to deal with here is each item in array, not a bunch of numbers, which are just the means to an end.</p>
+
+<p>Does JavaScript have an easy built-in way to iterate through a range of numbers like (0..10)? Does it have anything like the each method? I don't know! All I know is you can iterate through an array using this amazingly tedious for loop:</p>
+
+<code>for (i = 0; i < array.length; i++) {
+  array[i].doSomething;
+}</code>
+
+<p>or this slightly-less-tedious shorthand.</p>
+
+<code>for (i in array) {
+  array[i].doSomething;
+}</code>
+
+<p>Note here that i does not get the array element. Just its index. We still have to reference the element from the array! If you try this:</p>
+
+<code>for (i in array) {
+  i.doSomething;
+}</code>
+
+<p>you're in for a headache.</p>
+
+<p>It took me a while before I realized that's what was happening. It doesn't look like that's what it's supposed to mean! You'd think "i in array" would mean each thing in array, meaning each element. If you wanted to iterate through the <em>indices</em> you'd think the phrase would be something like "i in array.indexes" or "i in (0..array.length)"!</p>
+
+<p>Well, there's JavaScript for you.</p>
+
+
+</section>
+
+</section>
+
+<footer>
+
+          <ul>
+            <li>
+              <a href="mailto:clairemation@gmail.com"><img src="../imgs/social/email.png"></a>
+            </li>
+            <li>
+              <a href="#"><img src="../imgs/social/linkedin.png"></a>
+            </li>
+            <li>
+              <a href="http://github.com/clairemation"><img src="../imgs/social/github.png"></a>
+            </li>
+            <li>
+              <img src="../imgs/social/twitter.png">
+            </li>
+          </ul>
+        </footer>
+
+        </section>
+
+    </body>
+
+</html>
