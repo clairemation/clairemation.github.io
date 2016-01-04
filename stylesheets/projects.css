@@ -1,0 +1,27 @@
+ul.breadcrumbs {
+  background-color: black;
+}
+
+header   h1 {
+  background-color: white;
+}
+
+ul.breadcrumbs::before {
+  width: 130px;
+}
+
+h1 {
+  font-family: Lato;
+  font-weight: 200;
+  padding-top: .25em;
+}
+
+header h3, header h3 a, header h3a:visited {
+  font-size: .9em;
+  margin-bottom: 0;
+}
+
+ul.site-sections: {
+  margin-top: .1em;
+  padding-top: 0;
+  }
