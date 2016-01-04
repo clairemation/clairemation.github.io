@@ -136,7 +136,7 @@ var createHtmlMap = function() {
   } //end lava
 
   var crystals = {
-    image: '&#11042;',
+    image: '&#10053;',
     coords: [
       {y: 1, x: 17, visible: true},
       {y: 1, x: 23, visible: true},
@@ -181,7 +181,7 @@ var placeObjects = function() {
     if (crystals.coords[i].visible) {
       y = crystals.coords[i].y;
       x = crystals.coords[i].x;
-      document.getElementById("field").rows[y].cells[x].innerHTML = "<div class = 'crystal'>" + crystals.image + "</div>";
+      document.getElementById("field").rows[y].cells[x].innerHTML = "<div class = 'crystal'><span class='crystal'>" + crystals.image + "</span></div>";
     }
   }
 }
@@ -202,6 +202,13 @@ var placeObjects = function() {
   //------------------------------------------
 
   var winHandler = function() {
+
+    setTimeout(function(){ampersand.image = '&#10035;'}, 250);
+    setTimeout(function(){ampersand.image = '&#9676;'}, 400);
+    setTimeout(function(){ampersand.image = '&#8258;'}, 700);
+    setTimeout(function(){ampersand.image = '&#8283;'}, 875);
+    setTimeout(function(){ampersand.image = ''}, 1100);
+
     setTimeout(function(){
       clearInterval(tick);
       document.getElementById("shade").style.display = "block";
@@ -237,14 +244,13 @@ var press = function(direction) {
     }
 
     for (var position in crystals.coords) {
-      if (ampersand.x == crystals.coords[position].x && ampersand.y == crystals.coords[position].y) {
+      if (ampersand.x == crystals.coords[position].x && ampersand.y == crystals.coords[position].y && crystals.coords[position].visible) {
         crystals.coords[position].visible = false;
         totalCrystals -= 1;
 
         //shiny effect
         var shiny = setInterval (function(){
           document.getElementById("hero").style.textShadow = "0px 0px 10px hsl(0, 0%, 100%)";
-          document.getElementById("message").style.textShadow = "0px 0px 10px hsl(0, 0%, 100%)";
         }, 50);
         setTimeout(function(){
           clearInterval(shiny)
@@ -253,9 +259,8 @@ var press = function(direction) {
         if (totalCrystals <= 0) {winHandler()}
       }
     }
-    // placeObjects();
 
-} //function main
+} //function press
 
 
 var unpress = function() {

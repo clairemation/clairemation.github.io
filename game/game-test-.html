@@ -6,43 +6,37 @@
 
   <style>
 
+  /*reset*/
+  body, h1, h2, tr, td {
+    margin: 0;
+    border: 0;
+    padding: 0;
+  }
+
   body {
     text-align: center;
     background-color: black;
     background-image: url("bg.jpg");
     background-attachment: fixed;
     background-size: cover;
-    font-family: Lato;
+    font-family: Lato, 'Avenir Next', sans-serif;
     font-weight: 200;
     color: white;
-    margin: 0;
   }
 
-
   h1 {
-    margin: 0;
     font-weight: 700;
-    color: white;
   }
 
   h2 {
-    margin: 0;
     color: hsl(210, 50%, 80%);
     font-weight: 200;
-    ta
   }
 
   table {
     margin: auto;
-    padding: 0;
-    /*background-color: gray;*/
     border-spacing: 0;
     border-collapse:separate;
-  }
-
-  tr, td {
-    padding: 0;
-    margin: 0; border: 0;
   }
 
   td {
@@ -51,49 +45,74 @@
   }
 
   td.path {
-    background-color: hsla(0,100%,100%,.7);
+    background-color: hsla(250, 70%, 97%, .7);
   }
 
   div.flame {
-    display: block;
-
     width: 100%;
     height: 100%;
-    background-color: orange;
-    opacity: .6;
+    background-color: hsl(50, 95%, 70%);
+    opacity: .5;
+    border-radius: 25%;
+    box-shadow: 0 0 10px 5px hsl(25, 95%, 50%) inset, 0 0 5px 5px hsl(15, 95%, 70%) inset, 0 0 10px 5px hsl(15, 95%, 60%);
   }
 
-  #hero {
-    /*font-family: Impact, sans-serif;*/
-    font-weight: 800;
-    font-size: 20px;
-    color: blue;
+  div#hero {
+    height: 24px;
+    font-size: 24px;
+    color: aqua;
+    text-shadow: 0px 0px 3px rgba(0, 60, 60, .9);
   }
 
   .crystal {
-    font-weight: 800;
-    color: green;
+    height: 20px;
+    width: 20px;
+    color: teal;
+    text-shadow: 0px 0px 10px white, 0px 0px 5px rgba(0, 255, 255, 1);
   }
 
-  .buttons {
-    margin-top: .7em;
+  div.buttons {
+    display: inline-block;
+    padding: 5px;
+    background-color: black;
+    border-radius: 50%;
   }
 
   .buttons div {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     color: black;
     background-color: white;
     cursor: pointer;
+    width: 30px;
+    height: 30px;
+    margin: auto;
+    border-radius: 50%
   }
 
   .buttons div:active {
-    background-color: black;
-    box-shadow: 0 0 10px 5px hsla(200, 0%, 100%, .25);
-    cursor: pointer;
+    background-color: gray;
+    box-shadow: 0 0 10px 10px hsla(200, 0%, 100%, .4);
   }
 
   #instructions {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 5px solid black;
+    width: 40em;
+    padding: 3em;
+    height: 40%;
     color: black;
-    font-family: Inconsolata;
+    overflow: scroll;
+    text-align: left;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   #shade {
@@ -104,54 +123,104 @@
     background-color: hsla(0, 0%, 0%, 0.7);
   }
 
+  footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    height: 2em;
+    background-color: hsla(0, 0%, 0%, .7);
+    color: white;
+  }
+
+  header {
+    background-color: hsla(0, 0%, 0%, .6);
+    padding-bottom: .5em;
+  }
+
+  .summary {
+    text-align: center;
+    color: maroon;
+    font-weight: 700;
+  }
+
+  .summary button {
+    center;
+  }
+
+  #message {
+    font-family: Inconsolata;
+    text-shadow: 0px 0px 10px hsl(0, 0%, 100%);
+  }
+
+  #winWindow, #gameOverWindow {
+    display: none;
+    position: absolute;
+    overflow: scroll;
+    z-index: 1;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 70%; height: 70%;
+    background-color: hsla(200,90%,70%,.8);
+    border: 10px solid white;
+    border-radius: 50px;
+    font-size: 3em;
+  }
+
   </style>
 
 </head>
 
 <body>
 
+<!-- Hidden elements -->
+
 <div id = "shade"></div>
 
-<div id = "gameOverWindow" style = "display: none; position: absolute; margin: auto; width: 70%; height: 70%; background-color: hsla(200,90%,70%,.8); z-index: 1; border: 10px solid black; color: white; font-size: 3em; font-family: sans-serif;">
+<div id="instructions" onclick="closeInstructions();">
+<p>The lava's getting pretty close now. I'm still woozy, though maybe that's from all the carbon in this Precambrian Era air. Wish I'd made these chrono boots more comfortable. I just never imagined I'd be actually walking in them that much.</p>
+<p>Actually, it's pretty lucky the fuel cells blew up just the way they did, scattering the trilithium crystals across time. It means I can still make my way home, gathering my fuel as I hop from era to era. I'm not stranded here. Unless the lava gets me first.</p>
+<p style="text-align: right; position: relative; right: 1em;">--<span style="font-size: 3em; color: hsl(180, 70%, 50%);">&#9880;</span> </p>
+<p class="summary">Move with the arrow buttons to collect <span class="crystal">&#10053;</span> and start your journey home.<br>Watch out for lava!</p>
+<button onclick="closeInstructions();">Close the window</button>
+</div>
+
+<div id = "gameOverWindow">
+  <p>Melted by lava!</p>
   <h1>GAME OVER</h1>
-  <p>Burned to a crisp!</p>
 </div>
 
-<h1>Timecycle</h1>
+<div id = "winWindow">
+  <p>All crystals collected!<br>
+    Fuel replenished!</p>
+  <h1>Forward in time!</h1>
+</div>
+
+<!-- Visible elements -->
+
+<header>
+<h1>Chrono Boots</h1>
 <h2>Precambrian Era</h2>
-<button onclick="instructions();">*Instructions*</button>
+<button onclick="instructions();">Instructions</button>
+</header>
 
-<div id="instructions" style="display: none; position: fixed; margin: auto; background: white; border: 5px solid black; width: 60%; height: 40%; padding: 2em;">
-<p>It will only lead to catastrophe, your colleagues plead. Pleasant folks, but not too bright. You know what you're doing--you're Dr. Era (<span style="color: blue">&#9880;</span>), leading (and only) chronolocomotive systems engineer. And your timecycle, complete at last, is a work of beauty and genius, and the sweetest of rides.</p>
-<p>...Nice memory, but reality intrudes. You're stranded in the Precambrian Era, your timecycle's fuel chamber is busted, and the trilithium crystals it uses for fuel are scattered across the eons.</p>
-<p>Move with the arrow buttons to collect the trilithium crystals (<span style="color: green">&#11042;</span>) in this era to escape to the next one, and start your journey home. But don't let the lava touch you!</p>
-<button onclick="closeInstructions()">Close the window</button>
-</div>
+<p id = "message"></p> <!-- dynamic messages go in here -->
+
+<table id="field"></table> <!-- game field generated dynamically in here -->
 
 <div class='buttons'>
-<div onclick="press('up');" onmouseup="unpress();" id="up" style="margin: auto; display: block; width: 30px; height: 30px; border-radius: 50%">&#9650;</div>
-<div onclick="press('left');" onmouseup="unpress();" id="left" style="margin: auto; display: inline-block; width: 30px; height: 30px; border-radius: 50%">&#9664;</div>
-<div style="width: 30px; display: inline-block;"></div>
-<div onclick="press('right');" onmouseup="unpress();" id="right" style="margin: auto; display: inline-block; width: 30px; height: 30px; border-radius: 50%">&#9654;</div>
-<div onclick="press('down');" onmouseup="unpress();" id="down" style="margin: auto; display: block; width: 30px; height: 30px; border-radius: 50%">&#9660;</div>
+<div onclick="press('up');" onmouseup="unpress();" id="up" style="display: block;">&#9650;</div>
+<div onclick="press('left');" onmouseup="unpress();" id="left" style="display: inline-block; margin-right: 30px">&#9664;</div>
+<div onclick="press('right');" onmouseup="unpress();" id="right" style="display: inline-block;">&#9654;</div>
+<div onclick="press('down');" onmouseup="unpress();" id="down" style="display: block;">&#9660;</div>
 </div>
 
+<footer>A little game by Claire Samuels</footer>
+
+
+<!-- Generate game field -->
+
 <script>
-var startup = function() {
-  createHtmlMap();
-  lava.drawLava();
-
-}
-
-window.onload = startup();
-placeObjects();
-
+window.onload = createHtmlMap();
 </script>
-
-
-
-
-
 
 </body>
 
