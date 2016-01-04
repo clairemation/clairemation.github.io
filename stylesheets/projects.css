@@ -23,7 +23,7 @@ ul.breadcrumbs::before {
 
 h1, h1 a, h1 a:visited {
   font-family: 'Diehl Deco';
-  /*font-weight: 200;*/
+  font-weight: 200;
   padding-top: .25em;
 }
 
