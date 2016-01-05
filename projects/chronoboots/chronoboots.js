@@ -1,6 +1,7 @@
 // environment variables-----------------------------------------
 var totalCrystals = 3;
 var message = "";
+var running = true;
 
 // map--------------------------------------------------
 
@@ -186,8 +187,13 @@ var placeObjects = function() {
 // handlers-----------------------------------------
 
 var gameOverHandler = function() {
+  //stop running
+  running = false;
+
+  //remove controls
+  document.getElementsByClassName("buttons")[0].style.display = "none";
+
   ampersand.image = "&#9729;"; //'dead' sprite
-  document.getElementsByClassName("buttons")[0].style.display = "none"; //remove controls
   document.getElementById("hero").style.color = "#000000";
   var ending = setTimeout(function(){
     clearInterval(tick); //stop everything else
@@ -199,6 +205,12 @@ var gameOverHandler = function() {
 //------------------------------------------
 
 var winHandler = function() {
+  //stop running
+  running = false;
+
+  //remove controls
+  document.getElementsByClassName("buttons")[0].style.display = "none";
+
   //win 'animation' -- Hero zaps out
   setTimeout(function(){ampersand.image = '&#10035;'}, 250);
   setTimeout(function(){ampersand.image = '&#9676;'}, 400);
@@ -218,6 +230,8 @@ var winHandler = function() {
 //button handlers
 
 var press = function(direction) {
+
+  if (running) {
 
   //if the tile in the asked-for direction is a path tile, move there
 
@@ -241,6 +255,7 @@ var press = function(direction) {
       ampersand.x ++;
     }
   }
+  } //end if running
 
   //If hero matches any visible crystal's position, take it off the field and play a visual effect
   for (var position in crystals.coords) {
@@ -272,6 +287,8 @@ var unpress = function() {
 function keyDownHandler(event) {
   press({37: 'left', 38: 'up', 39: 'right', 40: 'down'}[event.keyCode]);
 }
+
+function keyUpHandler(event) {}
 //----------------------------------
 
 //constantly shift lava and constantly refresh screen
