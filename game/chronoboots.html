@@ -2,7 +2,7 @@
 <html>
 <head>
 
-  <script src='game.js'></script>
+  <script src='chronoboots.js'></script>
 
   <style>
 
@@ -16,7 +16,7 @@
   body {
     text-align: center;
     background-color: black;
-    background-image: url("bg.jpg");
+    background-image: url("lava-flow-magma-wide-hd-wallpaper-free-desktop-free-for-desktop-background.jpg");
     background-attachment: fixed;
     background-size: cover;
     font-family: Lato, 'Avenir Next', sans-serif;
@@ -51,10 +51,10 @@
   div.flame {
     width: 100%;
     height: 100%;
-    background-color: hsl(50, 95%, 70%);
-    opacity: .5;
+    background-color: hsl(45, 100%, 99%);
+    opacity: .6;
     border-radius: 25%;
-    box-shadow: 0 0 10px 5px hsl(25, 95%, 50%) inset, 0 0 5px 5px hsl(15, 95%, 70%) inset, 0 0 10px 5px hsl(15, 95%, 60%);
+    box-shadow: 0 0 10px 5px hsl(25, 95%, 50%) inset, 0 0 5px 5px hsl(29, 98%, 68%) inset, 0 0 10px 5px hsl(15, 95%, 60%);
   }
 
   div#hero {
@@ -74,7 +74,7 @@
   div.buttons {
     display: inline-block;
     padding: 5px;
-    background-color: black;
+    background-color: #666666;
     border-radius: 50%;
   }
 
@@ -176,10 +176,10 @@
 <div id = "shade"></div>
 
 <div id="instructions" onclick="closeInstructions();">
-<p>The lava's getting pretty close now. I'm still woozy from what happened, though maybe that's just the air quality here in the Precambrian. Wish I'd made these chrono boots more comfortable. I just never imagined I'd be actually <em>walking</em> in them this much.</p>
-<p>Actually, it's pretty lucky the fuel cells blew up just the way they did, scattering the trilithium crystals across time. It means I can still make my way home, gathering my fuel as I hop from era to era. I'm not stranded here. Unless the lava gets me first.</p>
+<p>The lava's getting pretty close now. I'm still woozy from what happened, but that might just be the air quality here in the Precambrian Era. Wish I'd made these chrono boots more comfortable. I just never imagined I'd be actually <em>walking</em> in them this much.</p>
+<p>Actually, it's pretty lucky the fuel cells blew up just the way they did, scattering the crystals across time. It means I can still make my way home, gathering the fuel crystals as I hop from era to era. I'm not stranded here. Unless the lava gets me first.</p>
 <p style="text-align: right; position: relative; right: 1em;">--<span style="font-size: 3em; color: hsl(180, 70%, 50%);">&#9880;</span> </p>
-<p class="summary">Move with the arrow buttons to collect <span class="crystal">&#10053;</span> and start your journey home.<br>Watch out for lava!</p>
+<p class="summary">Move using the arrow keys or the onscreen controller to collect <span class="crystal">&#10053;</span> and start your journey home.<br>Watch out for lava!</p>
 <button onclick="closeInstructions();">Close the window</button>
 </div>
 
@@ -213,6 +213,8 @@
 <div onclick="press('down');" onmouseup="unpress();" id="down" style="display: block;">&#9660;</div>
 </div>
 
+
+
 <footer>A little game by Claire Samuels</footer>
 
 
@@ -220,7 +222,12 @@
 
 <script>
 window.onload = createHtmlMap();
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
 </script>
+
 
 </body>
 
