@@ -14,6 +14,16 @@
   }
 
   body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+  }
+
+  body {
     text-align: center;
     background-color: black;
     background-image: url("lava-flow-magma-wide-hd-wallpaper-free-desktop-free-for-desktop-background.jpg");
@@ -76,18 +86,12 @@
     padding: 5px;
     background-color: #666666;
     border-radius: 50%;
+    cursor: pointer;
   }
 
   .buttons div {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     color: black;
     background-color: white;
-    cursor: pointer;
     width: 30px;
     height: 30px;
     margin: auto;
@@ -113,6 +117,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    cursor: pointer;
   }
 
   #shade {
@@ -165,6 +170,12 @@
     font-size: 3em;
   }
 
+  .close-x {
+    font-size: 35px;
+    position: absolute;
+    top: 5px; right: 10px;
+  }
+
   </style>
 
 </head>
@@ -176,11 +187,11 @@
 <div id = "shade"></div>
 
 <div id="instructions" onclick="closeInstructions();">
+<div class="close-x">&#8864;</div>
 <p>The lava's getting pretty close now. I'm still woozy from what happened, but that might just be the air quality here in the Precambrian Era. Wish I'd made these chrono boots more comfortable. I just never imagined I'd be actually <em>walking</em> in them this much.</p>
 <p>Actually, it's pretty lucky the fuel cells blew up just the way they did, scattering the crystals across time. It means I can still make my way home, gathering the fuel crystals as I hop from era to era. I'm not stranded here. Unless the lava gets me first.</p>
 <p style="text-align: right; position: relative; right: 1em;">--<span style="font-size: 3em; color: hsl(180, 70%, 50%);">&#9880;</span> </p>
-<p class="summary">Move using the arrow keys or the onscreen controller to collect <span class="crystal">&#10053;</span> and start your journey home.<br>Watch out for lava!</p>
-<button onclick="closeInstructions();">Close the window</button>
+<p class="summary">Move using the arrow keys or the onscreen buttons <br> to collect <span class="crystal">&#10053;</span> and start your journey home. Watch out for lava!</p>
 </div>
 
 <div id = "gameOverWindow">
