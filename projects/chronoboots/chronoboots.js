@@ -267,6 +267,13 @@ var unpress = function() {
   direction = null;
 }
 
+// key handlers--------------------------
+
+function keyDownHandler(event) {
+  press({37: 'left', 38: 'up', 39: 'right', 40: 'down'}[event.keyCode]);
+}
+//----------------------------------
+
 //constantly shift lava and constantly refresh screen
 var tick = setInterval(function() {advanceFrame();}, 200);
 

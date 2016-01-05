@@ -10,8 +10,13 @@ var keydownHandler = function(event) {
   document.getElementById("thing").innerHTML = "The key you just pressed is something";
 }
 
-document.addEventListener('keydown', keydownHandler(event), false);
+var keyupHandler = function(event) {
+  document.getElementById("thing").innerHTML = "bleep";
+}
 
+document.addEventListener("keydown", keydownHandler, false);
+
+function() {document.addEventListener("keyup", keyupHandler, false);
 
 </script>
 
