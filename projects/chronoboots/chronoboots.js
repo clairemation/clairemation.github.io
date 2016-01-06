@@ -350,6 +350,17 @@ var placeObjects = function() {
   }
 }
 
+// var restart = function() {
+//   ampersand.y = 12;
+//   ampersand.x = 24;
+//   for (var i in crystals.coords) {
+//     crystals.coords[i].visible = true;
+//   }
+// document.getElementById("gameOverWindow").style.display = "block");
+// running = true;
+// var tick = setInterval(function() {advanceFrame();}, 200);
+// }
+
 // handlers-----------------------------------------
 
 var gameOverHandler = function() {
