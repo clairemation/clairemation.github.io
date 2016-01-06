@@ -458,7 +458,9 @@ function keyUpHandler(event) {}
 //----------------------------------
 
 //constantly shift lava and constantly refresh screen
-var tick = setInterval(function() {advanceFrame();}, 200);
+
+// var tick = setInterval(function() {advanceFrame();}, 200);
+// commented out -- don't start tick until instructions dismissed
 
 //each tick:
 var advanceFrame = function() {
