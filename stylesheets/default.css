@@ -19,45 +19,47 @@ body {
   text-align: center;
   background-color: black;
   background-image: url("../imgs/layout/flowerytile.jpg");
-  font-family: 'Didact Gothic', sans-serif;
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 400;
   font-size: 1.1em;
   /* -webkit-font-smoothing: antialiased; */
 }
 
 section#main-pane {
   margin: auto;
-  margin-top: -9px;
+  /*margin-top: -9px;*/
   width: 900px;
-  padding: 82px 0px 2em 0px;
+  padding: 0px 0px 2em 0px;
   background-color: white;
-  background-image: url("../imgs/layout/paramount_electrum_400.jpg");
+  /*background-image: url("../imgs/layout/paramount_electrum_400.jpg");*/
   background-repeat: repeat-x;
-  border: 2px solid #472C1C;
-  border-bottom-left-radius: 50px;
-  border-bottom-right-radius: 50px;
+  /*border: 2px solid #472C1C;*/
+  /*border-bottom-left-radius: 50px;*/
+  /*border-bottom-right-radius: 50px;*/
   vertical-align: text-top;
 }
 
 #maintitle {
-  background-color: black;
+  background-color: rosybrown;
   margin: 0px;
   padding: 0px;
   border: 0px;
 
-  color: #DFBD76;
-  font-family: 'Skranji', serif;
-  text-transform: uppercase;
-  font-size: 3em;
+  color: white;
+  font-family: 'Avenir Next', serif;
+  font-weight: 800;
+  /*text-shadow: 0px -2px 0px hsla(0, 0%, 0%, .2);*/
+  font-size: 2.5em;
 }
 
-h1 {
+/*h1 {
   font-family: 'Skranji', serif;
   font-size: 3em;
 }
-
+*/
 #update {
   display: inline-block;
-  width: 250px;
+  /*width: 250px;*/
   margin: 20px;
   vertical-align: text-top;
   text-align: right;
@@ -80,14 +82,15 @@ nav h1 {
   background-color: white;
   color: black;
   vertical-align: text-top;
+  font-family: 'Diehl Deco';
 
 }
 
 
 section.copy {
-  width: 800px;
+  width: 600px;
   margin: auto;
-  margin-top: 3em;
+  margin-top: 2em;
   margin-bottom: 3em;
   /*column-count: 3;
    -webkit-column-count: 3;
@@ -95,7 +98,7 @@ section.copy {
   column-fill: auto
   -moz-column-fill: auto;*/
   /* text-align: left; */
-  vertical-align: text-top;
+  /*vertical-align: text-top;*/
 }
 
 p.copy-single-column {
@@ -107,22 +110,30 @@ p.copy-single-column {
 }
 
 hr {
-  width:800px;
+  display: none;
+  width:75%;
   margin: 0em auto 1em auto;
+  background-color: black;
+  border: 0;
+  height: 1px;
 }
 
-footer {
+a:visited {
+  color: gray;
+}
+
+/*footer {
   position: absolute;
   right: 30px;
   top: 92px;
   text-align: right;
   margin-bottom: 2em;
-}
+}*/
 
 p {
   /*text-indent: 1em;*/
   text-align: left;
-  text-justify: inter-word;
+  /*text-justify: inter-word;*/
   padding: .25em;
   max-width: 32em;
   margin: auto;
@@ -168,4 +179,11 @@ ol li {
   padding: 2px;
   font-family: monospace;
   font-weight: 200;
+}
+
+#headshot {
+  right: 100px;
+  width: 200px;
+  border-radius: 50%;
+  float: right;
 }
