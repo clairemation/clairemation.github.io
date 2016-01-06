@@ -8,20 +8,19 @@ var running = true;
 var map = {
 
   baseMap: [
-    "                              ".split(""),
-    "  •••••••••••••••••••••••••   ".split(""),
-    "  •     •     •     •     •   ".split(""),
-    "  •     •     •     •     •   ".split(""),
-    "  •••••••••••••••••••••••••   ".split(""),
-    "  •     •     •     •     •   ".split(""),
-    "  •     •     •     •     •   ".split(""),
-    "  •••••••••••••••••••••••••   ".split(""),
-    "  •     •     •     •     •   ".split(""),
-    "  •     •     •     •     •   ".split(""),
-    "  •••••••••••••••••••••••••   ".split(""),
-    "  •     •     •     •     •   ".split(""),
-    "  •     •     •     •     •   ".split(""),
-    "  •••••••••••••••••••••••••   ".split(""),
+    "#########################".split(""),
+    "#  #  #  #  #  #  #  #  #".split(""),
+    "#  #  #  #  #  #  #  #  #".split(""),
+    "#########################".split(""),
+    "#  #  #  #  #  #  #  #  #".split(""),
+    "#  #  #  #  #  #  #  #  #".split(""),
+    "#########################".split(""),
+    "#  #  #  #  #  #  #  #  #".split(""),
+    "#  #  #  #  #  #  #  #  #".split(""),
+    "#########################".split(""),
+    "#  #  #  #  #  #  #  #  #".split(""),
+    "#  #  #  #  #  #  #  #  #".split(""),
+    "#########################".split(""),
   ],
 
 }
@@ -30,28 +29,22 @@ var map = {
 var createHtmlMap = function() {
 
  //make rows
-  for (var i = 0; i < 15; i++) {
+  for (var i = 0; i < map.baseMap.length; i++) {
     var row = document.createElement("TR");
     document.getElementById("field").appendChild(row);
 
     //make cells inside each row
-    for (var j = 0; j < 29; j++) {
+    for (var j = 0; j < map.baseMap[0].length; j++) {
       var cell = document.createElement("TD");
       document.getElementById("field").rows[i].appendChild(cell);
     }
   }
 
-  //designate paths: rows
-  for (i = 1; i < 14; i += 3) {
-    for (j = 2; j < 27; j++) {
-      document.getElementById("field").rows[i].cells[j].setAttribute ("class", "path");
-    }
-  }
-
-  //designate paths: cols
-  for (var col = 2; col < 27; col += 3) {
-    for (var row = 2; row < 14; row++) {
-      document.getElementById("field").rows[row].cells[col].setAttribute ("class", "path");
+  for (var y in map.baseMap) {
+    for (var x in map.baseMap[y]) {
+      if (map.baseMap[y][x] == "#") {
+        document.getElementById("field").rows[y].cells[x].setAttribute("class", "path");
+      }
     }
   }
 
@@ -61,71 +54,244 @@ var createHtmlMap = function() {
 // world objects----------------------------------------------
 
 var ampersand = { //so called because she used to be a '&'
-  image: '&#9880;', //ASCII 'sprite'
-  y: 13,
-  x: 2
+  image: '<div id="hero">&#9880;</div>', //ASCII 'sprite'
+  y: 12,
+  x: 24
 }
 
 var lava = {
   image: '#',
   currentFrame: 0,
   frames: [ //# are lava tiles on the map. They shift in a 3-frame cycle
-    [ //frame0start
-     "                              ".split(""),
-     "        # #         # #       ".split(""),
-     "        # #         # #   #   ".split(""),
-     "    # #       # #             ".split(""),
-     "      #       # #             ".split(""),
-     "                              ".split(""),
-     "    #   # # #           # #   ".split(""),
-     "        # # #                 ".split(""),
-     "        # # #     # #         ".split(""),
-     "                  #           ".split(""),
-     "                              ".split(""),
-     "      #                 #     ".split(""),
-     "            # # #       # #   ".split(""),
-     "                          #   ".split(""),
-     ],//frame0end
+        [//frame0---------------------
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                       ##".split(""),
+        "#                        ".split(""),
+        "                         ".split(""),
+        "   ##                    ".split(""),
+        "    ##                   ".split(""),
+        "     ##                  ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        ],
 
-     [ //frame1start
-     "                              ".split(""),
-     "          # #       # #       ".split(""),
-     "    # #   # #       # #   #   ".split(""),
-     "      #     #   #             ".split(""),
-     "              # # #           ".split(""),
-     "    #         # #       # #   ".split(""),
-     "  # #     #             # #   ".split(""),
-     "        #       # #           ".split(""),
-     "      # # #     # #           ".split(""),
-     "      # #         #           ".split(""),
-     "                              ".split(""),
-     "      #                       ".split(""),
-     "            # # # #       #   ".split(""),
-     "                        # #   ".split(""),
-     ],//frame1end
+        [//frame1-------
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        " #                      #".split(""),
+        "###                      ".split(""),
+        " #                       ".split(""),
+        "     ##                  ".split(""),
+        "      ##                 ".split(""),
+        "       ##                ".split(""),
+        "                         ".split(""),
+        ],
 
-     [ //frame2start
-     "                              ".split(""),
-     "      #     # #     # #   #   ".split(""),
-     "  # # #     # #     # #   #   ".split(""),
-     "                #             ".split(""),
-     "    #           # #       #   ".split(""),
-     "    #     #   # #       # #   ".split(""),
-     "    #     # #           #     ".split(""),
-     "        #         # #         ".split(""),
-     "        #         #           ".split(""),
-     "      # #                     ".split(""),
-     "      # #                     ".split(""),
-     "      #                   #   ".split(""),
-     "      #       # #       # #   ".split(""),
-     "              # #       # #   ".split(""),
-     ],//frame2end
-  ],
+        [//frame2
+        "   ##                    ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "    #                    ".split(""),
+        "   ###                   ".split(""),
+        "    #                    ".split(""),
+        "       ##                ".split(""),
+        "        ##               ".split(""),
+        "         ##              ".split(""),
+        ],
+
+        [//frame3
+        "     ##                  ".split(""),
+        "     ##                  ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "      #                  ".split(""),
+        "     ###                 ".split(""),
+        "      #                  ".split(""),
+        "        ##               ".split(""),
+        "         ##              ".split(""),
+        ],
+
+        [//frame4
+        "                         ".split(""),
+        "       ##                ".split(""),
+        "       ##                ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "        #                ".split(""),
+        "       ###               ".split(""),
+        "        #                ".split(""),
+        "          ##             ".split(""),
+        ],
+
+        [//frame5
+        "                         ".split(""),
+        "                         ".split(""),
+        "         ##              ".split(""),
+        "         ##              ".split(""),
+        "#                        ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "          #              ".split(""),
+        "         ###             ".split(""),
+        "          #              ".split(""),
+        ],
+
+        [//frame6
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "           ##            ".split(""),
+        "           ##            ".split(""),
+        " ##                      ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "            #            ".split(""),
+        "           ###           ".split(""),
+        ],
+
+        [//frame7
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "             ##          ".split(""),
+        "             ##          ".split(""),
+        "   ##                    ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "             #           ".split(""),
+        ],
+
+        [//frame8
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "               ##        ".split(""),
+        "               ##        ".split(""),
+        "     ##                  ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        ],
+
+        [//frame9
+        "             ##          ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                 ##      ".split(""),
+        "                 ##      ".split(""),
+        "       ##                ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        ],
+
+        [//frame10
+        "                         ".split(""),
+        "               ##        ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                   ##    ".split(""),
+        "                   ##    ".split(""),
+        "         ##              ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        ],
+
+        [//frame11
+        "                         ".split(""),
+        "                         ".split(""),
+        "                 ##      ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "#                        ".split(""),
+        "                     ##  ".split(""),
+        "                     ##  ".split(""),
+        "           ##            ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        ],
+
+        [//frame12
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                   ##    ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "#                        ".split(""),
+        "##                       ".split(""),
+        " ##                      ".split(""),
+        "                       ##".split(""),
+        "                       ##".split(""),
+        "             ##          ".split(""),
+        "                         ".split(""),
+        ],
+
+        [//frame13
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        "                     ##  ".split(""),
+        "                         ".split(""),
+        "                         ".split(""),
+        " ##                      ".split(""),
+        "  ##                     ".split(""),
+        "   ##                    ".split(""),
+        "                        #".split(""),
+        "                        #".split(""),
+        "               ##        ".split(""),
+        ]
+      ],
 
   drawLava: function() {
     frameToDraw = this.frames[this.currentFrame];
-    for (var y = 0; y < frameToDraw.length; y++) {
-      for (var x = 0; x < frameToDraw[y].length; x++) {
+    for (var y in frameToDraw) {
+      for (var x in frameToDraw[y]) {
         if (frameToDraw[y][x] == "#") {
           document.getElementById("field").rows[y].cells[x].innerHTML = "<div class='flame'> </div>";
         }
@@ -137,9 +303,9 @@ var lava = {
 var crystals = {
   image: '&#10053;',
   coords: [
-    {y: 1, x: 17, visible: true},
-    {y: 1, x: 23, visible: true},
-    {y: 7, x: 4, visible: true}
+    {y: 1, x: 3, visible: true},
+    {y: 0, x: 24, visible: true},
+    {y: 12, x:1, visible: true}
         ],
 }
 
@@ -169,7 +335,7 @@ var clearField = function() {
 var placeObjects = function() {
 
   //place ampersand
-  document.getElementById("field").rows[ampersand.y].cells[ampersand.x].innerHTML = ("<div id='hero'>" + ampersand.image + "</div>");
+  document.getElementById("field").rows[ampersand.y].cells[ampersand.x].innerHTML = (ampersand.image);
 
   //place lava
   lava.drawLava();
@@ -193,8 +359,8 @@ var gameOverHandler = function() {
   //remove controls
   document.getElementsByClassName("buttons")[0].style.display = "none";
 
-  ampersand.image = "&#9729;"; //'dead' sprite
-  document.getElementById("hero").style.color = "#000000";
+  ampersand.image = "<div id='dead'>&#9729;</div>"; //'dead' sprite
+
   var ending = setTimeout(function(){
     clearInterval(tick); //stop everything else
     document.getElementById("shade").style.display = "block";
@@ -296,7 +462,7 @@ var tick = setInterval(function() {advanceFrame();}, 200);
 
 //each tick:
 var advanceFrame = function() {
-  lava.currentFrame = { 0: 1, 1: 2, 2: 0 }[lava.currentFrame]; //cycles to next lava frame
+  lava.currentFrame = [1,2,3,4,5,6,7,8,9,10,11,12,13,0][lava.currentFrame]; //cycles to next lava frame
   if (lava.frames[lava.currentFrame][ampersand.y][ampersand.x] == "#") {  //if hero's position is on lava tile...
     gameOverHandler();  //you lose
   }
