@@ -226,6 +226,10 @@
     text-decoration: none;
   }
 
+  .postFlame {
+    background-color: orange;
+  }
+
   </style>
 
 </head>
@@ -245,10 +249,11 @@
 <p class="summary">Move using the arrow keys to collect <span class="crystal">&#10053;</span> and start your journey home.<br>Watch out for lava!<br><button>Begin</button></p>
 </div>
 
-<div id = "gameOverWindow" onclick="restart();">
+<div id = "gameOverWindow">
   <p>Toasted by lava!</p>
   <h1>GAME OVER</h1>
-  <button>Try again</button>
+  <button onclick="restart(0);">Continue</button>
+  <button onclick="restart(1);">Start over</button>
 </div>
 
 <div id = "winWindow">
