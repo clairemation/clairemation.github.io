@@ -132,16 +132,12 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    /*border: 5px solid black;*/
     width: 638px;
     padding: 70px 0 0 0;
     height: 800px;
     color: black;
     overflow: scroll;
     text-align: left;
-    /*top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);*/
     cursor: pointer;
   }
 
@@ -180,8 +176,16 @@
     font-family: Lato, 'Avenir Next';
   }
 
-  .summary button {
+  button {
     center;
+    margin: 1em;
+    padding: 5px;
+    /*height: 50px;
+    width: 100px;*/
+    border-radius: 10px;
+    background-color: white;
+    border: 2px solid gray;
+    font-size: 15px;
   }
 
   #message {
@@ -227,9 +231,10 @@
 <p class="summary">Move using the arrow keys to collect <span class="crystal">&#10053;</span> and start your journey home.<br>Watch out for lava!<br><button>Begin</button></p>
 </div>
 
-<div id = "gameOverWindow">
+<div id = "gameOverWindow" onclick="restart();">
   <p>Melted by lava!</p>
   <h1>GAME OVER</h1>
+  <button>Try again</button>
 </div>
 
 <div id = "winWindow">
@@ -243,12 +248,13 @@
 <header>
 <h1>Chrono Boots</h1>
 <h2>Precambrian Era</h2>
-<!-- <button onclick="instructions();">Instructions</button> -->
 </header>
 
 <p id = "message" style = "height: 1em;"></p> <!-- dynamic status messages go in here -->
 
 <table id="field"></table> <!-- dynamic game field goes in here -->
+
+<button onclick="instructions();" style="margin-top: 1.2em; background-color: #cccccc;">Instructions</button>
 
 <div class='buttons'>
 <div onclick="press('up');" onmouseup="unpress();" id="up" style="display: block;">&#9650;</div>
