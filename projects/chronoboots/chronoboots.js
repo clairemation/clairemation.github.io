@@ -1,7 +1,7 @@
 // environment variables-----------------------------------------
 var totalCrystals = 3;
 var message = "";
-var running = true;
+var running = false;
 
 // map--------------------------------------------------
 
@@ -315,6 +315,7 @@ var crystals = {
 var instructions = function() { //pause, dim screen, and show instructions
   clearInterval(tick);
   clearField();
+  running = false;
   document.getElementById("shade").style.display = "block";
   document.getElementById("instructions").style.display = "block";
 }
@@ -323,8 +324,27 @@ var closeInstructions = function() {
   document.getElementById("shade").style.display = "none";
   document.getElementById("instructions").style.display = "none";
   placeObjects();
+  running = true;
   tick = setInterval(function() {advanceFrame();}, 200);
 }
+
+var restart = function () {
+  document.getElementById("shade").style.display = "none";
+  document.getElementById("gameOverWindow").style.display = "none";
+  ampersand.y = 12;
+  ampersand.x = 24;
+  ampersand.image = '<div id="hero">&#9880;</div>'
+  totalCrystals = 3;
+  crystals.coords = [
+    {y: 1, x: 3, visible: true},
+    {y: 0, x: 24, visible: true},
+    {y: 12, x:1, visible: true}
+        ];
+  placeObjects();
+  running = true;
+  tick = setInterval(function() {advanceFrame();}, 200);
+}
+
 
 var clearField = function() {
   var allCells = document.getElementsByTagName("TD");
@@ -350,17 +370,6 @@ var placeObjects = function() {
     }
   }
 }
-
-// var restart = function() {
-//   ampersand.y = 12;
-//   ampersand.x = 24;
-//   for (var i in crystals.coords) {
-//     crystals.coords[i].visible = true;
-//   }
-// document.getElementById("gameOverWindow").style.display = "block");
-// running = true;
-// var tick = setInterval(function() {advanceFrame();}, 200);
-// }
 
 // handlers-----------------------------------------
 
