@@ -322,6 +322,7 @@ var instructions = function() { //pause, dim screen, and show instructions
 var closeInstructions = function() {
   document.getElementById("shade").style.display = "none";
   document.getElementById("instructions").style.display = "none";
+  placeObjects();
   tick = setInterval(function() {advanceFrame();}, 200);
 }
 
