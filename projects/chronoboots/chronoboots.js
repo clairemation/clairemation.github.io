@@ -8,18 +8,20 @@ var running = false;
 var map = {
 
   baseMap: [
-    "#########################".split(""),
+  // 0         1         2
+  // 0123456789012345678901234
+    "######################   ".split(""),
+    "#  #  #  #  #  #  #  #   ".split(""),
     "#  #  #  #  #  #  #  #  #".split(""),
-    "#  #  #  #  #  #  #  #  #".split(""),
-    "#########################".split(""),
-    "#  #  #  #  #  #  #  #  #".split(""),
-    "#  #  #  #  #  #  #  #  #".split(""),
-    "#########################".split(""),
-    "#  #  #  #  #  #  #  #  #".split(""),
-    "#  #  #  #  #  #  #  #  #".split(""),
-    "#########################".split(""),
-    "#  #  #  #  #  #  #  #  #".split(""),
-    "#  #  #  #  #  #  #  #  #".split(""),
+    "################  #######".split(""),
+    "#  #     #  #  #  #  #  #".split(""),
+    "#  #     #  #  #  #  ####".split(""),
+    "####  #  ##########  #  #".split(""),
+    "      #           #  #  #".split(""),
+    "      #  #        #  #  #".split(""),
+    "########## ########  #   ".split(""),
+    "#  #       #   #  #  #   ".split(""),
+    "#          #   #  #      ".split(""),
     "#########################".split(""),
   ],
 
@@ -303,10 +305,10 @@ var lava = {
 var crystals = {
   image: '&#10053;',
   coords: [
-    {y: 1, x: 3, visible: true},
-    {y: 0, x: 24, visible: true},
-    {y: 12, x:1, visible: true}
-        ],
+    {y: 9, x: 7, visible: true},
+    {y: 10, x: 21, visible: true},
+    {y: 0, x:0, visible: true}
+        ]
 }
 
 
@@ -328,18 +330,20 @@ var closeInstructions = function() {
   tick = setInterval(function() {advanceFrame();}, 200);
 }
 
-var restart = function () {
+var restart = function (option) {
   document.getElementById("shade").style.display = "none";
   document.getElementById("gameOverWindow").style.display = "none";
   ampersand.y = 12;
   ampersand.x = 24;
-  ampersand.image = '<div id="hero">&#9880;</div>'
-  totalCrystals = 3;
-  crystals.coords = [
-    {y: 1, x: 3, visible: true},
-    {y: 0, x: 24, visible: true},
-    {y: 12, x:1, visible: true}
-        ];
+  ampersand.image = '<div id="hero">&#9880;</div>';
+  if (option) { //reset crystals if option = start over
+    totalCrystals = 3;
+    crystals.coords = [
+      {y: 9, x: 7, visible: true},
+      {y: 10, x: 21, visible: true},
+      {y: 0, x:0, visible: true}
+    ];
+  }
   placeObjects();
   running = true;
   tick = setInterval(function() {advanceFrame();}, 200);
@@ -396,7 +400,7 @@ var winHandler = function() {
   running = false;
 
   //remove controls
-  document.getElementsByClassName("buttons")[0].style.display = "none";
+  // document.getElementsByClassName("buttons")[0].style.display = "none";
 
   //win 'animation' -- Hero zaps out
   setTimeout(function(){ampersand.image = '&#10035;'}, 250);
@@ -485,12 +489,13 @@ function keyUpHandler(event) {}
 
 //each tick:
 var advanceFrame = function() {
+  clearField();
+  placeObjects();
   lava.currentFrame = [1,2,3,4,5,6,7,8,9,10,11,12,13,0][lava.currentFrame]; //cycles to next lava frame
-  if (lava.frames[lava.currentFrame][ampersand.y][ampersand.x] == "#") {  //if hero's position is on lava tile...
+  if (running && lava.frames[lava.currentFrame][ampersand.y][ampersand.x] == "#") {  //if hero's position is on lava tile...
     gameOverHandler();  //you lose
   }
   //otherwise, refresh the screen
-  clearField();
-  placeObjects();
+
   document.getElementById("message").innerHTML = "Collect " + totalCrystals + " crystals!";
 }
