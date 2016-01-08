@@ -2,6 +2,8 @@
 var totalCrystals = 3;
 var message = "";
 var running = false;
+var beginning = 1;
+var musicPaused = true;
 
 // map--------------------------------------------------
 
@@ -314,20 +316,38 @@ var crystals = {
 
 // functions---------------------------------------------------------------------
 
-var instructions = function() { //pause, dim screen, and show instructions
+function displayWindow(window) {
   clearInterval(tick);
   clearField();
   running = false;
   document.getElementById("shade").style.display = "block";
-  document.getElementById("instructions").style.display = "block";
+  document.getElementById(window).style.display = "block";
 }
 
-var closeInstructions = function() {
+function closeWindow(window) {
   document.getElementById("shade").style.display = "none";
-  document.getElementById("instructions").style.display = "none";
+  document.getElementById(window).style.display = "none";
   placeObjects();
   running = true;
   tick = setInterval(function() {advanceFrame();}, 200);
+}
+
+var closeInstructions = function() {
+  closeWindow('instructions');
+
+  //if beginning, change music track from intro to stage music
+  if (beginning) {
+    document.getElementById("music").src="music/DarkMystery-small.mp3";
+    beginning = false;
+  }
+}
+
+function toggleMusic() {
+  musicPaused = !musicPaused;
+  if (musicPaused) {document.getElementById("music").play();}
+  else {document.getElementById("music").pause();}
+  document.getElementById("musicToggle").style.opacity = {true: '0.75', false: '0.5'}[musicPaused];
+  document.getElementById("musicToggle").style.textDecoration = {false: 'line-through', true: 'none'}[musicPaused];
 }
 
 var restart = function (option) {
@@ -387,22 +407,16 @@ var gameOverHandler = function() {
   ampersand.image = "<div id='dead'>&#9729;</div>"; //'dead' sprite
 
   var ending = setTimeout(function(){
-    clearInterval(tick); //stop everything else
-    document.getElementById("shade").style.display = "block";
-    document.getElementById("gameOverWindow").style.display = "block";
+    displayWindow('gameOverWindow');
   }, 1200);
 }
 
 //------------------------------------------
 
 var winHandler = function() {
-  //stop running
+
   running = false;
 
-  //remove controls
-  // document.getElementsByClassName("buttons")[0].style.display = "none";
-
-  //win 'animation' -- Hero zaps out
   setTimeout(function(){ampersand.image = '&#10035;'}, 250);
   setTimeout(function(){ampersand.image = '&#9676;'}, 400);
   setTimeout(function(){ampersand.image = '&#8258;'}, 700);
@@ -410,9 +424,7 @@ var winHandler = function() {
   setTimeout(function(){ampersand.image = ''}, 1100);
 
   setTimeout(function(){
-    clearInterval(tick);
-    document.getElementById("shade").style.display = "block";
-    document.getElementById("winWindow").style.display = "block";
+    displayWindow('winWindow');
   }, 2000);
 }
 
