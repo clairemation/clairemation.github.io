@@ -509,5 +509,5 @@ var advanceFrame = function() {
   }
   //otherwise, refresh the screen
 
-  document.getElementById("message").innerHTML = "Collect " + totalCrystals + " crystals!";
+  document.getElementById("message").innerHTML = "Collect " + totalCrystals + " crystals to advance!";
 }

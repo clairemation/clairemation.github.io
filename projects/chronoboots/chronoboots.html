@@ -145,6 +145,10 @@
     padding: 0 4.5em 0 4.5em;
   }
 
+  #instructions em {
+    text-transform: uppercase;
+  }
+
   #shade {
     position: fixed;
     display: block;
@@ -209,7 +213,7 @@
     }
   }
 
-  #winWindow, #gameOverWindow {
+  #winWindow, #gameOverWindow, #credits {
     display: none;
     position: absolute;
     overflow: scroll;
@@ -251,17 +255,25 @@
   }
 
   #credits {
-    display: none;
-    position: absolute;
-    margin-left: 50%;
-    transform: translate(-50%);
-    bottom: 150px;
-    width: 500px; height: 100px;
-    background-color: white;
-    border-radius: 25px;
-    padding: 3em;
-    color: black;
+    font-size: 1em;
     cursor: pointer;
+    height: initial; width: initial;
+    padding: 3em;
+  }
+
+  #credits h1 {
+    font-size: 1.2em;
+    font-weight: 200;
+  }
+
+  #credits dt {
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  #credits dd {
+    margin: 0 0 .75em 0;
+    font-weight: 200;
   }
 
   .lightUp {
@@ -297,9 +309,9 @@
 
 <div id="instructions" onclick="closeInstructions();">
 <div class="close-x">&#8864;</div>
-<p>The lava's getting pretty close now. Still woozy from the accident, though that might just be this Precambrian Era air. Wish I'd made the chrono boots lighter. I just never thought I'd be doing this much <em>WALKING</em> in them.</p>
-<p>Actually, it's pretty lucky the fuel crystals scattered across time the way they did--as long as I keep finding crystals, I can keep going forward, from era to era.</p>
-<p>Well, keep going forward the fast way. I'd rather not get home as a fossil...
+<p>The lava's getting pretty close now. I'm still woozy from the accident... well, either that or the thin oxygen here in the Precambrian Era.</p>
+<p>But I have to pick up all the chrono crystals I dropped across time, or I'll never get home.</p>
+<p>Well, I mean, I'll <em>get</em> home either way, eventually. I'd just rather not get there as a fossil...</p>
 <p style="text-align: right; position: relative; right: 1em;">--<span style="font-size: 3em; color: hsl(180, 70%, 50%); text-shadow: 0 0 3px black;">&#9880;</span> </p>
 <p class="summary">Move using the arrow keys to collect <span class="crystal">&#10053;</span> and start your journey home.<br>Watch out for lava!<br><button>Begin</button></p>
 </div>
@@ -312,9 +324,18 @@
 </div>
 
 <div id = "winWindow">
-  <p>All crystals collected!<br>
-    Fuel replenished!</p>
+  <p>All crystals collected!</p>
   <h1>Forward in time!</h1>
+</div>
+
+<div id="credits" onclick="closeWindow('credits');">
+  <div class="close-x">&#9746;</div>
+  <h1>Credits:</h1>
+  <dl>
+    <dt>Game</dt><dd>Claire Samuels</dd>
+    <dt>Music</dt><dd><a href="http://audionautix.com/">Audionautix/</a></dd>
+    <dt>Photos</dt><dd><a href="http://www.demilked.com/free-paper-textures-backgrounds/">deMilked</a></dd>
+  </dl>
 </div>
 
 <!-- Visible elements -->
@@ -344,13 +365,6 @@
 <div onclick="press('right');" onmouseup="unpress();" id="right" style="display: inline-block;">&#9654;</div>
 <div onclick="press('down');" onmouseup="unpress();" id="down" style="display: block;">&#9660;</div>
 </div>
-
-<div id="credits" onclick="closeWindow('credits');">
-  <div class="close-x">&#9746;</div>
-  Game: Claire Samuels<br>
-  Music: <a href="http://audionautix.com/">http://audionautix.com/</a>
-</div>
-
 
 <footer class="lightUp">
   <a onclick="displayWindow('credits');">Credits</a>
