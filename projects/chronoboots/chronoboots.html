@@ -53,8 +53,8 @@
   }
 
   td {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
   }
 
   td.path {
@@ -71,15 +71,15 @@
   }
 
   div#hero {
-    height: 24px;
-    font-size: 24px;
+    height: 28px;
+    font-size: 28px;
     color: aqua;
     text-shadow: 0px 0px 3px rgba(0, 60, 60, .9);
   }
 
   div#dead {
-   height: 24px;
-   font-size: 24px;
+   height: 28px;
+   font-size: 28px;
    color: #999999;
   }
 
@@ -94,8 +94,8 @@
   }
 
   .crystal {
-    height: 20px;
-    width: 20px;
+    height: 28px;
+    width: 28px;
     color: teal;
     text-shadow: 0px 0px 10px white, 0px 0px 10px white, 0px 0px 5px rgba(0, 255, 255, 1);
   }
@@ -157,9 +157,8 @@
     width: 100%;
     position: fixed;
     bottom: 0px;
-    height: 2em;
-    background-color: hsla(0, 0%, 0%, .7);
-    color: white;
+    height: 2.5em;
+    padding-top: .5em;
   }
 
   header {
@@ -190,7 +189,24 @@
 
   #message {
     font-family: 'Inconsolata';
+    font-weight: bold;
     text-shadow: 0px 0px 10px hsl(0, 0%, 100%);
+    animation-name: pulsate;
+    animation-duration: 1s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    color: hsl(0, 0%, 100%);
+  }
+
+  @keyframes pulsate{
+    from {
+      color: hsla(0, 0%, 100%, .9);
+      text-shadow: 0px 0px 20px hsla(0, 0%, 100%, 1)
+    }
+    to {
+      color: hsla(0, 0%, 100%, .6);
+      text-shadow: 0px 0px 20px hsla(0, 0%, 100%, 0)
+    }
   }
 
   #winWindow, #gameOverWindow {
@@ -215,9 +231,6 @@
   #homeLink {
     position: absolute;
     top: 0; left: 0;
-    color: white;
-    opacity: .75;
-    font-weight: bold;
     padding: .2em 0 0 .5em;
   }
 
@@ -226,15 +239,57 @@
     text-decoration: none;
   }
 
-  .postFlame {
-    background-color: orange;
+  #musicToggle {
+    position: absolute;
+    top: 0;
+    right: 1em;
+    font-size: 1.5em;
+    color: white;
+    /*opacity: .75;*/
+    padding: .2em 0 0 .5em;
+    cursor: pointer;
   }
+
+  #credits {
+    display: none;
+    position: absolute;
+    margin-left: 50%;
+    transform: translate(-50%);
+    bottom: 150px;
+    width: 500px; height: 100px;
+    background-color: white;
+    border-radius: 25px;
+    padding: 3em;
+    color: black;
+    cursor: pointer;
+  }
+
+  .lightUp {
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: .75;
+    font-weight: bold;
+    transition: all 0.2s linear;
+  }
+
+  .lightUp:hover {
+    color: white;
+    opacity: .9;
+    text-shadow: 0px 0px 5px white;
+    transition: none;
+  }
+
 
   </style>
 
 </head>
 
 <body>
+
+<!-- Music -->
+
+<audio id="music" src="music/Atlantis-small.mp3" autoplay loop></audio>
 
 <!-- Hidden elements -->
 
@@ -264,8 +319,12 @@
 
 <!-- Visible elements -->
 
-<aside id="homeLink">
+<aside id="homeLink" class="lightUp">
   <a href="index.html">&lt;&lt;back to site</a>
+</aside>
+
+<aside id="musicToggle" class="lightUp" onclick="toggleMusic();">
+  &#9836;
 </aside>
 
 <header>
@@ -277,7 +336,7 @@
 
 <table id="field"></table> <!-- dynamic game field goes in here -->
 
-<button onclick="instructions();" style="margin-top: 1.2em; background-color: #cccccc;">Instructions</button>
+<button onclick="displayWindow('instructions');" style="margin-top: 1.2em; background-color: #cccccc;">Instructions</button>
 
 <div class='buttons'>
 <div onclick="press('up');" onmouseup="unpress();" id="up" style="display: block;">&#9650;</div>
@@ -286,9 +345,16 @@
 <div onclick="press('down');" onmouseup="unpress();" id="down" style="display: block;">&#9660;</div>
 </div>
 
+<div id="credits" onclick="closeWindow('credits');">
+  <div class="close-x">&#9746;</div>
+  Game: Claire Samuels<br>
+  Music: <a href="http://audionautix.com/">http://audionautix.com/</a>
+</div>
 
 
-<footer>A little game by Claire Samuels</footer>
+<footer class="lightUp">
+  <a onclick="displayWindow('credits');">Credits</a>
+</footer>
 
 
 <!-- Initialize game -->
