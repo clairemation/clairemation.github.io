@@ -309,7 +309,7 @@ var crystals = {
   coords: [
     {y: 9, x: 7, visible: true},
     {y: 10, x: 21, visible: true},
-    {y: 0, x:0, visible: true}
+    {y: 0, x:0, visible: true},
         ]
 }
 

@@ -211,14 +211,17 @@
     display: none;
     position: absolute;
     overflow: scroll;
+    padding: 2em;
     z-index: 1;
     top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 70%; height: 70%;
+    /*width: 70%; height: 70%;*/
     background-color: hsla(200,90%,70%,.8);
     border: 10px solid white;
-    border-radius: 50px;
-    font-size: 3em;
-  }
+    border-radius: 1.5em;
+    font-size: 2em;
+    box-shadow: 2px 2px 10px 2px hsla(0, 0%, 0%, .4) inset, -1em -2em 100px 0px hsla(0, 0%, 0%, .3) inset;
+    text-shadow: 0 .5px 0 gray;
+    }
 
   .close-x {
     font-size: 35px;
@@ -363,6 +366,8 @@
 <div id = "winWindow">
   <p>All crystals collected!</p>
   <h1>Forward in time!</h1>
+  <p>next: Ordovician Period</p>
+  <p>coming soon</p>
 </div>
 
 <div id="credits" onclick="closeWindow('credits');">
