@@ -316,7 +316,16 @@ var crystals = {
 
 // functions---------------------------------------------------------------------
 
+function begin() {
+  document.getElementById("title").id = "closingTitle";
+  setTimeout(function(){
+    document.getElementById("closingTitle").id = "closedTitle";
+  }, 500)
+
+}
+
 function displayWindow(window) {
+  document.getElementsByTagName("footer")[0].style.visibility = "hidden";
   clearInterval(tick);
   clearField();
   running = false;
@@ -325,6 +334,7 @@ function displayWindow(window) {
 }
 
 function closeWindow(window) {
+  document.getElementsByTagName("footer")[0].style.visibility = "visible";
   document.getElementById("shade").style.display = "none";
   document.getElementById(window).style.display = "none";
   placeObjects();
@@ -337,7 +347,7 @@ var closeInstructions = function() {
 
   //if beginning, change music track from intro to stage music
   if (beginning) {
-    document.getElementById("music").src="music/DarkMystery-small.mp3";
+    document.getElementById("music").src="music/Phantom_from_Space.mp3";
     beginning = false;
   }
 }
@@ -495,9 +505,6 @@ function keyUpHandler(event) {}
 //----------------------------------
 
 //constantly shift lava and constantly refresh screen
-
-// var tick = setInterval(function() {advanceFrame();}, 200);
-// commented out -- don't start tick until instructions dismissed
 
 //each tick:
 var advanceFrame = function() {
