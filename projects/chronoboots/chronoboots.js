@@ -361,8 +361,6 @@ function toggleMusic() {
 }
 
 var restart = function (option) {
-  document.getElementById("shade").style.display = "none";
-  document.getElementById("gameOverWindow").style.display = "none";
   ampersand.y = 12;
   ampersand.x = 24;
   ampersand.image = '<div id="hero">&#9880;</div>';
@@ -374,9 +372,7 @@ var restart = function (option) {
       {y: 0, x:0, visible: true}
     ];
   }
-  placeObjects();
-  running = true;
-  tick = setInterval(function() {advanceFrame();}, 200);
+  closeWindow('gameOverWindow');
 }
 
 
