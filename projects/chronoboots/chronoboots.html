@@ -5,6 +5,8 @@
   <script src='chronoboots.js'></script>
   <link href='https://fonts.googleapis.com/css?family=Reenie+Beanie' rel='stylesheet' type='text/css'>
 
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC:400,700|Reenie+Beanie|Caesar+Dressing|Uncial+Antiqua|Akronim|Josefin+Slab:400,700,600,300,100|Marcellus+SC|Quicksand:400,700|Julius+Sans+One|Denk+One|Rubik+One|Rubik+Mono+One' rel='stylesheet' type='text/css'>
+
   <style>
 
   /*reset*/
@@ -83,16 +85,6 @@
    color: #999999;
   }
 
-  @keyframes die {
-    from {color: red;}
-    to {color: black;}
-  }
-
-  @-webkit-keyframes die {
-    from {color-red;}
-    to {color: black;}
-  }
-
   .crystal {
     height: 28px;
     width: 28px;
@@ -125,24 +117,27 @@
   #instructions {
     display: block;
     position: absolute;
+    padding: auto;
     font-family: 'Reenie Beanie';
     font-size: 1.6em;
-    left: 20%;
+    width: 100%;
     background-image: url("foundpaper12.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    width: 638px;
     padding: 70px 0 0 0;
     height: 800px;
     color: black;
     overflow: scroll;
-    text-align: left;
+    text-align: center;
     cursor: pointer;
   }
 
   #instructions p {
-    padding: 0 4.5em 0 4.5em;
+    text-align: left;
+    width: 425px;
+    margin: 1em auto 0 auto;
+    /*padding: 0 4.5em 0 4.5em;*/
   }
 
   #instructions em {
@@ -158,6 +153,7 @@
   }
 
   footer {
+    visibility: hidden;
     width: 100%;
     position: fixed;
     bottom: 0px;
@@ -171,7 +167,7 @@
     margin-bottom: 10%px;
   }
 
-  .summary {
+  #instructions .summary {
     text-align: center;
     color: #666666;
     font-weight: 400;
@@ -292,6 +288,51 @@
     transition: none;
   }
 
+  #title, #closingTitle {
+    display: block;
+    margin: auto;
+    padding-top: 20%;
+    position: fixed;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  #title h1, #closingTitle h1 {
+    font-family: 'Amatic SC';
+    font-size: 100px;
+    color: white;
+    letter-spacing: .1em;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #65AAE6, 0 0 70px #65AAE6, 0 0 80px #65AAE6, 0 0 100px #65AAE6, 0 0 150px #65AAE6;
+  }
+
+  #title button {
+    background-color: black;
+    color: white;
+    animation-name: pulsate;
+    animation-duration: .5s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+  }
+
+  #closingTitle {
+    opacity: .5;
+    background-color: black;
+    color: white;
+    animation-name: fadeTitle;
+    animation-duration: .5s;
+    animation-timing-function: linear;
+  }
+
+  @keyframes fadeTitle {
+    0% {opacity: 1}
+    100% {opacity: 0}
+  }
+
+  #closedTitle {
+    display: none;
+  }
 
   </style>
 
@@ -301,20 +342,18 @@
 
 <!-- Music -->
 
-<audio id="music" src="music/Atlantis-small.mp3" autoplay loop></audio>
+<audio id="music" src="music/On_the_Shore.mp3" autoplay loop></audio>
 
 <!-- Hidden elements -->
 
 <div id = "shade"></div>
 
-<div id="instructions" onclick="closeInstructions();">
-<div class="close-x">&#8864;</div>
-<p>The lava's getting pretty close now. I'm still woozy from the accident... well, either that or the thin oxygen here in the Precambrian Era.</p>
-<p>But I have to pick up all the chrono crystals I dropped across time, or I'll never get home.</p>
-<p>Well, I mean, I'll <em>get</em> home either way, eventually. I'd just rather not get there as a fossil...</p>
-<p style="text-align: right; position: relative; right: 1em;">--<span style="font-size: 3em; color: hsl(180, 70%, 50%); text-shadow: 0 0 3px black;">&#9880;</span> </p>
-<p class="summary">Move using the arrow keys to collect <span class="crystal">&#10053;</span> and start your journey home.<br>Watch out for lava!<br><button>Begin</button></p>
+<div id = "title" onclick="begin();">
+  <h1>Chrono Boots</h1>
+  <h2>a little game demo by Claire Samuels</h2>
+  <button>Play</button>
 </div>
+
 
 <div id = "gameOverWindow">
   <p>Toasted by lava!</p>
@@ -333,11 +372,19 @@
   <h1>Credits:</h1>
   <dl>
     <dt>Game</dt><dd>Claire Samuels</dd>
-    <dt>Music</dt><dd><a href="http://audionautix.com/">Audionautix/</a></dd>
-    <dt>Photos</dt><dd><a href="http://www.demilked.com/free-paper-textures-backgrounds/">deMilked</a></dd>
+    <dt>Music</dt><dd>"On the Shore", "Phantom from Space"<br>Kevin MacLeod (incompetech.com)<br>Licensed under Creative Commons: By Attribution 3.0<br>http://creativecommons.org/licenses/by/3.0/</dd>
+    <dt>Photos</dt><dd>http://www.deMilked.com</dd>
   </dl>
 </div>
 
+<div id="instructions" onclick="closeInstructions();">
+<div class="close-x">&#8864;</div>
+<p>The lava's getting pretty close now. I'm still woozy from the accident... well, either that or the thin oxygen here in the early Precambrian Era.</p>
+<p>But I have to pick up all the chrono crystals I dropped across time, or I'll never get home.</p>
+<p>Well, I mean, I'll <em>get</em> home either way, eventually. I'd just rather not get there as a fossil...</p>
+<p style="text-align: right; position: relative; right: 1em;">--<span style="font-size: 3em; color: hsl(180, 70%, 50%); text-shadow: 0 0 3px black;">&#9880;</span> </p>
+<p class="summary">Move using the arrow keys to collect <span class="crystal">&#10053;</span> and start your journey home. Watch out for lava!<br><button>Begin</button></p>
+</div>
 <!-- Visible elements -->
 
 <aside id="homeLink" class="lightUp">
