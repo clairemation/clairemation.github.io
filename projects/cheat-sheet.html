@@ -56,9 +56,15 @@ function toggleSection(section, sectionHead) {
 
 }
 
+function flash(name) {
+  // console.log(name);
+  // row = document.getElementsByName(name.substr(1));
+  // console.log(row);
+}
+
 
 </script>
-
+<a name="top"></a>
 <header>
   <h3><a href="../index.html">Claire's DBC Site</a></h3>
   <h1>Cheat Sheet</h1>
@@ -80,7 +86,7 @@ function toggleSection(section, sectionHead) {
       <h1 class="sectionHead" id="arraysHead" onclick="toggleSection('arraysMenu', 'arraysHead');">arrays <span class="arrow">&#9654;</span></h1>
       <div class="subMenu">
         <ul id="arraysMenu" class="up">
-          <li><a href="#arr-concat">concatenation</a></li>
+          <li><a href="#arr-concat" onclick="flash(this.href);">concatenation</a></li>
           <li><a href="#empty">empty?</a></li>
           <li><a href="#includes">includes?</a></li>
           <li><a href="#arr-iterate">iteration</a></li>
@@ -872,6 +878,10 @@ end</td>
   <a href="mailto:clairemation@gmail.com"><img src="../imgs/social/email.png" alt="Email"></a>
   <a href="http://github.com/clairemation"><img src="../imgs/social/github.png" alt="GitHub"></a>
 </footer>
+
+<aside>
+  <a href="#top">&#10139;</a>
+</aside>
 
 </body>
 
