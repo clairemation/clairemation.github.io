@@ -2,8 +2,7 @@
 <html>
 <head>
   <link href='../stylesheets/cheatsheet.css' rel='stylesheet' type='text/css'>
-
-  <link href='https://fonts.googleapis.com/css?family=IM+Fell+DW+Pica|Bitter:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css'>
 
   <title>
     Cheatsheet: Ruby vs. JavaScript
@@ -38,18 +37,20 @@ function toggleSection(section, sectionHead) {
   //swap arrow
   document.getElementById(sectionHead).getElementsByClassName('arrow')[0].innerHTML = arrows[sectionVisibility[section]];
 
-  //toggle display style of section
+  //set new display style of section
 
   //if visible -> invisible, change to animated class
   if (!sectionVisibility[section]) {
-    document.getElementById(section).setAttribute("class", "slidingUp");
-    document.getElementById(section).parentNode.parentNode.setAttribute("class", "closing");
+    document.getElementById(section).setAttribute("class", "slidingUp"); // "drawer" closing animation
+    document.getElementById(section).parentNode.parentNode.setAttribute("class", "closing"); // animation moving header back down
     setTimeout(function(){
+      // wait for animations to finish, then set to closed
       document.getElementById(section).setAttribute("class", "up");
       document.getElementById(section).parentNode.parentNode.setAttribute("class", "closed");
     }, 175);
   }
   else {
+    // roll "drawer" down, move header up
     document.getElementById(section).setAttribute("class", "down")
     document.getElementById(section).parentNode.parentNode.setAttribute("class", "open");
   }
@@ -57,14 +58,30 @@ function toggleSection(section, sectionHead) {
 }
 
 function flash(name) {
-  // console.log(name);
-  // row = document.getElementsByName(name.substr(1));
-  // console.log(row);
+  console.log(name);
+  var id = name.substring(name.indexOf("#") + 1, name.length);
+  console.log(id)
+  row = document.getElementsByName(id)[0] .parentNode.parentNode;
+  console.log(row);
+  row.className = "flash";
+  setTimeout(function(){row.className="";}, 275);
+}
+
+window.onload = function() {
+  var indices = document.getElementsByClassName("scroll")[0].getElementsByTagName("a");
+  console.log(indices[0]);
+  for (var i = 0; i < indices.length; i++) {
+    console.log(indices[i]);
+    indices[i].onclick = "flash(this.href);";
+    console.log(indices[i].onclick);
+  }
 }
 
 
 </script>
+
 <a name="top"></a>
+
 <header>
   <h3><a href="../index.html">Claire's DBC Site</a></h3>
   <h1>Cheat Sheet</h1>
@@ -194,7 +211,7 @@ function flash(name) {
       <div class="subMenu">
         <ul id="stringsMenu" class="up">
           <li><a href="#to-char-array">array of chars</a></li>
-          <li><a href="#char lookup">char lookup</a></li>
+          <li><a href="#char-lookup">char lookup</a></li>
           <li><a href="#concat">concatenation</a></li>
           <li><a href="#del-char">delete chars</a></li>
           <li><a href="#join">join</a></li>
@@ -227,6 +244,10 @@ function flash(name) {
 
   </div>
 </nav>
+
+<main>
+
+<article id="cheatsheet-table">
 
 <table>
   <tr>
@@ -473,7 +494,7 @@ s2 = "Hello, " 'World!'</code></td>
   </tr>
 
   <tr>
-    <td class="label"><a name="subst-i">find substring</a></td>
+    <td class="label"><a name="substr-i">find substring</a></td>
     <td class="ruby"><code># returns nil if not found:
 "do re re".index("re")
 "do re re".rindex("re")</code></td>
@@ -873,6 +894,9 @@ end</td>
   contents from <a href="http://hyperpolyglot.org/scripting">http://hyperpolyglot.org/scripting</a><br>
   licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">creative commons attribution-sharealike 3.0</a>
 </p>
+
+</article>
+<main>
 
 <footer>
   <a href="mailto:clairemation@gmail.com"><img src="../imgs/social/email.png" alt="Email"></a>

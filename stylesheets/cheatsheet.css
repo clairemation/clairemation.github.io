@@ -126,6 +126,8 @@ nav h1 {
 }
 
 @keyframes lower1 {
+  from {color: darkred;}
+  to {color: black;}
 }
 
 .scroll div:nth-child(2).closing {
@@ -135,8 +137,8 @@ nav h1 {
 }
 
 @keyframes lower2 {
-  from {top: 0;}
-  to {top: 25px;}
+  from {top: 0; color: darkred;}
+  to {top: 25px; color: black;}
 }
 
 .scroll div:nth-child(3).closing {
@@ -146,8 +148,8 @@ nav h1 {
 }
 
 @keyframes lower3 {
-  from {top: 0;}
-  to {top: 50px;}
+  from {top: 0; color: darkred;}
+  to {top: 50px; color: black;}
 }
 
 .scroll div:nth-child(4).closing {
@@ -157,8 +159,8 @@ nav h1 {
 }
 
 @keyframes lower4 {
-  from {top: 0;}
-  to {top: 75px;}
+  from {top: 0; color: darkred;}
+  to {top: 75px; color: black;}
 }
 
 .scroll div:nth-child(5).closing {
@@ -168,8 +170,8 @@ nav h1 {
 }
 
 @keyframes lower5 {
-  from {top: 0;}
-  to {top: 100px;}
+  from {top: 0; color: darkred;}
+  to {top: 100px; color: black;}
 }
 
 .scroll div:nth-child(6).closing {
@@ -179,8 +181,8 @@ nav h1 {
 }
 
 @keyframes lower6 {
-  from {top: 0;}
-  to {top: 125px;}
+  from {top: 0; color: darkred;}
+  to {top: 125px; color: black;}
 }
 
 .scroll div:nth-child(7).closing {
@@ -190,8 +192,8 @@ nav h1 {
 }
 
 @keyframes lower7 {
-  from {top: 0;}
-  to {top: 175px;}
+  from {top: 0; color: darkred;}
+  to {top: 175px; color: black;}
 }
 
 .scroll div:nth-child(8).closing {
@@ -201,8 +203,8 @@ nav h1 {
 }
 
 @keyframes lower8 {
-  from {top: 0;}
-  to {top: 175px;}
+  from {top: 0; color: darkred;}
+  to {top: 175px; color: black;}
 }
 
 .scroll div:nth-child(9).closing {
@@ -212,8 +214,8 @@ nav h1 {
 }
 
 @keyframes lower9 {
-  from {top: 0;}
-  to {top: 225px;}
+  from {top: 0; color: darkred;}
+  to {top: 225px; color: black;}
 }
 
 
@@ -259,6 +261,8 @@ nav h1 {
   background-color: white;
   width: 100%;
   height: 100%;
+  color: darkred;
+  /*box-shadow: 0px 30px 100px 1px hsla(0, 0%, 100%, .5), 0px 10px 40px 1px white;*/
 }
 
 .scroll div:nth-child(1).open {
@@ -268,6 +272,8 @@ nav h1 {
 }
 
 @keyframes raise1 {
+  from {color: black;}
+  to {color: darkred;}
 }
 
 .scroll div:nth-child(2).open {
@@ -277,8 +283,8 @@ nav h1 {
 }
 
 @keyframes raise2 {
-  to {top: 0; height: 100%;}
-  from {top: 25px; height: 25px;}
+  to {top: 0; height: 100%; color: darkred;}
+  from {top: 25px; height: 25px; color: black;}
 }
 
 .scroll div:nth-child(3).open {
@@ -288,8 +294,8 @@ nav h1 {
 }
 
 @keyframes raise3 {
-  to {top: 0; height: 100%;}
-  from {top: 50px; height: 25px;}
+  to {top: 0; height: 100%; color: darkred;}
+  from {top: 50px; height: 25px; color: black;}
 }
 
 .scroll div:nth-child(4).open {
@@ -299,8 +305,8 @@ nav h1 {
 }
 
 @keyframes raise4 {
-  to {top: 0; height: 100%;}
-  from {top: 75px; height: 25px;}
+  to {top: 0; height: 100%; color: darkred;}
+  from {top: 75px; height: 25px; color: black;}
 }
 
 .scroll div:nth-child(5).open {
@@ -310,8 +316,8 @@ nav h1 {
 }
 
 @keyframes raise5 {
-  to {top: 0; height: 100%;}
-  from {top: 100px; height: 25px;}
+  to {top: 0; height: 100%; color: darkred;}
+  from {top: 100px; height: 25px; color: black;}
 }
 
 .scroll div:nth-child(6).open {
@@ -321,8 +327,8 @@ nav h1 {
 }
 
 @keyframes raise6 {
-  to {top: 0; height: 100%;}
-  from {top: 125px; height: 25px;}
+  to {top: 0; height: 100%; color: darkred;}
+  from {top: 125px; height: 25px; color: black;}
 }
 
 .scroll div:nth-child(7).open {
@@ -332,8 +338,8 @@ nav h1 {
 }
 
 @keyframes raise7 {
-  to {top: 0; height: 100%;}
-  from {top: 150px; height: 25px;}
+  to {top: 0; height: 100%; color: darkred;}
+  from {top: 150px; height: 25px; color: black;}
 }
 
 .scroll div:nth-child(8).open {
@@ -343,8 +349,8 @@ nav h1 {
 }
 
 @keyframes raise8 {
-  to {top: 0; height: 100%;}
-  from {top: 175px; height: 25px;}
+  to {top: 0; height: 100%; color: darkred;}
+  from {top: 175px; height: 25px; color: black;}
 }
 
 .scroll div:nth-child(9).open {
@@ -354,8 +360,8 @@ nav h1 {
 }
 
 @keyframes raise9 {
-  to {top: 0; height: 100%;}
-  from {top: 200px; height: 25px;}
+  to {top: 0; height: 100%; color: darkred;}
+  from {top: 200px; height: 25px; color: black;}
 }
 
 
@@ -380,7 +386,7 @@ div.subMenu {
 
 .subMenu a, .subMenu a:visited {
   text-decoration: none;
-  color: gray;
+  color: black;
 }
 
 
@@ -547,17 +553,22 @@ footer {
   top: .5em; right: 1em;
 }
 
-.flash {
+.flash td.ruby, .flash td.js, .flash td.label {
+  background-color: initial;
+  color: initial;
   animation-name: flash;
-  animation-duration: .4s;
+  animation-duration: .3s;
+  animation-timing-function: ease-in;
 }
 
 @keyframes flash {
   from {
-    box-shadow: 0px 0px 10px 10px white;
+    background-color: #ff9999;
+    color: red;
   }
   to {
-    box-shadow: 0px 0px 0px 0px white;
+    background-color: initial;
+    color: inital;
   }
 }
 
@@ -567,6 +578,8 @@ aside {
   right: 1em;
   top: 45%;
   transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
   color: black;
   width: 50px;
   height: 50px;
