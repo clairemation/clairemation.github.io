@@ -1,0 +1,498 @@
+ul, menu, dir {
+    display: block;
+    list-style-type: disc;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 0;
+}
+
+* {
+  animation-timing-function: linear;
+}
+
+body {
+  margin-top: 0;
+  padding-top: 0;
+  text-align: center;
+}
+
+header, header h3, header h1 {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+}
+
+header {
+  background-color: lightgray;
+}
+
+header h2 {
+  margin: 0;
+  padding-top: .5em;
+  background-color: white;
+  font-size: 2.5em;
+}
+
+nav {
+  margin: auto;
+  margin-top: 2em;
+  text-align: center;
+  width: 20em;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+
+nav h1 {
+  float: left;
+  margin: 0 .5em 0 0;
+  text-decoration: underline;
+}
+
+
+.scroll h1 {
+  float: initial;
+  padding: 0;
+  margin: 0;
+  font-size: 1.2em;
+  font-family: sans-serif;
+  font-weight: 400;
+  text-decoration: none;
+  height: 25px;
+}
+
+.scroll {
+  vertical-align: top;
+  position: relative;
+  display: block;
+  overflow: scroll;
+  height: 250px;
+  border: 1px solid gray;
+  border-left: 10px solid gray;
+  text-align: left;
+  padding: 5px 0 0 .5em;
+  line-height: 20px;
+  font-size: 15px;
+  background-color: white;
+}
+
+.scroll div {
+  position: absolute;
+  background-color: white;
+  width: 100%
+}
+
+.scroll div.closing {
+  z-index: 1;
+}
+
+.scroll div:nth-child(1).closing {
+  top: 0;
+  animation-name: lower1;
+  animation-duration: .25s;
+}
+
+@keyframes lower1 {
+}
+
+.scroll div:nth-child(2).closing {
+  top: 25px;
+  animation-name: lower2;
+  animation-duration: .25s;
+}
+
+@keyframes lower2 {
+  from {top: 0;}
+  to {top: 25px;}
+}
+
+.scroll div:nth-child(3).closing {
+  top: 50px;
+  animation-name: lower3;
+  animation-duration: .25s;
+}
+
+@keyframes lower3 {
+  from {top: 0;}
+  to {top: 50px;}
+}
+
+.scroll div:nth-child(4).closing {
+  top: 75px;
+  animation-name: lower4;
+  animation-duration: .25s;
+}
+
+@keyframes lower4 {
+  from {top: 0;}
+  to {top: 75px;}
+}
+
+.scroll div:nth-child(5).closing {
+  top: 100px;
+  animation-name: lower5;
+  animation-duration: .25s;
+}
+
+@keyframes lower5 {
+  from {top: 0;}
+  to {top: 100px;}
+}
+
+.scroll div:nth-child(6).closing {
+  top: 125px;
+  animation-name: lower6;
+  animation-duration: .25s;
+}
+
+@keyframes lower6 {
+  from {top: 0;}
+  to {top: 125px;}
+}
+
+.scroll div:nth-child(7).closing {
+  top: 150px;
+  animation-name: lower7;
+  animation-duration: .25s;
+}
+
+@keyframes lower7 {
+  from {top: 0;}
+  to {top: 150px;}
+}
+
+.scroll div:nth-child(8).closing {
+  top: 175px;
+  animation-name: lower8;
+  animation-duration: .25s;
+}
+
+@keyframes lower8 {
+  from {top: 0;}
+  to {top: 175px;}
+}
+
+.scroll div:nth-child(9).closing {
+  top: 200px;
+  animation-name: lower9;
+  animation-duration: .25s;
+}
+
+@keyframes lower9 {
+  from {top: 0;}
+  to {top: 200px;}
+}
+
+
+.scroll div:nth-child(1).closed {
+  top: 0;
+}
+
+.scroll div:nth-child(2).closed {
+  top: 25px;
+}
+
+.scroll div:nth-child(3).closed {
+  top: 50px;
+}
+
+.scroll div:nth-child(4).closed {
+  top: 75px;
+}
+
+.scroll div:nth-child(5).closed {
+  top: 100px;
+}
+
+.scroll div:nth-child(6).closed {
+  top: 125px;
+}
+
+.scroll div:nth-child(7).closed {
+  top: 150px;
+}
+
+.scroll div:nth-child(8).closed {
+  top: 175px;
+}
+
+.scroll div:nth-child(9).closed {
+  top: 200px;
+}
+
+
+.scroll div.open {
+  z-index: 1;
+  background-color: white;
+  width: 100%;
+  height: 100%;
+}
+
+.scroll div:nth-child(1).open {
+  top: 0;
+  animation-name: raise1;
+  animation-duration: .25s;
+}
+
+@keyframes raise1 {
+}
+
+.scroll div:nth-child(2).open {
+  top: 0;
+  animation-name: raise2;
+  animation-duration: .25s;
+}
+
+@keyframes raise2 {
+  to {top: 0; height: 100%;}
+  from {top: 25px; height: 25px;}
+}
+
+.scroll div:nth-child(3).open {
+  top: 0;
+  animation-name: raise3;
+  animation-duration: .25s;
+}
+
+@keyframes raise3 {
+  to {top: 0; height: 100%;}
+  from {top: 50px; height: 25px;}
+}
+
+.scroll div:nth-child(4).open {
+  top: 0;
+  animation-name: raise4;
+  animation-duration: .25s;
+}
+
+@keyframes raise4 {
+  to {top: 0; height: 100%;}
+  from {top: 75px; height: 25px;}
+}
+
+.scroll div:nth-child(5).open {
+  top: 0;
+  animation-name: raise5;
+  animation-duration: .25s;
+}
+
+@keyframes raise5 {
+  to {top: 0; height: 100%;}
+  from {top: 100px; height: 25px;}
+}
+
+.scroll div:nth-child(6).open {
+  top: 0;
+  animation-name: raise6;
+  animation-duration: .25s;
+}
+
+@keyframes raise6 {
+  to {top: 0; height: 100%;}
+  from {top: 125px; height: 25px;}
+}
+
+.scroll div:nth-child(7).open {
+  top: 0;
+  animation-name: raise7;
+  animation-duration: .25s;
+}
+
+@keyframes raise7 {
+  to {top: 0; height: 100%;}
+  from {top: 150px; height: 25px;}
+}
+
+.scroll div:nth-child(8).open {
+  top: 0;
+  animation-name: raise8;
+  animation-duration: .25s;
+}
+
+@keyframes raise8 {
+  to {top: 0; height: 100%;}
+  from {top: 175px; height: 25px;}
+}
+
+.scroll div:nth-child(9).open {
+  top: 0;
+  animation-name: raise9;
+  animation-duration: .25s;
+}
+
+@keyframes raise9 {
+  to {top: 0; height: 100%;}
+  from {top: 200px; height: 25px;}
+}
+
+
+
+
+nav ul li {
+  list-style-type: none;
+}
+
+.arrow {
+  font-size: .6em;
+}
+
+div.subMenu {
+  overflow: hidden;
+  padding: 0;
+}
+
+.subMenu ul{
+  margin-left: .4em;
+}
+
+.subMenu a, .subMenu a:visited {
+  text-decoration: none;
+  color: gray;
+}
+
+
+
+
+ul.up {
+  display: none;
+}
+
+ul.down {
+  display: list-item;
+  padding: 0;
+  animation-name: slideDown;
+  animation-duration: .25s;
+}
+
+ul.slidingUp {
+  animation-name: slideUp;
+  animation-duration: .20s;
+}
+
+
+@keyframes slideDown {
+  from {
+    margin-top: -100%;
+  }
+  to {
+    margin-top: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    margin-top: 0;
+  }
+  to {
+    margin-top: -100%;
+  }
+}
+
+hr {
+  clear: both;
+  width: 30em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border: none;
+  height: 1px;
+  background-color: gray;
+  text-align: center;
+}
+
+table {
+  width: 80%;
+  margin: auto;
+  border-spacing: 0;
+}
+
+td {
+  margin: 0;
+  width: 5%;
+  border-top: 1px solid hsla(0, 0%, 50%, .5);
+  position: relative;
+  padding: .5em;
+  text-align: left;
+  vertical-align: top;
+}
+
+td.ruby, td.js {
+  width: 45%;
+}
+
+tr:nth-child(odd) .ruby{
+  background-color: hsl(0, 50%, 98%);
+}
+
+tr:nth-child(odd) .js{
+  background-color: hsl(50, 60%, 98%);
+}
+
+tr:nth-child(even) .ruby{
+  background-color: hsl(0, 50%, 95%);
+}
+
+tr:nth-child(even) .js{
+  background-color: hsl(50, 40%, 90%);
+}
+
+th {
+padding: 1.5em 0 .5em 0;
+border-top: 1px solid hsla(0, 0%, 50%, .5);
+text-align: center;
+text-transform: uppercase;
+border: 0 0 0 0;
+padding: 1.2em 0 0 0;
+font-family: sans-serif;
+font-weight: lighter;
+font-size: 1.2em;
+}
+
+tr:first-child th, tr:nth-child(2) th {
+  border: 0;
+}
+
+tr:first-child th {
+  font-size: 2em;
+  margin: 0;
+  padding: 0;
+}
+
+tr:first-child th:nth-child(2) {
+  color: rosybrown;
+}
+
+tr:first-child th:last-child {
+  color: hsla(51,27%,53%,1);
+}
+
+td * {
+  margin: 0;
+  padding: 0;
+}
+
+td:last-child {
+  border-left: 1px solid hsla(0, 0%, 50%, .5);
+}
+
+td.label {
+  font-size: .8em;
+  font-weight: lighter;
+  font-family: sans-serif;
+  color: gray;
+}
+
+td h1 {
+  font-size: 1.3em;
+}
+
+code {
+  white-space: pre;
+  /*margin: 0 0 0 3em;*/
+  padding: 0;
+  font-family: monospace;
+}
+
+p code {
+  margin: 0;
+  }
