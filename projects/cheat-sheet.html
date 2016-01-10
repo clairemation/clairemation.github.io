@@ -3,6 +3,8 @@
 <head>
   <link href='../stylesheets/cheatsheet.css' rel='stylesheet' type='text/css'>
 
+  <link href='https://fonts.googleapis.com/css?family=IM+Fell+DW+Pica|Bitter:400,700' rel='stylesheet' type='text/css'>
+
   <title>
     Cheatsheet: Ruby vs. JavaScript
   </title>
@@ -45,7 +47,7 @@ function toggleSection(section, sectionHead) {
     setTimeout(function(){
       document.getElementById(section).setAttribute("class", "up");
       document.getElementById(section).parentNode.parentNode.setAttribute("class", "closed");
-    }, 200);
+    }, 175);
   }
   else {
     document.getElementById(section).setAttribute("class", "down")
@@ -58,9 +60,14 @@ function toggleSection(section, sectionHead) {
 </script>
 
 <header>
-  <h3>Claire's DBC Site</h3>
+  <h3><a href="../index.html">Claire's DBC Site</a></h3>
   <h1>Cheat Sheet</h1>
   <h2>Ruby Vs. Javascript</h2>
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Home</a> &gt; </li>
+    <li><a href="index.html">Projects</a> &gt; </li>
+  </ul>
+
 </header>
 
 <nav>
@@ -856,12 +863,15 @@ end</td>
 
 </table>
 
+<p>
+  contents from <a href="http://hyperpolyglot.org/scripting">http://hyperpolyglot.org/scripting</a><br>
+  licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">creative commons attribution-sharealike 3.0</a>
+</p>
+
 <footer>
-  contact info
+  <a href="mailto:clairemation@gmail.com"><img src="../imgs/social/email.png" alt="Email"></a>
+  <a href="http://github.com/clairemation"><img src="../imgs/social/github.png" alt="GitHub"></a>
 </footer>
-
-
-
 
 </body>
 

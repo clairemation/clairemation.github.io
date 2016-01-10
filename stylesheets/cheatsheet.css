@@ -13,26 +13,57 @@ ul, menu, dir {
 }
 
 body {
+  font-family: Avenir, sans-serif;
   margin-top: 0;
   padding-top: 0;
   text-align: center;
 }
 
+
 header, header h3, header h1 {
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 0;
+  color: white;
+}
+
+header h3, header h3 a, header h3 a:visited {
+  color: white;
+  text-decoration: none;
+  font-weight: lighter;
 }
 
 header {
-  background-color: lightgray;
+  background-color: #AA4F4A;
 }
 
 header h2 {
   margin: 0;
   padding-top: .5em;
   background-color: white;
-  font-size: 2.5em;
+  color: hsla(3,39%,48%,1);
+  font-size: 5em;
+  font-family: Bitter;
+  font-weight: 400;
+}
+
+ul.breadcrumbs {
+  display: inline;
+  position: absolute;
+  top: 2.5em;
+  left: 1em;
+}
+ul.breadcrumbs li {
+  display: inline;
+  background-color: transparent;
+  color: white;
+  /*font-weight: bold;*/
+}
+
+.breadcrumbs a, .breadcrumbs a:visited {
+  text-decoration: none;
+  color: white;
+
 }
 
 nav {
@@ -56,10 +87,11 @@ nav h1 {
   padding: 0;
   margin: 0;
   font-size: 1.2em;
-  font-family: sans-serif;
+  /*font-family: sans-serif;*/
   font-weight: 400;
   text-decoration: none;
   height: 25px;
+  cursor: pointer;
 }
 
 .scroll {
@@ -67,9 +99,9 @@ nav h1 {
   position: relative;
   display: block;
   overflow: scroll;
-  height: 250px;
-  border: 1px solid gray;
-  border-left: 10px solid gray;
+  height: 300px;
+  /*border: 1px solid gray;
+  border-left: 10px solid gray;*/
   text-align: left;
   padding: 5px 0 0 .5em;
   line-height: 20px;
@@ -152,14 +184,14 @@ nav h1 {
 }
 
 .scroll div:nth-child(7).closing {
-  top: 150px;
+  top: 175px;
   animation-name: lower7;
   animation-duration: .25s;
 }
 
 @keyframes lower7 {
   from {top: 0;}
-  to {top: 150px;}
+  to {top: 175px;}
 }
 
 .scroll div:nth-child(8).closing {
@@ -174,14 +206,14 @@ nav h1 {
 }
 
 .scroll div:nth-child(9).closing {
-  top: 200px;
+  top: 225px;
   animation-name: lower9;
   animation-duration: .25s;
 }
 
 @keyframes lower9 {
   from {top: 0;}
-  to {top: 200px;}
+  to {top: 225px;}
 }
 
 
@@ -404,6 +436,7 @@ table {
   width: 80%;
   margin: auto;
   border-spacing: 0;
+  border-bottom: 1px solid hsla(0, 0%, 50%, .5);
 }
 
 td {
@@ -417,7 +450,7 @@ td {
 }
 
 td.ruby, td.js {
-  width: 45%;
+  width: 30%;
 }
 
 tr:nth-child(odd) .ruby{
@@ -443,9 +476,14 @@ text-align: center;
 text-transform: uppercase;
 border: 0 0 0 0;
 padding: 1.2em 0 0 0;
-font-family: sans-serif;
+/*font-family: sans-serif;*/
 font-weight: lighter;
 font-size: 1.2em;
+}
+
+tr:first-child th {
+  font-weight: normal;
+  /*text-shadow: 0px 1px 0px black;*/
 }
 
 tr:first-child th, tr:nth-child(2) th {
@@ -471,6 +509,10 @@ td * {
   padding: 0;
 }
 
+td {
+  font-size: .8em;
+}
+
 td:last-child {
   border-left: 1px solid hsla(0, 0%, 50%, .5);
 }
@@ -478,21 +520,43 @@ td:last-child {
 td.label {
   font-size: .8em;
   font-weight: lighter;
-  font-family: sans-serif;
-  color: gray;
+  /*font-family: sans-serif;*/
+  /*color: gray;*/
 }
 
 td h1 {
   font-size: 1.3em;
 }
 
+
 code {
   white-space: pre;
   /*margin: 0 0 0 3em;*/
   padding: 0;
   font-family: monospace;
+  /*font-size: 1.15em;*/
+
 }
 
 p code {
   margin: 0;
   }
+
+footer {
+  position: absolute;
+  top: .5em; right: 1em;
+}
+
+.flash {
+  animation-name: flash;
+  animation-duration: .4s;
+}
+
+@keyframes flash {
+  from {
+    box-shadow: 0px 0px 10px 10px white;
+  }
+  to {
+    box-shadow: 0px 0px 0px 0px white;
+  }
+}

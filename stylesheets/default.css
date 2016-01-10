@@ -59,7 +59,7 @@ section#main-pane {
 */
 #update {
   display: inline-block;
-  /*width: 250px;*/
+  width: 250px;
   margin: 20px;
   vertical-align: text-top;
   text-align: right;
@@ -68,6 +68,10 @@ section#main-pane {
 #update h1 {
   font-family: inherit;
   font-size: 2em;
+}
+
+#update h2 {
+font-size: 2em;
 }
 
 nav {
