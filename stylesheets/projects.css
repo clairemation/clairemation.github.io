@@ -2,6 +2,10 @@ ul.breadcrumbs {
   background-color: black;
 }
 
+#main-pane {
+  height: 100%;
+}
+
 header {
   font-family: inherit;
 }
@@ -79,7 +83,7 @@ ul.site-sections li {
     padding: 0;
     font-family: 'Diehl Deco';
     font-size: 2em;
-    text-transform: uppercase;
+    font-weight: light;
   }
 
   #update p::first-letter {
@@ -104,5 +108,37 @@ ul.site-sections li {
   nav {
     border-top: 1px solid hsla(0, 0%, 50%, .5);
     border-bottom: 1px solid hsla(0, 0%, 50%, .5);
-    padding-bottom: .5em;
+    padding-bottom: .7em;
+    padding-top: .5em;
+  }
+
+  nav li {
+    list-style-type: none;
+  }
+
+  .gameType, .utilType {
+    display: inline-block;
+    background-color: rosybrown;
+    font-size: .65em;
+    padding: .3em;
+    text-transform: uppercase;
+    width: 3.5em;
+    text-align: center;
+    border-radius: .4em;
+    margin: .2em;
+    border: 1px solid black;
+    color: hsla(0, 0%, 100%, 1);
+    font-weight:  bold;
+    /*text-shadow: .5px .5px .5px hsla(0, 0%, 0%, .7), -.5px -.5px 1px hsla(0, 0%, 100%, .7);*/
+    box-shadow: 4px 4px 8px 4px hsla(0, 0%, 0%, .3) inset, 1px 1px 1px 1px hsla(0, 0%, 100%, 1) inset, 1px 1px 1px 1px hsla(0, 0%, 100%, 1) inset, 1px 1px 4px 1px hsla(0, 0%, 100%, .5) inset;
+  }
+
+  .gameType {
+    background-color: green;
+    border-color: darkgreen;
+  }
+
+  .utilType {
+    background-color: brown;
+    border-color: darkred;
   }
