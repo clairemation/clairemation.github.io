@@ -540,7 +540,7 @@ code {
   /*margin: 0 0 0 3em;*/
   padding: 0;
   font-family: monospace;
-  /*font-size: 1.15em;*/
+  font-size: 1.15em;
 
 }
 
@@ -563,7 +563,7 @@ footer {
 
 @keyframes flash {
   from {
-    background-color: #ff9999;
+    background-color: #ff8888;
     color: red;
   }
   to {
