@@ -70,10 +70,8 @@ function flash(name) {
 window.onload = function() {
   var indices = document.getElementsByClassName("scroll")[0].getElementsByTagName("a");
   console.log(indices[0]);
-  for (var i = 0; i < indices.length; i++) {
-    console.log(indices[i]);
-    indices[i].onclick = "flash(this.href);";
-    console.log(indices[i].onclick);
+  for (var i in indices) {
+    indices[i].onclick = function(){flash(this.href)};
   }
 }
 
