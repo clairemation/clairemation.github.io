@@ -70,6 +70,7 @@ header {
   margin-bottom: .5em;
   color: gray;
   font-family: inherit;
+  transform: none;
 }
 
 header a, header a:visited {
@@ -105,6 +106,10 @@ header h3, header h3 a, header h3 a:visited {
 
 h2 {
   font-size: 1.5em;
+}
+
+#update h2 {
+  border: 0;
 }
 
 header h2 {
@@ -262,6 +267,7 @@ code.pseudo {
 
 section.copy {
 margin-top: .5em;
+background: inherit;
 }
 
 img.feature {
