@@ -445,6 +445,12 @@ table {
   border-bottom: 1px solid hsla(0, 0%, 50%, .5);
 }
 
+table#stickyHeader {
+  z-index: 1;
+  background-color: white;
+  border: 0;
+}
+
 td {
   margin: 0;
   width: 5%;

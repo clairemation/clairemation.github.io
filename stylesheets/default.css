@@ -18,7 +18,7 @@ html, body {
 body {
   text-align: center;
   background-color: black;
-  background-image: url("../imgs/layout/flowerytile.jpg");
+  background-image: url("../imgs/layout/oriental_deco_artex_pattern-908.jpg");
   font-family: 'Avenir Next', sans-serif;
   font-weight: 400;
   font-size: 1.1em;
@@ -27,51 +27,58 @@ body {
 
 section#main-pane {
   margin: auto;
-  /*margin-top: -9px;*/
+  margin-bottom: 0;
   width: 900px;
   padding: 0px 0px 2em 0px;
   background-color: white;
-  /*background-image: url("../imgs/layout/paramount_electrum_400.jpg");*/
   background-repeat: repeat-x;
-  /*border: 2px solid #472C1C;*/
-  /*border-bottom-left-radius: 50px;*/
-  /*border-bottom-right-radius: 50px;*/
   vertical-align: text-top;
 }
 
 #maintitle {
-  background-color: rosybrown;
-  margin: 0px;
+  background-color: #853836;
+  margin: 0;
   padding: 0px;
   border: 0px;
-
   color: white;
-  font-family: 'Avenir Next', serif;
+  font-family: 'Diehl Deco', serif;
   font-weight: 800;
-  /*text-shadow: 0px -2px 0px hsla(0, 0%, 0%, .2);*/
   font-size: 2.5em;
+  transform: rotate(5deg) skew(5deg);
 }
 
-/*h1 {
-  font-family: 'Skranji', serif;
-  font-size: 3em;
+header {
+  width: 100%;
+  transform: rotate(-5deg) skew(-5deg);
 }
-*/
+
+#top {
+  display: inline-block;
+  /*border-left: 3px solid #A0B098;*/
+  border-bottom: 6px solid #A0B098;
+  border-bottom-left-radius: 3em;
+  border-bottom-right-radius: 5px;
+  padding: 1.5em 0 0 0px;
+  margin: -1.5em 0 0 0;
+}
+
 #update {
   display: inline-block;
   width: 250px;
-  margin: 20px;
+  margin: 20px 20px 20px 20px;
   vertical-align: text-top;
   text-align: right;
 }
 
-#update h1 {
-  font-family: inherit;
-  font-size: 2em;
-}
-
 #update h2 {
-font-size: 2em;
+  text-align: right;
+  font-family: 'Diehl Deco';
+  width: 6em;
+  margin: .5em 0 .4em 1.1em;
+  font-size: 2em;
+  text-shadow: 1px 1px 0 white, 2px 2px 0 #A0B098;
+  border-top: 1px solid #A0B098;
+  border-bottom: 1px solid #A0B098;
 }
 
 nav {
@@ -83,7 +90,6 @@ nav {
 
 nav h1 {
   font-size: 2em;
-  background-color: white;
   color: black;
   vertical-align: text-top;
   font-family: 'Diehl Deco';
@@ -114,7 +120,7 @@ p.copy-single-column {
 }
 
 hr {
-  display: none;
+  /*display: none;*/
   width:75%;
   margin: 0em auto 1em auto;
   background-color: black;
@@ -122,22 +128,13 @@ hr {
   height: 1px;
 }
 
-a:visited {
-  color: gray;
+a, a:visited {
+  color: #A0B098;
+  text-decoration: none;
 }
 
-/*footer {
-  position: absolute;
-  right: 30px;
-  top: 92px;
-  text-align: right;
-  margin-bottom: 2em;
-}*/
-
 p {
-  /*text-indent: 1em;*/
   text-align: left;
-  /*text-justify: inter-word;*/
   padding: .25em;
   max-width: 32em;
   margin: auto;
@@ -185,9 +182,28 @@ ol li {
   font-weight: 200;
 }
 
-#headshot {
-  right: 100px;
-  width: 200px;
+.vignette {
+  width: 5.5em;
   border-radius: 50%;
+  border: 1px solid black;
+  clear: both;
+  margin: .4em;
+}
+
+#bodypic1 {
+  right: 100px;
   float: right;
+  /*transform: scaleX(-1);*/
+}
+
+#bodypic2 {
+  float: left;
+  left: 100px;
+  /*transform: scaleX(-1);*/
+}
+
+#bodypic3 {
+  right: 100px;
+  float: right;
+  transform: scaleX(-1);
 }

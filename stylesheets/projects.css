@@ -15,6 +15,10 @@ header   h1 {
   font-size: 2.5em;
 }
 
+a, a:visited {
+  transform: none;
+}
+
 header h3, header h3 a, header h3 a:visited {
   padding-top: .5em;
   font-family: 'Diehl Deco';
@@ -97,8 +101,10 @@ ul.site-sections li {
   }
 
   #update h2 {
-    margin-top: .4em;
+    margin-top: 0;
     margin-bottom: .50em;
+    transform: none;
+    border: 0;
   }
 
   #update a, #update a:visited {
