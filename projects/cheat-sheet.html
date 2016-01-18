@@ -68,12 +68,46 @@ function flash(name) {
 }
 
 window.onload = function() {
+
+  var aboveHeader = true;
+
+  //set onclick flash calls for all items in quicksearch
   var indices = document.getElementsByClassName("scroll")[0].getElementsByTagName("a");
   console.log(indices[0]);
   for (var i in indices) {
     indices[i].onclick = function(){flash(this.href)};
   }
+
+  //set stickyHeader cells width to match main table
+  var origCells = document.getElementById("cheatsheet").getElementsByTagName("tr")[1].getElementsByTagName("td");
+  var widths = [origCells[0].offsetWidth, origCells[1].offsetWidth, origCells[2].offsetWidth];
+  var stickyHeader = document.getElementById("stickyHeader");
+  var stickyCells = stickyHeader.getElementsByTagName("th");
+  for (cellNum in stickyCells) {
+    stickyCells[cellNum].width = widths[cellNum];
+  }
+
+  //make stickyHeader stick to top when scrolled to top
+  document.onscroll = function () {
+    if (aboveHeader) {
+      if (document.getElementById("stickyHeader").getBoundingClientRect().top <= 0) {
+        document.getElementById("stickyHeader").style.position = "fixed";
+        document.getElementById("stickyHeader").style.top = 0;
+        document.getElementById("stickyHeader").style.left = ((origCells[0].getBoundingClientRect().left - 5) + "px");
+        aboveHeader = false;
+      }
+    }
+    else if (!aboveHeader) {
+      // if (document.getElementById("stickyHeader").getBoundingClientRect().bottom >= document.getElementById("cheatsheet").getBoundingClientRect().top) {
+      //   document.getElementById("stickyHeader").style.position = "static";
+      //   aboveHeader = true;
+      // }
+    }
+
+  }
+
 }
+
 
 
 </script>
@@ -243,17 +277,26 @@ window.onload = function() {
   </div>
 </nav>
 
-<main>
-
-<article id="cheatsheet-table">
-
-<table>
+<table id="stickyHeader">
   <tr>
     <th></th>
     <th>Ruby</th>
     <th>JavaScript</th>
   </tr>
+</table>
 
+<main>
+
+<article id="cheatsheet-table">
+
+<table id="cheatsheet">
+
+<!--   <tr>
+    <th> </th>
+    <th>Ruby</th>
+    <th>JavaScript</th>
+  </tr>
+ -->
   <tr>
     <th colspan=3 class="heading"><a name="grammar">grammar</th>
   </tr>
