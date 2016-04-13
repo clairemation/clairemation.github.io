@@ -1,4 +1,4 @@
-var level = new Level({
+var level1 = new Level({
   number: 1,
   title: "Precambrian Era",
   musicFiles: {
@@ -7,6 +7,7 @@ var level = new Level({
     stage: "music/Phantom_from_Space.mp3"})
   },
   bg: "imgs/lava-flow-magma-wide-hd-wallpaper-free-desktop-free-for-desktop-background.jpg",
+  totalCrystals: 3
   baseMap: [
   // 0         1         2
   // 0123456789012345678901234

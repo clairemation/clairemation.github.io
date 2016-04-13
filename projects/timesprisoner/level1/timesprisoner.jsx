@@ -1,27 +1,122 @@
-// MODELS-----------------------------------------
+/** @jsx React.DOM */
+
+// ENVIRONMENT JS CLASS =========================
 
 function Env(args){
-  this.totalCrystals = args.totalCrystals;
-  this.message = args.message;
-  this.running = args.running;
-  this.beginning = args.beginning;
-  this.music = new Music({
-    file: args.musicFile,
-    playing: args.musicPlaying
-  });
-};
+  this.totalCrystals = level.totalCrystals;
+  this.message = "";
+  this.running = false;
+  this.beginning = true;
+  this.currentTrack = level.musicFiles.intro;
+  this.musicState = "autoplay"
+}
 
-function Level(baseMap) {
+// REACT DISPLAY ELEMENTS ======================
+
+// POPUP WINDOW ---------------------
+
+var PopupWindow = React.createClass({
+
+  getInitialState: function(){
+    visible: false
+  },
+
+  handleClick: function(){
+    this.setState({visible: !this.state.visible});
+  },
+
+  render: function(){
+    return (
+      <div
+        id={this.props.id}
+        onclick={this.handleClick}
+        class={this.state.visible ? this.props.className : "closedWindow"}>
+        {this.props.children}
+      </div>
+    );
+  }
+});
+
+//  CONTROLLER REACT CLASS=============================
+
+var Game = React.createClass({
+
+  getInitialState: function(){
+    level: level1,
+    env: new Env,
+  },
+
+  render: function(){
+    <PopupWindow id="title" className="title">
+      <h1>{"Time's Prisoner"}</h1>
+      <h2>a little game demo by Claire Samuels</h2>
+      <button>Play</button>
+    </PopupWindow>
+  }
+
+})
+
+// MUSIC REACT CLASS =================================
+
+var Music = React.createClass({
+  render: function() {
+    return (
+      <audio id="music" src={this.props.fileName} {this.props.playState} loop></audio>
+    );
+  }
+})
+
+// FIELD REACT CLASS =================================
+
+var Field = React.createClass({
+
+  getInitialState: function(){
+    baseMap: this.props.baseMap
+
+  },
+
+  componentDidMount: function() {
+    // assign class to path tiles
+    for (var y in this.baseMap) {
+      for (var x in this.baseMap[y]) {
+        if (this.baseMap[y][x] == "#") {
+          $(document.getElementById("field").rows[y].cells[x]).attr("class", "path");
+        }
+      }
+    }
+  },
+
+  render: function(){
+    //make table cells and rows
+    var rowString = "<td></td>".repeat(this.map.baseMap[0].length);
+    var tableString = "<table id='field'>" + ("<tr>" + rowString + "</tr>").repeat(this.map.baseMap.length) + "</table>";
+    return (
+      {"<table id='field'>"
+        + ("<tr>"
+        + rowString
+        + "</tr>"
+        ).repeat(this.map.baseMap.length)
+      + "</table>"}
+    );
+  }
+
+})
+
+// RUNNER =================================
+
+ReactDOM.render(
+  <Game />,
+  $(document)
+);
+
+//=====================================
+
+function Level(args) {
   this.number = args.number;
   this.title = args.title;
   this.baseMap = baseMap;
   this.bg = args.bg;
   this.musicFiles = args.musicFiles;
-}
-
-function Music(args){
-  this.file = args.file;
-  this.playing = args.playing;
 }
 
 function Sprite(args) {
