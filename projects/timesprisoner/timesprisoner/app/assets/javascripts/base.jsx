@@ -1,22 +1,34 @@
 /** @jsx React.DOM */
 
+// ENVIRONMENT JS CLASS =========================
+
+function Env(args){
+  this.totalCrystals = level.totalCrystals;
+  this.message = "";
+  this.running = false;
+  this.beginning = true;
+  this.currentTrack = level.musicFiles.intro;
+  this.musicState = "autoplay"
+}
+
+// REACT DISPLAY ELEMENTS ======================
+
+// POPUP WINDOW ---------------------
+
 var PopupWindow = React.createClass({
 
   getInitialState: function(){
-    return {
-      visible: false
-    }
+    visible: false
   },
 
   handleClick: function(){
-    console.log("handleClick");
-    this.setState({visible:
-                  this.state.visible ? false : true});
+    this.setState({visible: !this.state.visible});
   },
 
   render: function(){
     return (
-      <div id={this.props.id}
+      <div
+        id={this.props.id}
         onclick={this.handleClick}
         class={this.state.visible ? this.props.className : "closedWindow"}>
         {this.props.children}
@@ -30,45 +42,36 @@ var PopupWindow = React.createClass({
 var Game = React.createClass({
 
   getInitialState: function(){
-    return {
-      level: level1,
-      env: new Env({
-        totalCrystals: level1.totalCrystals,
-        musicFiles: level1.musicFiles
-      })
-    };
+    level: level1,
+    env: new Env,
   },
 
   render: function(){
-    return (
-      <PopupWindow id="title" className="title">
-        <h1>{"Time's Prisoner"}</h1>
-        <h2>a little game demo by Claire Samuels</h2>
-        <button>Play</button>
-      </PopupWindow>
-    );
+    <PopupWindow id="title" className="title">
+      <h1>{"Time's Prisoner"}</h1>
+      <h2>a little game demo by Claire Samuels</h2>
+      <button>Play</button>
+    </PopupWindow>
   }
 
 })
 
 // MUSIC REACT CLASS =================================
 
-// var Music = React.createClass({
-//   render: function() {
-//     return (
-//       <audio id='music' src={this.props.fileName} {this.props.playState} loop></audio>
-//     );
-//   }
-// })
+var Music = React.createClass({
+  render: function() {
+    return (
+      <audio id="music" src={this.props.fileName} {this.props.playState} loop></audio>
+    );
+  }
+})
 
 // FIELD REACT CLASS =================================
 
 var Field = React.createClass({
 
   getInitialState: function(){
-    return {
-      baseMap: this.props.baseMap
-    }
+    baseMap: this.props.baseMap
 
   },
 
@@ -88,11 +91,12 @@ var Field = React.createClass({
     var rowString = "<td></td>".repeat(this.map.baseMap[0].length);
     var tableString = "<table id='field'>" + ("<tr>" + rowString + "</tr>").repeat(this.map.baseMap.length) + "</table>";
     return (
-      <table id='field'>
-        {
-          ("<tr>" + rowString + "</tr>").repeat(this.map.baseMap.length)
-        }
-      </table>
+      {"<table id='field'>"
+        + ("<tr>"
+        + rowString
+        + "</tr>"
+        ).repeat(this.map.baseMap.length)
+      + "</table>"}
     );
   }
 
@@ -100,32 +104,44 @@ var Field = React.createClass({
 
 // RUNNER =================================
 
-$(document).ready(function(){
-  ReactDOM.render(
-    <Game />,
-    $(document)
-  );
-});
+ReactDOM.render(
+  <Game />,
+  $(document)
+);
 
 //=====================================
 
+function Level(args) {
+  this.number = args.number;
+  this.title = args.title;
+  this.baseMap = baseMap;
+  this.bg = args.bg;
+  this.musicFiles = args.musicFiles;
+}
+
+function Sprite(args) {
+  this.image = args.image;
+  this.x = args.x;
+  this.y = args.y;
+  this.visible = args.visible;
+}
 
 // CONTROLLER=================================
 
-// function Game(args) {
-//   this.view = new View();
-//   this.view.game = this;
-//   this.env = args.env;
-//   this.objects = args.objects;
-// }
+function Game(args) {
+  this.view = new View();
+  this.view.game = this;
+  this.env = args.env;
+  this.objects = args.objects;
+}
 
 // Move some functionality to View
-// Game.prototype.begin = function(){
-//   $("#title").attr = ("id", "closingTitle");
-//   setTimeout(function(){
-//     $("#closingTitle").attr("id", "closedTitle");
-//   }, 500);
-// }
+Game.prototype.begin = function(){
+  $("#title").attr = ("id", "closingTitle");
+  setTimeout(function(){
+    $("#closingTitle").attr("id", "closedTitle");
+  }, 500);
+}
 
 
 // VIEW ----------------------------------------

@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-var PopupWindow = React.createClass({
+var PopupWindow = React.createClass({displayName: "PopupWindow",
 
   getInitialState: function(){
     return {
@@ -16,18 +16,18 @@ var PopupWindow = React.createClass({
 
   render: function(){
     return (
-      <div id={this.props.id}
-        onclick={this.handleClick}
-        class={this.state.visible ? this.props.className : "closedWindow"}>
-        {this.props.children}
-      </div>
+      React.createElement("div", {id: this.props.id, 
+        onclick: this.handleClick, 
+        class: this.state.visible ? this.props.className : "closedWindow"}, 
+        this.props.children
+      )
     );
   }
 });
 
 //  CONTROLLER REACT CLASS=============================
 
-var Game = React.createClass({
+var Game = React.createClass({displayName: "Game",
 
   getInitialState: function(){
     return {
@@ -41,11 +41,11 @@ var Game = React.createClass({
 
   render: function(){
     return (
-      <PopupWindow id="title" className="title">
-        <h1>{"Time's Prisoner"}</h1>
-        <h2>a little game demo by Claire Samuels</h2>
-        <button>Play</button>
-      </PopupWindow>
+      React.createElement(PopupWindow, {id: "title", className: "title"}, 
+        React.createElement("h1", null, "Time's Prisoner"), 
+        React.createElement("h2", null, "a little game demo by Claire Samuels"), 
+        React.createElement("button", null, "Play")
+      )
     );
   }
 
@@ -63,7 +63,7 @@ var Game = React.createClass({
 
 // FIELD REACT CLASS =================================
 
-var Field = React.createClass({
+var Field = React.createClass({displayName: "Field",
 
   getInitialState: function(){
     return {
@@ -88,11 +88,11 @@ var Field = React.createClass({
     var rowString = "<td></td>".repeat(this.map.baseMap[0].length);
     var tableString = "<table id='field'>" + ("<tr>" + rowString + "</tr>").repeat(this.map.baseMap.length) + "</table>";
     return (
-      <table id='field'>
-        {
+      React.createElement("table", {id: "field"}, 
+        
           ("<tr>" + rowString + "</tr>").repeat(this.map.baseMap.length)
-        }
-      </table>
+        
+      )
     );
   }
 
@@ -102,7 +102,7 @@ var Field = React.createClass({
 
 $(document).ready(function(){
   ReactDOM.render(
-    <Game />,
+    React.createElement(Game, null),
     $(document)
   );
 });

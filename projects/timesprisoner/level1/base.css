@@ -322,6 +322,6 @@
     100% {opacity: 0}
   }
 
-  #closedWindow {
+  .closedWindow {
     display: none;
   }
