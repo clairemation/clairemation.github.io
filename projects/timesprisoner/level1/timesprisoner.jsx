@@ -9,16 +9,15 @@ var PopupWindow = React.createClass({
   },
 
   handleClick: function(){
-    console.log("handleClick");
     this.setState({visible:
-                  this.state.visible ? false : true});
+                  (this.state.visible ? false : true)});
   },
 
   render: function(){
     return (
       <div id={this.props.id}
-        onclick={this.handleClick}
-        class={this.state.visible ? this.props.className : "closedWindow"}>
+        onClick={this.handleClick}
+        className={this.state.visible ? 'closedWindow' : this.props.className}>
         {this.props.children}
       </div>
     );
@@ -103,7 +102,7 @@ var Field = React.createClass({
 $(document).ready(function(){
   ReactDOM.render(
     <Game />,
-    $(document)
+    document.getElementById("root")
   );
 });
 

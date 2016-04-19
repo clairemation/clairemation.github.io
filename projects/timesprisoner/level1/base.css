@@ -281,7 +281,6 @@
   }
 
   #title, #closingTitle {
-    display: block;
     margin: auto;
     padding-top: 20%;
     position: fixed;
@@ -322,6 +321,10 @@
     100% {opacity: 0}
   }
 
-  .closedWindow {
-    display: none;
+.title {
+  display: block;
+  }
+
+.closedWindow {
+  display: none;
   }
