@@ -118,7 +118,9 @@ nav {
 }
 
 nav h1 {
-  font-size: 2em;
+  display: inline-block;
+  margin: .5em;
+  font-size: 1.5em;
   color: black;
   vertical-align: text-top;
   font-family: 'Diehl Deco';
@@ -127,7 +129,7 @@ nav h1 {
 
 section.copy {
   display: inline-block;
-  float: left;
+  float: right;
   margin: auto;
   background-color: hsl(100,14%,40%);
   background: radial-gradient(hsl(100,14%,40%), hsl(100,14%,25%) 90%);
