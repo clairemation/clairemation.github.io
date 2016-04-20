@@ -1,22 +1,93 @@
 /** @jsx React.DOM */
 
-var PopupWindow = React.createClass({
+
+// POPUP WINDOW REACT CLASS ========================
+
+var Window = React.createClass({
   getInitialState: function(){
     return {
-      visible: false
+      windowState: 'openWindow'
     }
   },
-  handleClick: function(){
-    this.setState({visible:
-                  (this.state.visible ? false : true)});
+  hideMe: function(){
+    this.setState({windowState:
+                  ('closedWindow')});
+  },
+  fadeOut: function(){
+    this.setState({windowState: 'fadeWindow'});
+    closeDelay = setTimeout(this.hideMe, 500);
   },
   render: function(){
+    var classNameString = this.props.windowType + " " + this.state.windowState
     return (
       <div id={this.props.id}
-        onClick={this.handleClick}
-        className={this.state.visible ? 'closedWindow' : this.props.className}>
+        onClick={{'hideMe': this.hideMe,
+                  'fadeOut': this.fadeOut}
+                  [this.props.clickAction]}
+        className={classNameString}
+      >
         {this.props.children}
       </div>
+    );
+  }
+});
+
+
+// FIELD REACT CLASS =================================
+
+var Field = React.createClass({
+
+  getInitialState: function(){
+    return {
+      baseMap: this.props.baseMap
+    }
+  },
+  componentDidMount: function() {
+    // assign class to path tiles
+    for (var y in this.state.baseMap) {
+      for (var x in this.state.baseMap[y]) {
+        if (this.state.baseMap[y][x] == "#") {
+          $(document.getElementById("field").rows[y].cells[x]).attr("class", "path");
+        }
+      }
+    }
+  },
+  render: function(){
+    //make table cells and rows
+    var rowString = "<td></td>".repeat(this.state.baseMap[0].length);
+    var tableString = "<table id='field'>" + ("<tr>" + rowString + "</tr>").repeat(this.state.baseMap.length) + "</table>";
+    return (
+      <table id='field' dangerouslySetInnerHTML={{__html:
+          ("<tr>" + rowString + "</tr>").repeat(this.state.baseMap.length)
+      }}>
+      </table>
+    );
+  }
+
+})
+
+
+// MUSIC REACT CLASS =================================
+
+var Music = React.createClass({
+
+  getInitialState: function() {
+    return {track: this.props.children};
+  },
+
+  componentDidMount: function() {
+    $("#music")[0].loop = true;
+    $("#music")[0].play();
+    $("#music")[0].paused = false;
+  },
+
+  switchTracks: function(fileName) {
+    this.setState({track: fileName});
+  },
+
+  render: function() {
+    return (
+      <audio id="music" src={this.state.track}></audio>
     );
   }
 });
@@ -38,71 +109,19 @@ var Game = React.createClass({
   render: function(){
     return (
       <div>
-      <Music playState="autoplay">music/On_the_Shore.mp3</Music>
-      <PopupWindow id="title" className="openWindow">
-        <h1>{"Time's Prisoner"}</h1>
-        <h2>a little game demo by Claire Samuels</h2>
-        <button>Play</button>
-      </PopupWindow>
+        <Music>music/On_the_Shore.mp3</Music>
+        <Field baseMap={this.state.level.baseMap} />
+        <Window id="title" windowType="titleWindow" clickAction="fadeOut">
+          <h1>{"Time's Prisoner"}</h1>
+          <h2>a little game demo by Claire Samuels</h2>
+          <button>Play</button>
+        </Window>
       </div>
     );
   }
 
 })
 
-// MUSIC REACT CLASS =================================
-
-var Music = React.createClass({
-
-  componentDidMount: function() {
-    $("#music")[0].loop = true;
-    $("#music")[0].play();
-    $("#music")[0].paused = false;
-  },
-
-  render: function() {
-    return (
-      <audio id="music" src={this.props.children}></audio>
-    );
-  }
-});
-
-// FIELD REACT CLASS =================================
-
-var Field = React.createClass({
-
-  getInitialState: function(){
-    return {
-      baseMap: this.props.baseMap
-    }
-
-  },
-
-  componentDidMount: function() {
-    // assign class to path tiles
-    for (var y in this.baseMap) {
-      for (var x in this.baseMap[y]) {
-        if (this.baseMap[y][x] == "#") {
-          $(document.getElementById("field").rows[y].cells[x]).attr("class", "path");
-        }
-      }
-    }
-  },
-
-  render: function(){
-    //make table cells and rows
-    var rowString = "<td></td>".repeat(this.map.baseMap[0].length);
-    var tableString = "<table id='field'>" + ("<tr>" + rowString + "</tr>").repeat(this.map.baseMap.length) + "</table>";
-    return (
-      <table id='field'>
-        {
-          ("<tr>" + rowString + "</tr>").repeat(this.map.baseMap.length)
-        }
-      </table>
-    );
-  }
-
-})
 
 // RUNNER =================================
 
