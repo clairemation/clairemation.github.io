@@ -1,18 +1,15 @@
 /** @jsx React.DOM */
 
 var PopupWindow = React.createClass({
-
   getInitialState: function(){
     return {
       visible: false
     }
   },
-
   handleClick: function(){
     this.setState({visible:
                   (this.state.visible ? false : true)});
   },
-
   render: function(){
     return (
       <div id={this.props.id}
@@ -40,11 +37,14 @@ var Game = React.createClass({
 
   render: function(){
     return (
-      <PopupWindow id="title" className="title">
+      <div>
+      <Music playState="autoplay">music/On_the_Shore.mp3</Music>
+      <PopupWindow id="title" className="openWindow">
         <h1>{"Time's Prisoner"}</h1>
         <h2>a little game demo by Claire Samuels</h2>
         <button>Play</button>
       </PopupWindow>
+      </div>
     );
   }
 
@@ -52,13 +52,20 @@ var Game = React.createClass({
 
 // MUSIC REACT CLASS =================================
 
-// var Music = React.createClass({
-//   render: function() {
-//     return (
-//       <audio id='music' src={this.props.fileName} {this.props.playState} loop></audio>
-//     );
-//   }
-// })
+var Music = React.createClass({
+
+  componentDidMount: function() {
+    $("#music")[0].loop = true;
+    $("#music")[0].play();
+    $("#music")[0].paused = false;
+  },
+
+  render: function() {
+    return (
+      <audio id="music" src={this.props.children}></audio>
+    );
+  }
+});
 
 // FIELD REACT CLASS =================================
 
