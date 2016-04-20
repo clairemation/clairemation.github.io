@@ -3,7 +3,7 @@
 
 // POPUP WINDOW REACT CLASS ========================
 
-var Window = React.createClass({
+var Window = React.createClass({displayName: "Window",
   getInitialState: function(){
     return {
       windowState: 'openWindow'
@@ -20,14 +20,14 @@ var Window = React.createClass({
   render: function(){
     var classNameString = this.props.windowType + " " + this.state.windowState
     return (
-      <div id={this.props.id}
-        onClick={{'hideMe': this.hideMe,
+      React.createElement("div", {id: this.props.id, 
+        onClick: {'hideMe': this.hideMe,
                   'fadeOut': this.fadeOut}
-                  [this.props.clickAction]}
-        className={classNameString}
-      >
-        {this.props.children}
-      </div>
+                  [this.props.clickAction], 
+        className: classNameString
+      }, 
+        this.props.children
+      )
     );
   }
 });
@@ -35,7 +35,7 @@ var Window = React.createClass({
 
 // FIELD REACT CLASS =================================
 
-var Field = React.createClass({
+var Field = React.createClass({displayName: "Field",
 
   getInitialState: function(){
     return {
@@ -57,10 +57,10 @@ var Field = React.createClass({
     var rowString = "<td></td>".repeat(this.state.baseMap[0].length);
     var tableString = "<table id='field'>" + ("<tr>" + rowString + "</tr>").repeat(this.state.baseMap.length) + "</table>";
     return (
-      <table id='field' dangerouslySetInnerHTML={{__html:
+      React.createElement("table", {id: "field", dangerouslySetInnerHTML: {__html:
           ("<tr>" + rowString + "</tr>").repeat(this.state.baseMap.length)
-      }}>
-      </table>
+      }}
+      )
     );
   }
 
@@ -69,7 +69,7 @@ var Field = React.createClass({
 
 // MUSIC REACT CLASS =================================
 
-var Music = React.createClass({
+var Music = React.createClass({displayName: "Music",
   getInitialState: function() {
     return {track: this.props.filePath};
   },
@@ -83,14 +83,14 @@ var Music = React.createClass({
   },
   render: function() {
     return (
-      <audio id="music" src={this.state.track}></audio>
+      React.createElement("audio", {id: "music", src: this.state.track})
     );
   }
 });
 
 //  CONTROLLER REACT CLASS=============================
 
-var Game = React.createClass({
+var Game = React.createClass({displayName: "Game",
 
   getInitialState: function(){
     return {
@@ -98,27 +98,27 @@ var Game = React.createClass({
       env: new Env(level1),
       windows: [
         (
-          <Window id="title" windowType="titleWindow" clickAction="fadeOut">
-            <h1>{"Time's Prisoner"}</h1>
-            <h2>a little game demo by Claire Samuels</h2>
-            <button>Play</button>
-          </Window>
+          React.createElement(Window, {id: "title", windowType: "titleWindow", clickAction: "fadeOut"}, 
+            React.createElement("h1", null, "Time's Prisoner"), 
+            React.createElement("h2", null, "a little game demo by Claire Samuels"), 
+            React.createElement("button", null, "Play")
+          )
         ),
         (
-          <Window id = "title" windowType="titleWindow" clickAction="fadeOut">
-            <p>All crystals collected!</p>
-            <h1>Forward in time!</h1>
-            <p>next: Ordovician Period</p>
-            <p>coming soon</p>
-          </Window>
+          React.createElement(Window, {id: "title", windowType: "titleWindow", clickAction: "fadeOut"}, 
+            React.createElement("p", null, "All crystals collected!"), 
+            React.createElement("h1", null, "Forward in time!"), 
+            React.createElement("p", null, "next: Ordovician Period"), 
+            React.createElement("p", null, "coming soon")
+          )
         ),
         (
-          <div id = "gameOverWindow">
-            <p>Toasted by lava!</p>
-            <h1>GAME OVER</h1>
-            <button onclick="restart(0);">Continue</button>
-            <button onclick="restart(1);">Start over</button>
-          </div>
+          React.createElement("div", {id: "gameOverWindow"}, 
+            React.createElement("p", null, "Toasted by lava!"), 
+            React.createElement("h1", null, "GAME OVER"), 
+            React.createElement("button", {onclick: "restart(0);"}, "Continue"), 
+            React.createElement("button", {onclick: "restart(1);"}, "Start over")
+          )
         )
       ]
     };
@@ -127,30 +127,30 @@ var Game = React.createClass({
   render: function(){
     var textWindow = this.state.windows[this.state.env.currentWindow];
     return (
-      <div>
-        <Music filePath={this.state.env.music.current} />
-        <aside id="homeLink" class="lightUp">
-          <a href="index.html">&lt;&lt;back to site</a>
-        </aside>
+      React.createElement("div", null, 
+        React.createElement(Music, {filePath: this.state.env.music.current}), 
+        React.createElement("aside", {id: "homeLink", class: "lightUp"}, 
+          React.createElement("a", {href: "index.html"}, "<<back to site")
+        ), 
 
-        <aside id="musicToggle" class="lightUp" onclick="toggleMusic();">
-          play/pause music;
-        </aside>
+        React.createElement("aside", {id: "musicToggle", class: "lightUp", onclick: "toggleMusic();"}, 
+          "play/pause music;"
+        ), 
 
-        <header>
-          <h1>{"Time's Prisoner"}</h1>
-          <h2>Precambrian Era</h2>
-        </header>
+        React.createElement("header", null, 
+          React.createElement("h1", null, "Time's Prisoner"), 
+          React.createElement("h2", null, "Precambrian Era")
+        ), 
 
-        <Field baseMap={this.state.level.baseMap} />
+        React.createElement(Field, {baseMap: this.state.level.baseMap}), 
 
-        {this.state.windows[0]}
+        this.state.windows[0], 
 
-        <footer class="lightUp">
-          <a onClick="displayWindow('credits');">Credits</a>
-        </footer>
+        React.createElement("footer", {class: "lightUp"}, 
+          React.createElement("a", {onClick: "displayWindow('credits');"}, "Credits")
+        )
 
-      </div>
+      )
     );
   }
 
@@ -161,7 +161,7 @@ var Game = React.createClass({
 
 $(document).ready(function(){
   ReactDOM.render(
-    <Game />,
+    React.createElement(Game, null),
     document.getElementById("root")
   );
 });

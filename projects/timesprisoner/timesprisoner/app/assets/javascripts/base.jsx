@@ -1,89 +1,38 @@
 /** @jsx React.DOM */
 
+// ENVIRONMENT JS CLASS =========================
 
-// POPUP WINDOW REACT CLASS ========================
+function Env(args){
+  this.totalCrystals = level.totalCrystals;
+  this.message = "";
+  this.running = false;
+  this.beginning = true;
+  this.currentTrack = level.musicFiles.intro;
+  this.musicState = "autoplay"
+}
 
-var Window = React.createClass({
+// REACT DISPLAY ELEMENTS ======================
+
+// POPUP WINDOW ---------------------
+
+var PopupWindow = React.createClass({
+
   getInitialState: function(){
-    return {
-      windowState: 'openWindow'
-    }
+    visible: false
   },
-  hideMe: function(){
-    this.setState({windowState:
-                  ('closedWindow')});
+
+  handleClick: function(){
+    this.setState({visible: !this.state.visible});
   },
-  fadeOut: function(){
-    this.setState({windowState: 'fadeWindow'});
-    closeDelay = setTimeout(this.hideMe, 500);
-  },
+
   render: function(){
-    var classNameString = this.props.windowType + " " + this.state.windowState
     return (
-      <div id={this.props.id}
-        onClick={{'hideMe': this.hideMe,
-                  'fadeOut': this.fadeOut}
-                  [this.props.clickAction]}
-        className={classNameString}
-      >
+      <div
+        id={this.props.id}
+        onclick={this.handleClick}
+        class={this.state.visible ? this.props.className : "closedWindow"}>
         {this.props.children}
       </div>
-    );
-  }
-});
-
-
-// FIELD REACT CLASS =================================
-
-var Field = React.createClass({
-
-  getInitialState: function(){
-    return {
-      baseMap: this.props.baseMap
-    }
-  },
-  componentDidMount: function() {
-    // assign class to path tiles
-    for (var y in this.state.baseMap) {
-      for (var x in this.state.baseMap[y]) {
-        if (this.state.baseMap[y][x] == "#") {
-          $(document.getElementById("field").rows[y].cells[x]).attr("class", "path");
-        }
-      }
-    }
-  },
-  render: function(){
-    //make table cells and rows
-    var rowString = "<td></td>".repeat(this.state.baseMap[0].length);
-    var tableString = "<table id='field'>" + ("<tr>" + rowString + "</tr>").repeat(this.state.baseMap.length) + "</table>";
-    return (
-      <table id='field' dangerouslySetInnerHTML={{__html:
-          ("<tr>" + rowString + "</tr>").repeat(this.state.baseMap.length)
-      }}>
-      </table>
-    );
-  }
-
-})
-
-
-// MUSIC REACT CLASS =================================
-
-var Music = React.createClass({
-  getInitialState: function() {
-    return {track: this.props.filePath};
-  },
-  componentDidMount: function() {
-    $("#music")[0].loop = true;
-    $("#music")[0].play();
-    $("#music")[0].paused = false;
-  },
-  switchTracks: function(fileName) {
-    this.setState({track: fileName});
-  },
-  render: function() {
-    return (
-      <audio id="music" src={this.state.track}></audio>
     );
   }
 });
@@ -93,98 +42,106 @@ var Music = React.createClass({
 var Game = React.createClass({
 
   getInitialState: function(){
-    return {
-      level: level1,
-      env: new Env(level1),
-      windows: [
-        (
-          <Window id="title" windowType="titleWindow" clickAction="fadeOut">
-            <h1>{"Time's Prisoner"}</h1>
-            <h2>a little game demo by Claire Samuels</h2>
-            <button>Play</button>
-          </Window>
-        ),
-        (
-          <Window id = "title" windowType="titleWindow" clickAction="fadeOut">
-            <p>All crystals collected!</p>
-            <h1>Forward in time!</h1>
-            <p>next: Ordovician Period</p>
-            <p>coming soon</p>
-          </Window>
-        ),
-        (
-          <div id = "gameOverWindow">
-            <p>Toasted by lava!</p>
-            <h1>GAME OVER</h1>
-            <button onclick="restart(0);">Continue</button>
-            <button onclick="restart(1);">Start over</button>
-          </div>
-        )
-      ]
-    };
+    level: level1,
+    env: new Env,
   },
 
   render: function(){
-    var textWindow = this.state.windows[this.state.env.currentWindow];
+    <PopupWindow id="title" className="title">
+      <h1>{"Time's Prisoner"}</h1>
+      <h2>a little game demo by Claire Samuels</h2>
+      <button>Play</button>
+    </PopupWindow>
+  }
+
+})
+
+// MUSIC REACT CLASS =================================
+
+var Music = React.createClass({
+  render: function() {
     return (
-      <div>
-        <Music filePath={this.state.env.music.current} />
-        <aside id="homeLink" class="lightUp">
-          <a href="index.html">&lt;&lt;back to site</a>
-        </aside>
+      <audio id="music" src={this.props.fileName} {this.props.playState} loop></audio>
+    );
+  }
+})
 
-        <aside id="musicToggle" class="lightUp" onclick="toggleMusic();">
-          play/pause music;
-        </aside>
+// FIELD REACT CLASS =================================
 
-        <header>
-          <h1>{"Time's Prisoner"}</h1>
-          <h2>Precambrian Era</h2>
-        </header>
+var Field = React.createClass({
 
-        <Field baseMap={this.state.level.baseMap} />
+  getInitialState: function(){
+    baseMap: this.props.baseMap
 
-        {this.state.windows[0]}
+  },
 
-        <footer class="lightUp">
-          <a onClick="displayWindow('credits');">Credits</a>
-        </footer>
+  componentDidMount: function() {
+    // assign class to path tiles
+    for (var y in this.baseMap) {
+      for (var x in this.baseMap[y]) {
+        if (this.baseMap[y][x] == "#") {
+          $(document.getElementById("field").rows[y].cells[x]).attr("class", "path");
+        }
+      }
+    }
+  },
 
-      </div>
+  render: function(){
+    //make table cells and rows
+    var rowString = "<td></td>".repeat(this.map.baseMap[0].length);
+    var tableString = "<table id='field'>" + ("<tr>" + rowString + "</tr>").repeat(this.map.baseMap.length) + "</table>";
+    return (
+      {"<table id='field'>"
+        + ("<tr>"
+        + rowString
+        + "</tr>"
+        ).repeat(this.map.baseMap.length)
+      + "</table>"}
     );
   }
 
 })
 
-
 // RUNNER =================================
 
-$(document).ready(function(){
-  ReactDOM.render(
-    <Game />,
-    document.getElementById("root")
-  );
-});
+ReactDOM.render(
+  <Game />,
+  $(document)
+);
 
 //=====================================
 
+function Level(args) {
+  this.number = args.number;
+  this.title = args.title;
+  this.baseMap = baseMap;
+  this.bg = args.bg;
+  this.musicFiles = args.musicFiles;
+}
+
+function Sprite(args) {
+  this.image = args.image;
+  this.x = args.x;
+  this.y = args.y;
+  this.visible = args.visible;
+}
 
 // CONTROLLER=================================
 
-// function Game(args) {
-//   this.view = new View();
-//   this.view.game = this;
-//   this.env = args.env;
-//   this.objects = args.objects;
-// }
+function Game(args) {
+  this.view = new View();
+  this.view.game = this;
+  this.env = args.env;
+  this.objects = args.objects;
+}
 
 // Move some functionality to View
-// Game.prototype.begin = function(){
-//   $("#title").attr = ("id", "closingTitle");
-//   setTimeout(function(){
-//     $("#closingTitle").attr("id", "closedTitle");
-//   }, 500);
-// }
+Game.prototype.begin = function(){
+  $("#title").attr = ("id", "closingTitle");
+  setTimeout(function(){
+    $("#closingTitle").attr("id", "closedTitle");
+  }, 500);
+}
 
 
 // VIEW ----------------------------------------

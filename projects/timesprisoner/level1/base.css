@@ -142,7 +142,7 @@
   }
 
   footer {
-    visibility: hidden;
+/*    visibility: hidden;*/
     width: 100%;
     position: fixed;
     bottom: 0px;
@@ -280,11 +280,12 @@
     transition: none;
   }
 
-  #title, #closingTitle {
-    display: block;
+  .titleWindow {
     margin: auto;
     padding-top: 20%;
     position: fixed;
+    left: 0;
+    top: 0;
     background-color: black;
     width: 100%;
     height: 100%;
@@ -308,20 +309,21 @@
     animation-iteration-count: infinite;
   }
 
-  #closingTitle {
-    opacity: .5;
-    background-color: black;
-    color: white;
-    animation-name: fadeTitle;
+  .fadeWindow {
+    animation-name: fadeWindow;
     animation-duration: .5s;
     animation-timing-function: linear;
   }
 
-  @keyframes fadeTitle {
+  @keyframes fadeWindow {
     0% {opacity: 1}
     100% {opacity: 0}
   }
 
-  #closedWindow {
-    display: none;
+.openWindow {
+  display: block;
+  }
+
+.closedWindow {
+  display: none;
   }
