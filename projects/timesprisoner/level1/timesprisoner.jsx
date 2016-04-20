@@ -72,7 +72,7 @@ var Field = React.createClass({
 var Music = React.createClass({
 
   getInitialState: function() {
-    return {track: this.props.children};
+    return {track: this.props.filePath};
   },
 
   componentDidMount: function() {
@@ -99,17 +99,14 @@ var Game = React.createClass({
   getInitialState: function(){
     return {
       level: level1,
-      env: new Env({
-        totalCrystals: level1.totalCrystals,
-        musicFiles: level1.musicFiles
-      })
+      env: new Env(level1)
     };
   },
 
   render: function(){
     return (
       <div>
-        <Music>music/On_the_Shore.mp3</Music>
+        <Music filePath={this.state.env.music.current} />
         <Field baseMap={this.state.level.baseMap} />
         <Window id="title" windowType="titleWindow" clickAction="fadeOut">
           <h1>{"Time's Prisoner"}</h1>

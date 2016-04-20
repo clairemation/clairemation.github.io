@@ -3,16 +3,20 @@ function Level(args) {
   this.title = args.title;
   this.baseMap = args.baseMap;
   this.bg = args.bg;
-  this.musicFiles = args.musicFiles;
+  this.totalCrystals = args.totalCrystals;
+  this.musicTracks = args.musicTracks;
 }
 
-function Env(args){
-  this.totalCrystals = args.totalCrystals;
+function Env(level){
+  this.levelNum = level.number;
+  this.title = level.title;
+  this.totalCrystals = level.totalCrystals;
   this.message = "";
+  this.music = {
+    tracks: level.musicTracks,
+    current: level.musicTracks.intro}
   this.running = false;
   this.beginning = true;
-  this.currentTrack = args.musicFiles.intro;
-  this.musicState = "autoplay"
 }
 
 
@@ -26,7 +30,7 @@ function Sprite(args) {
 var level1 = new Level({
   number: 1,
   title: "Precambrian Era",
-  musicFiles: {
+  musicTracks: {
     intro: "music/On_the_Shore.mp3",
     stage: "music/Phantom_from_Space.mp3"
   },

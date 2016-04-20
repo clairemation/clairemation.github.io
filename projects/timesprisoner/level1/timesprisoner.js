@@ -72,7 +72,7 @@ var Field = React.createClass({displayName: "Field",
 var Music = React.createClass({displayName: "Music",
 
   getInitialState: function() {
-    return {track: this.props.children};
+    return {track: this.props.filePath};
   },
 
   componentDidMount: function() {
@@ -99,17 +99,14 @@ var Game = React.createClass({displayName: "Game",
   getInitialState: function(){
     return {
       level: level1,
-      env: new Env({
-        totalCrystals: level1.totalCrystals,
-        musicFiles: level1.musicFiles
-      })
+      env: new Env(level1)
     };
   },
 
   render: function(){
     return (
       React.createElement("div", null, 
-        React.createElement(Music, null, "music/On_the_Shore.mp3"), 
+        React.createElement(Music, {filePath: this.state.env.music.current}), 
         React.createElement(Field, {baseMap: this.state.level.baseMap}), 
         React.createElement(Window, {id: "title", windowType: "titleWindow", clickAction: "fadeOut"}, 
           React.createElement("h1", null, "Time's Prisoner"), 
