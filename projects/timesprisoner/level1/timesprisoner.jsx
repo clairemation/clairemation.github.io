@@ -70,21 +70,17 @@ var Field = React.createClass({
 // MUSIC REACT CLASS =================================
 
 var Music = React.createClass({
-
   getInitialState: function() {
     return {track: this.props.filePath};
   },
-
   componentDidMount: function() {
     $("#music")[0].loop = true;
     $("#music")[0].play();
     $("#music")[0].paused = false;
   },
-
   switchTracks: function(fileName) {
     this.setState({track: fileName});
   },
-
   render: function() {
     return (
       <audio id="music" src={this.state.track}></audio>
@@ -99,20 +95,61 @@ var Game = React.createClass({
   getInitialState: function(){
     return {
       level: level1,
-      env: new Env(level1)
+      env: new Env(level1),
+      windows: [
+        (
+          <Window id="title" windowType="titleWindow" clickAction="fadeOut">
+            <h1>{"Time's Prisoner"}</h1>
+            <h2>a little game demo by Claire Samuels</h2>
+            <button>Play</button>
+          </Window>
+        ),
+        (
+          <Window id = "title" windowType="titleWindow" clickAction="fadeOut">
+            <p>All crystals collected!</p>
+            <h1>Forward in time!</h1>
+            <p>next: Ordovician Period</p>
+            <p>coming soon</p>
+          </Window>
+        ),
+        (
+          <div id = "gameOverWindow">
+            <p>Toasted by lava!</p>
+            <h1>GAME OVER</h1>
+            <button onclick="restart(0);">Continue</button>
+            <button onclick="restart(1);">Start over</button>
+          </div>
+        )
+      ]
     };
   },
 
   render: function(){
+    var textWindow = this.state.windows[this.state.env.currentWindow];
     return (
       <div>
         <Music filePath={this.state.env.music.current} />
-        <Field baseMap={this.state.level.baseMap} />
-        <Window id="title" windowType="titleWindow" clickAction="fadeOut">
+        <aside id="homeLink" class="lightUp">
+          <a href="index.html">&lt;&lt;back to site</a>
+        </aside>
+
+        <aside id="musicToggle" class="lightUp" onclick="toggleMusic();">
+          play/pause music;
+        </aside>
+
+        <header>
           <h1>{"Time's Prisoner"}</h1>
-          <h2>a little game demo by Claire Samuels</h2>
-          <button>Play</button>
-        </Window>
+          <h2>Precambrian Era</h2>
+        </header>
+
+        <Field baseMap={this.state.level.baseMap} />
+
+        {this.state.windows[0]}
+
+        <footer class="lightUp">
+          <a onClick="displayWindow('credits');">Credits</a>
+        </footer>
+
       </div>
     );
   }

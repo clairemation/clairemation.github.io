@@ -17,6 +17,8 @@ function Env(level){
     current: level.musicTracks.intro}
   this.running = false;
   this.beginning = true;
+  this.currentWindow = 0;
+  this.windows = level.windows;
 }
 
 

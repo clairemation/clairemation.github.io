@@ -70,21 +70,17 @@ var Field = React.createClass({displayName: "Field",
 // MUSIC REACT CLASS =================================
 
 var Music = React.createClass({displayName: "Music",
-
   getInitialState: function() {
     return {track: this.props.filePath};
   },
-
   componentDidMount: function() {
     $("#music")[0].loop = true;
     $("#music")[0].play();
     $("#music")[0].paused = false;
   },
-
   switchTracks: function(fileName) {
     this.setState({track: fileName});
   },
-
   render: function() {
     return (
       React.createElement("audio", {id: "music", src: this.state.track})
@@ -99,20 +95,61 @@ var Game = React.createClass({displayName: "Game",
   getInitialState: function(){
     return {
       level: level1,
-      env: new Env(level1)
+      env: new Env(level1),
+      windows: [
+        (
+          React.createElement(Window, {id: "title", windowType: "titleWindow", clickAction: "fadeOut"}, 
+            React.createElement("h1", null, "Time's Prisoner"), 
+            React.createElement("h2", null, "a little game demo by Claire Samuels"), 
+            React.createElement("button", null, "Play")
+          )
+        ),
+        (
+          React.createElement(Window, {id: "title", windowType: "titleWindow", clickAction: "fadeOut"}, 
+            React.createElement("p", null, "All crystals collected!"), 
+            React.createElement("h1", null, "Forward in time!"), 
+            React.createElement("p", null, "next: Ordovician Period"), 
+            React.createElement("p", null, "coming soon")
+          )
+        ),
+        (
+          React.createElement("div", {id: "gameOverWindow"}, 
+            React.createElement("p", null, "Toasted by lava!"), 
+            React.createElement("h1", null, "GAME OVER"), 
+            React.createElement("button", {onclick: "restart(0);"}, "Continue"), 
+            React.createElement("button", {onclick: "restart(1);"}, "Start over")
+          )
+        )
+      ]
     };
   },
 
   render: function(){
+    var textWindow = this.state.windows[this.state.env.currentWindow];
     return (
       React.createElement("div", null, 
         React.createElement(Music, {filePath: this.state.env.music.current}), 
-        React.createElement(Field, {baseMap: this.state.level.baseMap}), 
-        React.createElement(Window, {id: "title", windowType: "titleWindow", clickAction: "fadeOut"}, 
+        React.createElement("aside", {id: "homeLink", class: "lightUp"}, 
+          React.createElement("a", {href: "index.html"}, "<<back to site")
+        ), 
+
+        React.createElement("aside", {id: "musicToggle", class: "lightUp", onclick: "toggleMusic();"}, 
+          "play/pause music;"
+        ), 
+
+        React.createElement("header", null, 
           React.createElement("h1", null, "Time's Prisoner"), 
-          React.createElement("h2", null, "a little game demo by Claire Samuels"), 
-          React.createElement("button", null, "Play")
+          React.createElement("h2", null, "Precambrian Era")
+        ), 
+
+        React.createElement(Field, {baseMap: this.state.level.baseMap}), 
+
+        this.state.windows[0], 
+
+        React.createElement("footer", {class: "lightUp"}, 
+          React.createElement("a", {onClick: "displayWindow('credits');"}, "Credits")
         )
+
       )
     );
   }

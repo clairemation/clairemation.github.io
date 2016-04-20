@@ -60,6 +60,7 @@ section#main-pane {
   z-index: -1;
   box-shadow: 0 5px 0 0 hsl(0, 0%, 72%) inset, 0 -5px 0 0 hsl(0, 0%, 72%) inset;
   border: 2px solid black;
+  overflow: hidden;
 }
 
 #maintitle::before {
@@ -84,7 +85,6 @@ header {
   height: 100%;
   background-color: white;
   /*border-bottom-right-radius: 5px;*/
-  background: linear-gradient(hsl(100,50%,60%) 8%, hsl(100,10%,60%) 12%, white 15%);
   /*padding-bottom: 1em;*/
 }
 
@@ -113,6 +113,8 @@ nav {
   margin: 20px;
   vertical-align: text-top;
   text-align: left;
+  background-color: white;
+  float: left;
 }
 
 nav h1 {
@@ -124,10 +126,11 @@ nav h1 {
 }
 
 section.copy {
+  display: inline-block;
+  float: left;
   margin: auto;
   background-color: hsl(100,14%,40%);
-  background: radial-gradient(hsl(100,14%,40%), hsl(100,14%,20%) 90%);
-  border-top: 15px solid hsl(100, 14%, 20%);
+  background: radial-gradient(hsl(100,14%,40%), hsl(100,14%,25%) 90%);
   padding: 1.5em 1.5em 1.5em 1.5em;
   color: white;
   font-size: 1.5em;
