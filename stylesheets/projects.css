@@ -2,6 +2,10 @@ ul.breadcrumbs {
   background-color: black;
 }
 
+main {
+  padding-left: 20%;
+}
+
 #main-pane {
   height: 100%;
 }
@@ -111,15 +115,18 @@ ul.site-sections li {
     /*text-decoration: none;*/
   }
 
-  nav {
-    border-top: 1px solid hsla(0, 0%, 50%, .5);
-    border-bottom: 1px solid hsla(0, 0%, 50%, .5);
+  nav, #desc {
     padding-bottom: .7em;
     padding-top: .5em;
+    width: 40%;
+    float: left;
+    text-align: left;
   }
 
   nav li {
     list-style-type: none;
+    position: relative;
+    height: 40px;
   }
 
   .gameType, .utilType {
@@ -147,4 +154,18 @@ ul.site-sections li {
   .utilType {
     background-color: brown;
     border-color: darkred;
+  }
+
+  .githubButton {
+    position: absolute;
+    left: -1.5em;
+  }
+
+  .githubButton img {
+    height: 1.5em;
+    width: 1.5em;
+  }
+
+  p {
+    clear: left;
   }
