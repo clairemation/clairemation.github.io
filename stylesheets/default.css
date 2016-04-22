@@ -29,7 +29,7 @@ section#main-pane {
   margin: auto;
   margin-bottom: 0;
   width: 900px;
-  padding: 50px 0px 2em 0px;
+  padding: 0px 0px 2em 0px;
   /*background-color: white;*/
   background-repeat: repeat-x;
   vertical-align: text-top;
@@ -38,8 +38,8 @@ section#main-pane {
 #maintitle {
   display: inline-block;
   width: 750px;
-  background-color: hsla(100,24%,64%,1);
-  margin: 0 0 0 -25px;
+  background-color: #A0B098;
+  margin: 1.5em 0 0 0;
   padding: 0px;
   border: 2px solid black;
   color: white;
@@ -47,7 +47,7 @@ section#main-pane {
   font-weight: 800;
   font-size: 2.5em;
   position: relative;
-  box-shadow: 0 5px 0 0 white inset, 0 -5px 0 0 white inset;
+  box-shadow: 0 5px 0 0 white inset, 0 -5px 0 0 white inset, 0 2px 1px 0 gray;
 }
 
 #maintitle::before, #maintitle::after {
@@ -60,17 +60,14 @@ section#main-pane {
   z-index: -1;
   box-shadow: 0 5px 0 0 hsl(0, 0%, 72%) inset, 0 -5px 0 0 hsl(0, 0%, 72%) inset;
   border: 2px solid black;
-  overflow: hidden;
 }
 
 #maintitle::before {
   left: -40px;
-  background: linear-gradient(90deg, hsla(100,20%,46%,1), hsl(100,14%,20%) 80%)
 }
 
 #maintitle::after {
   right: -40px;
-  background: linear-gradient(250deg, hsla(100,13%,46%,1), hsl(100,14%,20%))
 }
 
 header {
@@ -82,10 +79,11 @@ header {
 #top {
   display: inline-block;
   width: 40em;
-  height: 100%;
+  border-left: 3px solid #A0B098;
+  border-bottom: 6px solid #A0B098;
+  border-bottom-left-radius: 3em;
+  border-bottom-right-radius: 5px;
   background-color: white;
-  /*border-bottom-right-radius: 5px;*/
-  /*padding-bottom: 1em;*/
 }
 
 #update {
@@ -113,14 +111,10 @@ nav {
   margin: 20px;
   vertical-align: text-top;
   text-align: left;
-  background-color: white;
-  float: left;
 }
 
 nav h1 {
-  display: inline-block;
-  margin: .5em;
-  font-size: 1.5em;
+  font-size: 2em;
   color: black;
   vertical-align: text-top;
   font-family: 'Diehl Deco';
@@ -128,15 +122,8 @@ nav h1 {
 }
 
 section.copy {
-  display: inline-block;
-  float: right;
   margin: auto;
-  background-color: hsl(100,14%,40%);
-  background: radial-gradient(hsl(100,14%,40%), hsl(100,14%,25%) 90%);
-  padding: 1.5em 1.5em 1.5em 1.5em;
-  color: white;
-  font-size: 1.5em;
-  /*margin-top: 2em;
+  margin-top: 2em;
   margin-bottom: 3em;
   background-color: white;
   padding: 1.5em;
@@ -144,7 +131,7 @@ section.copy {
   background: radial-gradient(white, white, #B0AA98);
   background: -webkit-radial-gradient(white, white, #B0AA98);
   background: -o-radial-gradient(white, white, #B0AA98);
-  background: -mo-radial-gradient(white, white, #B0AA98);*/
+  background: -mo-radial-gradient(white, white, #B0AA98);
 }
 
 hr {
@@ -157,7 +144,7 @@ hr {
 }
 
 a, a:visited {
-  /*color: #A0B098;*/
+  color: #A0B098;
   text-decoration: none;
 }
 
