@@ -12,7 +12,7 @@
     border: 0;
     padding: 0;
   }
-  body, .buttons {
+  body {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -78,7 +78,7 @@
     text-shadow: 0px 0px 10px white, 0px 0px 10px white, 0px 0px 5px rgba(0, 255, 255, 1);
   }
   div.buttons {
-    display: inline-block;
+    display: none;
     padding: 5px;
     background-color: #666666;
     border-radius: 50%;
@@ -342,7 +342,7 @@
 <p>But I have to pick up all the chrono crystals I dropped across time, or I'll never get home.</p>
 <p>Well, I mean, I'll <em>get</em> home either way, eventually. I'd just rather not get there as a fossil...</p>
 <p style="text-align: right; position: relative; right: 1em;">--<span style="font-size: 3em; color: hsl(180, 70%, 50%); text-shadow: 0 0 3px black;">&#9880;</span> </p>
-<p class="summary">Move using the arrow keys or by tapping the onscreen buttons to collect <span class="crystal">&#10053;</span> and start your journey home. Watch out for lava!<br><button>Begin</button></p>
+<p class="summary">Move using the arrow keys to collect <span class="crystal">&#10053;</span> and start your journey home. Watch out for lava!<br><button>Begin</button></p>
 </div>
 <!-- Visible elements -->
 
@@ -364,7 +364,7 @@
 <table id="field"></table> <!-- dynamic game field goes in here -->
 
 <button onclick="displayWindow('instructions');" style="margin-top: 1.2em; background-color: #cccccc;">Instructions</button>
-<br/>
+
 <div class='buttons'>
 <div onclick="press('up');" onmouseup="unpress();" id="up" style="display: block;">&#9650;</div>
 <div onclick="press('left');" onmouseup="unpress();" id="left" style="display: inline-block; margin-right: 30px">&#9664;</div>
