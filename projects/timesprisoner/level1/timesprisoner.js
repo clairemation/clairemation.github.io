@@ -9,21 +9,24 @@ var Window = React.createClass({displayName: "Window",
       windowState: 'openWindow'
     }
   },
-  hideMe: function(){
-    this.setState({windowState:
-                  ('closedWindow')});
+
+  close: function(effect){
+    switch (effect) {
+      case null:
+        this.setState({windowState: ('closedWindow')});
+        break;
+      case 'fade':
+        this.setState({windowState: 'fadeWindow'});
+        closeDelay = setTimeout(this.hideMe, 500);
+        break;
+    }
   },
-  fadeOut: function(){
-    this.setState({windowState: 'fadeWindow'});
-    closeDelay = setTimeout(this.hideMe, 500);
-  },
+
   render: function(){
     var classNameString = this.props.windowType + " " + this.state.windowState
     return (
       React.createElement("div", {id: this.props.id, 
-        onClick: {'hideMe': this.hideMe,
-                  'fadeOut': this.fadeOut}
-                  [this.props.clickAction], 
+        onClick: this.close(this.props.effect), 
         className: classNameString
       }, 
         this.props.children
@@ -53,6 +56,7 @@ var Field = React.createClass({displayName: "Field",
     }
   },
   render: function(){
+    console.log("wheee");
     //make table cells and rows
     var rowString = "<td></td>".repeat(this.state.baseMap[0].length);
     var tableString = "<table id='field'>" + ("<tr>" + rowString + "</tr>").repeat(this.state.baseMap.length) + "</table>";
@@ -105,7 +109,7 @@ var Game = React.createClass({displayName: "Game",
           )
         ),
         (
-          React.createElement(Window, {id: "title", windowType: "titleWindow", clickAction: "fadeOut"}, 
+          React.createElement(Window, {id: "title", windowType: "titleWindow", effect: "fadeOut"}, 
             React.createElement("p", null, "All crystals collected!"), 
             React.createElement("h1", null, "Forward in time!"), 
             React.createElement("p", null, "next: Ordovician Period"), 
