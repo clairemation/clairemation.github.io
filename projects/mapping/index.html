@@ -58,7 +58,7 @@
     }
   </style>
   <link rel="stylesheet" href="OSMBuildings/OSMBuildings.css">
-  <script src="OSMBuildings/OSMBuildings.js"></script>
+  <script src="OSMBuildings/OSMBuildings.debug.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 </head>
 
@@ -86,7 +86,7 @@
     zoom: 16,
     minZoom: 12,
     maxZoom: 20,
-    state: true // stores map position/rotation in url
+    state: false // stores map position/rotation in url
   });
 
   var osmb = new OSMBuildings({
@@ -94,6 +94,7 @@
     minZoom: 15,
     maxZoom: 22,
     effects: ['shadows'],
+    fastMode: true,
     attribution: '© 3D <a href="https://osmbuildings.org/copyright/">OSM Buildings</a>'
   }).addTo(map);
 
@@ -113,6 +114,7 @@
       if (id) {
         document.body.style.cursor = 'pointer';
         osmb.highlight(id, '#f08000');
+        console.log(id);
       } else {
         document.body.style.cursor = 'default';
         osmb.highlight(null);
@@ -121,18 +123,33 @@
   });
 
   map.on('pointerup', function(e) {
-    var id = osmb.getTarget(e.x, e.y, function(id) {
+
+    // by id
+
+    var id = osmb.getTarget(e.x, e.y, function(id){
       if (id) {
-        console.log(id);
-        var url = "https://www.openstreetmap.org/relation/" + id
-        $.get(url,
-              function(data){
-                alert(data)
-              },
-              'xml'
-        );
+        var url = "http://overpass-api.de/api/interpreter?data=[out:json];(relation(" + id + ");node(w);way(" + id + ");node(w));out%20body;"
+        $.get(url, function(response){
+          console.log(response);
+        });
       }
     });
+
+
+    // by point on the map
+    // var latLong = osmb.unproject(e.x, e.y);
+    // var url = "http://overpass.osm.rambler.ru/cgi/interpreter?data=%5Bout:json%5D;is_in(" + latLong.latitude + "," + latLong.longitude + ");out%20meta;";
+
+    //     $.get(url,
+    //           function(response){
+    //             var id = response.elements[1].tags["gnis:feature_id"];
+    //             console.log(id);
+    //             var url = "http://overpass.osm.rambler.ru/cgi/interpreter?data=%5Bout:json%5D;node(" + id + ");out%20body;";
+    //             $.get(url, function(response){
+    //               console.log(response);
+    //             });
+    //           }
+    //     );
   });
 
   //***************************************************************************

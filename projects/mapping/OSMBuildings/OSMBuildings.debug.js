@@ -156,15 +156,15 @@ Basemap.prototype = {
   },
 
   /* returns the geographical bounds of the current view.
-   * notes: 
+   * notes:
    * - since the bounds are always axis-aligned they will contain areas that are
    *   not currently visible if the current view is not also axis-aligned.
    * - the bounds only contain the map area that OSMBuildings considers for rendering.
    *   OSMBuildings has a rendering distance of about 3.5km, so the bounds will
    *   never extend beyond that, even if the horizon is visible (in which case the
    *   bounds would mathematically be infinite).
-   * - the bounds only consider ground level. For example, buildings whose top 
-   *   is seen at the lower edge of the screen, but whose footprint is outside 
+   * - the bounds only consider ground level. For example, buildings whose top
+   *   is seen at the lower edge of the screen, but whose footprint is outside
    *   of the current view below the lower edge do not contribute to the bounds.
    *   so their top may be visible and they may still be out of bounds.
    */
@@ -252,7 +252,7 @@ Basemap.prototype = {
   },
 
   setTilt: function(tilt) {
-    tilt = clamp(parseFloat(tilt), 0, 45); // bigger max increases shadow moire on base map
+    // tilt = clamp(parseFloat(tilt), 0, 45); // bigger max increases shadow moire on base map
     if (this.tilt !== tilt) {
       this.tilt = tilt;
       this.emit('tilt', { tilt: tilt });
@@ -2387,7 +2387,7 @@ var GLX = function(container, width, height, highQuality) {
         context.anisotropyExtension.MAX_TEXTURE_MAX_ANISOTROPY_EXT
       );
     }
-    
+
     context.depthTextureExtension = context.getExtension('WEBGL_depth_texture');
   }
 
@@ -2482,7 +2482,7 @@ glx.Buffer.prototype = {
 glx.Framebuffer = function(width, height, useDepthTexture) {
   if (useDepthTexture && !GL.depthTextureExtension)
     throw "Depth textures are not supported by your GPU";
-    
+
   this.useDepthTexture = !!useDepthTexture;
   this.setSize(width, height);
 };
@@ -2501,17 +2501,17 @@ glx.Framebuffer.prototype = {
 
     this.width  = width;
     this.height = height;
-    
+
     if (this.depthRenderBuffer) {
       GL.deleteRenderbuffer(this.depthRenderBuffer)
       this.depthRenderBuffer = null;
-    } 
-    
+    }
+
     if (this.depthTexture) {
       this.depthTexture.destroy();
       this.depthTexture = null;
     }
-    
+
     if (this.useDepthTexture) {
       this.depthTexture = new glx.texture.Image()//GL.createTexture();
       this.depthTexture.enable(0);
@@ -2582,7 +2582,7 @@ glx.Framebuffer.prototype = {
     if (this.renderTexture) {
       this.renderTexture.destroy();
     }
-    
+
     if (this.depthTexture) {
       this.depthTexture.destroy();
     }
@@ -2613,7 +2613,7 @@ glx.Shader = function(config) {
   for (i = 0; i < this.attributeNames.length; i++) {
     this.locateAttribute(this.attributeNames[i]);
   }
-  
+
   this.uniforms = {};
   for (i = 0; i < this.uniformNames.length; i++) {
     this.locateUniform(this.uniformNames[i]);
@@ -2659,7 +2659,7 @@ glx.Shader.prototype = {
     for (var name in this.attributes) {
       GL.enableVertexAttribArray(this.attributes[name]);
     }
-    
+
     return this;
   },
 
@@ -2670,7 +2670,7 @@ glx.Shader.prototype = {
       }
     }
   },
-  
+
   bindBuffer: function(buffer, attribute) {
     if (this.attributes[attribute] === undefined) {
       var qualifiedName = this.shaderName + ":" + attribute;
@@ -2680,11 +2680,11 @@ glx.Shader.prototype = {
       }
       return;
     }
-    
+
     buffer.enable();
     GL.vertexAttribPointer(this.attributes[attribute], buffer.itemSize, gl.FLOAT, false, 0, 0);
   },
-  
+
   setUniform: function(uniform, type, value) {
     if (this.uniforms[uniform] === undefined) {
       var qualifiedName = this.shaderName + ":" + uniform;
@@ -2721,7 +2721,7 @@ glx.Shader.prototype = {
       this.setUniformMatrix(uniforms[i][0], uniforms[i][1], uniforms[i][2]);
     }
   },
-  
+
   bindTexture: function(uniform, textureUnit, glxTexture) {
     glxTexture.enable(textureUnit);
     this.setUniform(uniform, "1i", textureUnit);
@@ -2890,13 +2890,13 @@ glx.Matrix.identity3 = function() {
     return res;
   };
 
-  // returns a perspective projection matrix with a field-of-view of 'fov' 
+  // returns a perspective projection matrix with a field-of-view of 'fov'
   // degrees, an width/height aspect ratio of 'aspect', the near plane at 'near'
   // and the far plane at 'far'
   glx.Matrix.Perspective = function(fov, aspect, near, far) {
-    var f =  1 / Math.tan(fov*(Math.PI/180)/2), 
+    var f =  1 / Math.tan(fov*(Math.PI/180)/2),
         nf = 1 / (near - far);
-        
+
     return new glx.Matrix([
       f/aspect, 0,               0,  0,
       0,        f,               0,  0,
@@ -2911,33 +2911,33 @@ glx.Matrix.identity3 = function() {
     var rl = 1 / (right - left),
         tb = 1 / (top - bottom),
         nf = 1 / (near - far);
-        
+
     return new glx.Matrix( [
           (near * 2) * rl,                   0,                     0,  0,
                         0,     (near * 2) * tb,                     0,  0,
       (right + left) * rl, (top + bottom) * tb,     (far + near) * nf, -1,
                         0,                   0, (far * near * 2) * nf,  0]);
   };
-  
+
   glx.Matrix.OffCenterProjection = function (screenBottomLeft, screenTopLeft, screenBottomRight, eye, near, far) {
     var vRight = norm3(sub3( screenBottomRight, screenBottomLeft));
     var vUp    = norm3(sub3( screenTopLeft,     screenBottomLeft));
     var vNormal= normal( screenBottomLeft, screenTopLeft, screenBottomRight);
-    
+
     var eyeToScreenBottomLeft = sub3( screenBottomLeft, eye);
     var eyeToScreenTopLeft    = sub3( screenTopLeft,    eye);
     var eyeToScreenBottomRight= sub3( screenBottomRight,eye);
-    
+
     var d = - dot3(eyeToScreenBottomLeft, vNormal);
-    
+
     var l = dot3(vRight, eyeToScreenBottomLeft) * near / d;
     var r = dot3(vRight, eyeToScreenBottomRight)* near / d;
     var b = dot3(vUp,    eyeToScreenBottomLeft) * near / d;
     var t = dot3(vUp,    eyeToScreenTopLeft)    * near / d;
-    
+
     return glx.Matrix.Frustum(l, r, t, b, near, far);
   };
-  
+
   // based on http://www.songho.ca/opengl/gl_projectionmatrix.html
   glx.Matrix.Ortho = function(left, right, top, bottom, near, far) {
     return new glx.Matrix([
@@ -2989,9 +2989,9 @@ glx.Matrix.identity3 = function() {
 
   glx.Matrix.transpose = function(a) {
     return new Float32Array([
-      a[0], a[4],  a[8], a[12], 
-      a[1], a[5],  a[9], a[13], 
-      a[2], a[6], a[10], a[14], 
+      a[0], a[4],  a[8], a[12],
+      a[1], a[5],  a[9], a[13],
+      a[2], a[6], a[10], a[14],
       a[3], a[7], a[11], a[15]
     ]);
   };
@@ -3954,8 +3954,8 @@ var METERS_PER_DEGREE_LATITUDE = EARTH_CIRCUMFERENCE_IN_METERS / 360;
 var SKYWALL_HEIGHT = 2000.0;
 
 /* For shadow mapping, the camera rendering the scene as seen by the sun has
- * to cover everything that's also visible to the user. For this to work 
- * reliably, we have to make assumptions on how high (in [m]) the buildings 
+ * to cover everything that's also visible to the user. For this to work
+ * reliably, we have to make assumptions on how high (in [m]) the buildings
  * can become.
  * Note: using a lower-than-accurate value will lead to buildings parts at the
  * edge of the viewport to have incorrect shadows. Using a higher-than-necessary
@@ -4099,7 +4099,7 @@ function substituteZCoordinate(points, zValue) {
   for (var i in points) {
     res.push( [points[i][0], points[i][1], zValue] );
   }
-  
+
   return res;
 }
 
@@ -4161,7 +4161,7 @@ Grid.prototype = {
     var s = 'abcd'[(x+y) % 4];
     return pattern(this.source, { s:s, x:x, y:y, z:z });
   },
-  
+
   getClosestTiles: function(tileList, referencePoint) {
     tileList.sort(function(a, b) {
       // tile coordinates correspond to the tile's upper left corner, but for
@@ -4171,7 +4171,7 @@ Grid.prototype = {
 
       var distB = Math.pow(b[0] + 0.5 - referencePoint[0], 2.0) +
                   Math.pow(b[1] + 0.5 - referencePoint[1], 2.0);
-      
+
       return distA > distB;
     });
 
@@ -4187,11 +4187,11 @@ Grid.prototype = {
       return true;
     });
   },
-  
+
   /* Returns a set of tiles based on 'tiles' (at zoom level 'zoom'),
    * but with those tiles recursively replaced by their respective parent tile
    * (tile from zoom level 'zoom'-1 that contains 'tile') for which said parent
-   * tile covers less than 'pixelAreaThreshold' pixels on screen based on the 
+   * tile covers less than 'pixelAreaThreshold' pixels on screen based on the
    * current view-projection matrix.
    *
    * The returned tile set is duplicate-free even if there were duplicates in
@@ -4202,7 +4202,7 @@ Grid.prototype = {
     var tileSet = {};
     var tileList = [];
     var key;
-    
+
     //if there is no parent zoom level
     if (zoom === 0 || zoom <= this.minZoom) {
       for (key in tiles) {
@@ -4210,18 +4210,18 @@ Grid.prototype = {
       }
       return tiles;
     }
-    
+
     for (key in tiles) {
       var tile = tiles[key];
 
       var parentX = (tile[0] <<0) / 2;
       var parentY = (tile[1] <<0) / 2;
-      
+
       if (parentTiles[ [parentX, parentY] ] === undefined) { //parent tile screen size unknown
         var numParentScreenPixels = getTileSizeOnScreen(parentX, parentY, zoom-1, render.viewProjMatrix);
         parentTiles[ [parentX, parentY] ] = (numParentScreenPixels < pixelAreaThreshold);
       }
-      
+
       if (! parentTiles[ [parentX, parentY] ]) { //won't be replaced by a parent tile -->keep
         if (tileSet[ [tile[0], tile[1]] ] === undefined) {  //remove duplicates
           tileSet[ [tile[0], tile[1]]] = true;
@@ -4229,20 +4229,20 @@ Grid.prototype = {
         }
       }
     }
-    
+
     var parentTileList = [];
-    
+
     for (key in parentTiles) {
       if (parentTiles[key]) {
         var parentTile = key.split(',');
         parentTileList.push( [parseInt(parentTile[0]), parseInt(parentTile[1]), zoom-1]);
       }
     }
-    
+
     if (parentTileList.length > 0) {
       parentTileList = this.mergeTiles(parentTileList, zoom - 1, pixelAreaThreshold);
     }
-      
+
     return tileList.concat(parentTileList);
   },
 
@@ -4280,7 +4280,7 @@ Grid.prototype = {
     tiles = ( this.fixedZoom ) ?
       this.getClosestTiles(tiles, mapCenterTile) :
       this.mergeTiles(tiles, zoom, 0.5 * TILE_SIZE * TILE_SIZE);
-    
+
     this.visibleTiles = {};
     for (i = 0; i < tiles.length; i++) {
       if (tiles[i][2] === undefined) {
@@ -4743,7 +4743,7 @@ mesh.GeoJSON = (function() {
  *
  * A 'MapPlane' is untextured and featureless. Its intended use is as a stand-in
  * for a 'BaseMap' in situations where either using the actual BaseMap would be
- * inefficient (e.g. when the BaseMap would be rendered without a texture) or 
+ * inefficient (e.g. when the BaseMap would be rendered without a texture) or
  * no BaseMap is present (e.g. if OSMBuildings is used as an overlay to Leaflet
  * or MapBoxGL). This mostly applies to creating depth and normal textures of the
  * scene, not to the actual shaded scene rendering.
@@ -4770,7 +4770,7 @@ mesh.MapPlane = (function() {
   constructor.prototype = {
 
     createGlGeometry: function() {
-      /* This method creates front and back faces, in case rendering 
+      /* This method creates front and back faces, in case rendering
        * effect requires both. */
       var NUM_SEGMENTS = 50;
       var segmentSize = 2*this.radius / NUM_SEGMENTS;
@@ -4784,17 +4784,17 @@ mesh.MapPlane = (function() {
       var filterEntry = [0, 1, 1, 1];
       var filterEntries = [].concat(filterEntry, filterEntry, filterEntry,
                                     filterEntry, filterEntry, filterEntry);
-      
+
       for (var x = 0; x < NUM_SEGMENTS; x++)
         for (var y = 0; y < NUM_SEGMENTS; y++) {
-          
-          
+
+
           var baseX = -this.radius + x*segmentSize;
           var baseY = -this.radius + y*segmentSize;
           this.vertexBuffer.push( baseX,               baseY, 0,
                                   baseX + segmentSize, baseY + segmentSize, 0,
                                   baseX + segmentSize, baseY, 0,
-                                  
+
                                   baseX,               baseY, 0,
                                   baseX,               baseY + segmentSize, 0,
                                   baseX + segmentSize, baseY + segmentSize, 0);
@@ -4813,11 +4813,11 @@ mesh.MapPlane = (function() {
           [].push.apply(this.filterBuffer, filterEntries);
           [].push.apply(this.filterBuffer, filterEntries);
       }
-       
+
       this.vertexBuffer = new glx.Buffer(3, new Float32Array(this.vertexBuffer));
       this.normalBuffer = new glx.Buffer(3, new Float32Array(this.normalBuffer));
       this.filterBuffer = new glx.Buffer(4, new Float32Array(this.filterBuffer));
-       
+
     },
 
     // TODO: switch to a notation like mesh.transform
@@ -4826,7 +4826,7 @@ mesh.MapPlane = (function() {
 
       var modelMatrix = new glx.Matrix();
       //modelMatrix.scale(scale, scale, scale);
-    
+
       return modelMatrix;
     },
 
@@ -4874,7 +4874,7 @@ mesh.DebugQuad = (function() {
       this.v2 = v2;
       this.v3 = v3;
       this.v4 = v4;
-      
+
       if (this.vertexBuffer)
         this.vertexBuffer.destroy();
 
@@ -4886,27 +4886,27 @@ mesh.DebugQuad = (function() {
         0.0, 0.0,
           1, 0.0,
           1,   1,
-        
+
         0.0, 0.0,
           1,   1,
         0.0,   1]));*/
 
       if (this.normalBuffer)
         this.normalBuffer.destroy();
-        
+
       this.normalBuffer = new glx.Buffer(3, new Float32Array([
         0, 0, 1,
         0, 0, 1,
         0, 0, 1,
-        
+
         0, 0, 1,
         0, 0, 1,
         0, 0, 1]));
-      
+
       var color = [1, 0.5, 0.25];
       if (this.colorBuffer)
         this.colorBuffer.destroy();
-        
+
       this.colorBuffer = new glx.Buffer(3, new Float32Array(
         [].concat(color, color, color, color, color, color)));
 
@@ -4916,15 +4916,15 @@ mesh.DebugQuad = (function() {
 
       this.idBuffer = new glx.Buffer(3, new Float32Array(
         [].concat(color, color, color, color, color, color)));
-        
+
       this.texCoordBuffer = new glx.Buffer(2, new Float32Array(
         [0,0,0,0,0,0,0,0,0,0,0,0]));
-        
+
       var filter = [0,1,1,1];
-      
+
       this.filterBuffer = new glx.Buffer(4, new Float32Array(
         [].concat(filter, filter, filter, filter, filter, filter)));
-        
+
       //this.numDummyVertices = 6;
     },
 
@@ -4933,7 +4933,7 @@ mesh.DebugQuad = (function() {
       //var scale = render.fogRadius/this.radius;
       var modelMatrix = new glx.Matrix();
       //modelMatrix.scale(scale, scale, scale);
-    
+
       return modelMatrix;
     },
 
@@ -5222,15 +5222,15 @@ mesh.OBJ = (function() {
         matrix.rotateZ(-this.rotation);
       }
 
-      var metersPerDegreeLongitude = METERS_PER_DEGREE_LATITUDE * 
+      var metersPerDegreeLongitude = METERS_PER_DEGREE_LATITUDE *
                                      Math.cos(MAP.position.latitude / 180 * Math.PI);
 
       var dLat = this.position.latitude - MAP.position.latitude;
       var dLon = this.position.longitude- MAP.position.longitude;
-      
+
       matrix.translate( dLon * metersPerDegreeLongitude,
                        -dLat * METERS_PER_DEGREE_LATITUDE, 0);
-      
+
       return matrix;
     },
 
@@ -5283,28 +5283,28 @@ function getDistancePointLine2( line1, line2, p) {
 } */
 
 /*  given a pixel's (integer) position through which the line 'segmentStart' ->
- *  'segmentEnd' passes, this method returns the one neighboring pixel of 
- *  'currentPixel' that would be traversed next if the line is followed in 
+ *  'segmentEnd' passes, this method returns the one neighboring pixel of
+ *  'currentPixel' that would be traversed next if the line is followed in
  *  the direction from 'segmentStart' to 'segmentEnd' (even if the next point
  *  would lie beyond 'segmentEnd'. )
  */
 function getNextPixel(segmentStart, segmentEnd, currentPixel) {
 
-  var vInc = [segmentStart[0] < segmentEnd[0] ? 1 : -1, 
+  var vInc = [segmentStart[0] < segmentEnd[0] ? 1 : -1,
               segmentStart[1] < segmentEnd[1] ? 1 : -1];
-         
+
   var nextX = currentPixel[0] + (segmentStart[0] < segmentEnd[0] ?  +1 : 0);
   var nextY = currentPixel[1] + (segmentStart[1] < segmentEnd[1] ?  +1 : 0);
-  
+
   // position of the edge to the next pixel on the line 'segmentStart'->'segmentEnd'
   var alphaX = (nextX - segmentStart[0])/ (segmentEnd[0] - segmentStart[0]);
   var alphaY = (nextY - segmentStart[1])/ (segmentEnd[1] - segmentStart[1]);
-  
+
   // neither value is valid
   if ((alphaX <= 0.0 || alphaX > 1.0) && (alphaY <= 0.0 || alphaY > 1.0)) {
     return [undefined, undefined];
   }
-    
+
   if (alphaX <= 0.0 || alphaX > 1.0) { // only alphaY is valid
     return [currentPixel[0], currentPixel[1] + vInc[1]];
   }
@@ -5312,14 +5312,14 @@ function getNextPixel(segmentStart, segmentEnd, currentPixel) {
   if (alphaY <= 0.0 || alphaY > 1.0) { // only alphaX is valid
     return [currentPixel[0] + vInc[0], currentPixel[1]];
   }
-    
+
   return alphaX < alphaY ? [currentPixel[0]+vInc[0], currentPixel[1]] :
                            [currentPixel[0],         currentPixel[1] + vInc[1]];
 }
 
 /* returns all pixels that are at least partially covered by the triangle
- * p1-p2-p3. 
- * Note: the returned array of pixels *will* contain duplicates that may need 
+ * p1-p2-p3.
+ * Note: the returned array of pixels *will* contain duplicates that may need
  * to be removed.
  */
 function rasterTriangle(p1, p2, p3) {
@@ -5330,17 +5330,17 @@ function rasterTriangle(p1, p2, p3) {
   p1 = points[0];
   p2 = points[1];
   p3 = points[2];
-  
+
   if (p1[1] == p2[1])
     return rasterFlatTriangle( p1, p2, p3);
-    
+
   if (p2[1] == p3[1])
     return rasterFlatTriangle( p2, p3, p1);
 
   var alpha = (p2[1] - p1[1]) / (p3[1] - p1[1]);
   //point on the line p1->p3 with the same y-value as p2
   var p4 = [p1[0] + alpha*(p3[0]-p1[0]), p2[1]];
-  
+
   /*  P3
    *   |\
    *   | \
@@ -5363,7 +5363,7 @@ function rasterTriangle(p1, p2, p3) {
  *  | \_
  *  |   \_
  *  |     \_
- * f0/f1--f1/f0  
+ * f0/f1--f1/f0
  */
 function rasterFlatTriangle( flat0, flat1, other ) {
 
@@ -5379,7 +5379,7 @@ function rasterFlatTriangle( flat0, flat1, other ) {
     flat0 = flat1;
     flat1 = tmp;
   }
-  
+
   var leftRasterPos = [other[0] <<0, other[1] <<0];
   var rightRasterPos = leftRasterPos.slice(0);
   points.push(leftRasterPos.slice(0));
@@ -5396,19 +5396,19 @@ function rasterFlatTriangle( flat0, flat1, other ) {
       leftRasterPos = getNextPixel(other, flat0, leftRasterPos);
     } while (leftRasterPos[1]*yDir <= y*yDir);
     leftRasterPos = prevLeftRasterPos;
-    
+
     do {
       points.push( rightRasterPos.slice(0));
       prevRightRasterPos = rightRasterPos;
       rightRasterPos = getNextPixel(other, flat1, rightRasterPos);
     } while (rightRasterPos[1]*yDir <= y*yDir);
     rightRasterPos = prevRightRasterPos;
-    
+
     for (var x = leftRasterPos[0]; x <= rightRasterPos[0]; x++) {
       points.push([x, y]);
     }
   }
-  
+
   return points;
 }
 
@@ -5437,7 +5437,7 @@ function normal(a, b, c) {
  * screen. The quad is returned in tile coordinates for tile zoom level
  * 'tileZoomLevel', and thus can directly be used to determine which basemap
  * and geometry tiles need to be loaded.
- * Note: if the horizon is level (as should usually be the case for 
+ * Note: if the horizon is level (as should usually be the case for
  * OSMBuildings) then said quad is also a trapezoid. */
 function getViewQuad(viewProjectionMatrix, maxFarEdgeDistance, viewDirOnMap) {
   /* maximum distance from the map center at which
@@ -5453,7 +5453,7 @@ function getViewQuad(viewProjectionMatrix, maxFarEdgeDistance, viewDirOnMap) {
 
   /* If even the lower edge of the screen does not intersect with the map plane,
    * then the map plane is not visible at all.
-   * (Or somebody screwed up the projection matrix, putting the view upside-down 
+   * (Or somebody screwed up the projection matrix, putting the view upside-down
    *  or something. But in any case we won't attempt to create a view rectangle).
    */
   if (!vBottomLeft || !vBottomRight) {
@@ -5466,7 +5466,7 @@ function getViewQuad(viewProjectionMatrix, maxFarEdgeDistance, viewDirOnMap) {
   /* The lower screen edge shows the map layer, but the upper one does not.
    * This usually happens when the camera is close to parallel to the ground
    * so that the upper screen edge lies above the horizon. This is not a bug
-   * and can legitimately happen. But from a theoretical standpoint, this means 
+   * and can legitimately happen. But from a theoretical standpoint, this means
    * that the view 'trapezoid' stretches infinitely toward the horizon. Since this
    * is not a practically useful result - though formally correct - we instead
    * manually bound that area.*/
@@ -5476,7 +5476,7 @@ function getViewQuad(viewProjectionMatrix, maxFarEdgeDistance, viewDirOnMap) {
     vLeftDir = norm2(sub2( vLeftPoint, vBottomLeft));
     f = dot2(vLeftDir, viewDirOnMap);
     vTopLeft = add2( vBottomLeft, mul2scalar(vLeftDir, maxFarEdgeDistance/f));
-    
+
     vRightPoint = getIntersectionWithXYPlane( 1, -0.9, inverse);
     vRightDir = norm2(sub2(vRightPoint, vBottomRight));
     f = dot2(vRightDir, viewDirOnMap);
@@ -5497,7 +5497,7 @@ function getViewQuad(viewProjectionMatrix, maxFarEdgeDistance, viewDirOnMap) {
     f = dot2(vRightDir, viewDirOnMap);
     vTopRight = add2( vBottomRight, mul2scalar(vRightDir, maxFarEdgeDistance/f));
  }
- 
+
   return [vBottomLeft, vBottomRight, vTopRight, vTopLeft];
 }
 
@@ -5505,8 +5505,8 @@ function getViewQuad(viewProjectionMatrix, maxFarEdgeDistance, viewDirOnMap) {
 /* Returns an orthographic projection matrix whose view rectangle contains all
  * points of 'points' when watched from the position given by targetViewMatrix.
  * The depth range of the returned matrix is [near, far].
- * The 'points' are given as euclidean coordinates in [m] distance to the 
- * current reference point (MAP.position). 
+ * The 'points' are given as euclidean coordinates in [m] distance to the
+ * current reference point (MAP.position).
  */
 function getCoveringOrthoProjection(points, targetViewMatrix, near, far, height) {
   var p0 = transformVec3(targetViewMatrix.data, points[0]);
@@ -5522,7 +5522,7 @@ function getCoveringOrthoProjection(points, targetViewMatrix, near, far, height)
     top  = Math.max( top,   p[1]);
     bottom=Math.min( bottom,p[1]);
   }
-  
+
   return new glx.Matrix.Ortho(left, right, top, bottom, near, far);
 }
 
@@ -5564,41 +5564,41 @@ function getIntersectionWithXYPlane(screenNdcX, screenNdcY, inverseTransform) {
   var lambda = -v1[2]/vDir[2];
   var pos = add3( v1, mul3scalar(vDir, lambda));
 
-  return [pos[0], pos[1]];  // z==0 
+  return [pos[0], pos[1]];  // z==0
 }
 
-/* Returns: the number of screen pixels that would be covered by the tile 
+/* Returns: the number of screen pixels that would be covered by the tile
  *          tileZoom/tileX/tileY *if* the screen would not end at the viewport
- *          edges. The intended use of this method is to return a measure of 
+ *          edges. The intended use of this method is to return a measure of
  *          how detailed the tile should be rendered.
  * Note: This method does not clip the tile to the viewport. So the number
  *       returned will be larger than the number of screen pixels covered iff.
- *       the tile intersects with a viewport edge. 
+ *       the tile intersects with a viewport edge.
  */
 function getTileSizeOnScreen(tileX, tileY, tileZoom, viewProjMatrix) {
-  var metersPerDegreeLongitude = METERS_PER_DEGREE_LATITUDE * 
+  var metersPerDegreeLongitude = METERS_PER_DEGREE_LATITUDE *
                                  Math.cos(MAP.position.latitude / 180 * Math.PI);
   var tileLon = tile2lon(tileX, tileZoom);
   var tileLat = tile2lat(tileY, tileZoom);
-  
+
   var modelMatrix = new glx.Matrix();
   modelMatrix.translate( (tileLon - MAP.position.longitude)* metersPerDegreeLongitude,
                         -(tileLat - MAP.position.latitude) * METERS_PER_DEGREE_LATITUDE, 0);
 
   var size = getTileSizeInMeters( MAP.position.latitude, tileZoom);
-  
+
   var mvpMatrix = glx.Matrix.multiply(modelMatrix, viewProjMatrix);
   var tl = transformVec3(mvpMatrix, [0   , 0   , 0]);
   var tr = transformVec3(mvpMatrix, [size, 0   , 0]);
   var bl = transformVec3(mvpMatrix, [0   , size, 0]);
   var br = transformVec3(mvpMatrix, [size, size, 0]);
   var verts = [tl, tr, bl, br];
-  for (var i in verts) { 
+  for (var i in verts) {
     // transformation from NDC [-1..1] to viewport [0.. width/height] coordinates
     verts[i][0] = (verts[i][0] + 1.0) / 2.0 * MAP.width;
     verts[i][1] = (verts[i][1] + 1.0) / 2.0 * MAP.height;
   }
-  
+
   return getConvexQuadArea( [tl, tr, br, bl]);
 }
 
@@ -5607,24 +5607,24 @@ function getTriangleArea(p1, p2, p3) {
   var a = len2(sub2( p1, p2));
   var b = len2(sub2( p1, p3));
   var c = len2(sub2( p2, p3));
-  
+
   //Heron's formula
   var s = 0.5 * (a+b+c);
   return Math.sqrt( s * (s-a) * (s-b) * (s-c));
 }
 
 function getConvexQuadArea(quad) {
-  return getTriangleArea( quad[0], quad[1], quad[2]) + 
+  return getTriangleArea( quad[0], quad[1], quad[2]) +
          getTriangleArea( quad[0], quad[2], quad[3]);
 }
 
 function getTileSizeInMeters( latitude, zoom) {
-  return EARTH_CIRCUMFERENCE_IN_METERS * Math.cos(latitude / 180 * Math.PI) / 
+  return EARTH_CIRCUMFERENCE_IN_METERS * Math.cos(latitude / 180 * Math.PI) /
          Math.pow(2, zoom);
 }
 
 function getPositionFromLocal(localXY) {
-  var metersPerDegreeLongitude = METERS_PER_DEGREE_LATITUDE * 
+  var metersPerDegreeLongitude = METERS_PER_DEGREE_LATITUDE *
                                  Math.cos(MAP.position.latitude / 180 * Math.PI);
 
   return {
@@ -5635,7 +5635,7 @@ function getPositionFromLocal(localXY) {
 
 function getTilePositionFromLocal(localXY, zoom) {
   var pos = getPositionFromLocal(localXY);
-  
+
   return [long2tile(pos.longitude, zoom), lat2tile(pos.latitude, zoom)];
 }
 
@@ -5643,7 +5643,7 @@ function getTilePositionFromLocal(localXY, zoom) {
 function long2tile(lon,zoom) { return (lon+180)/360*Math.pow(2,zoom); }
 function lat2tile(lat,zoom)  { return (1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom); }
 function tile2lon(x,z) { return (x/Math.pow(2,z)*360-180); }
-function tile2lat(y,z) { 
+function tile2lat(y,z) {
   var n = Math.PI-2*Math.PI*y/Math.pow(2,z);
   return (180/Math.PI*Math.atan(0.5*(Math.exp(n)-Math.exp(-n))));
 }
@@ -5716,7 +5716,7 @@ var render = {
     if (render.effects.shadows || render.effects.outlines) {
       render.cameraGBuffer = new render.DepthFogNormalMap();
     }
-    
+
     if (render.effects.shadows) {
       render.sunGBuffer    = new render.DepthFogNormalMap();
       render.sunGBuffer.framebufferSize = [SHADOW_DEPTH_MAP_SIZE, SHADOW_DEPTH_MAP_SIZE];
@@ -5728,12 +5728,12 @@ var render = {
 
     requestAnimationFrame( this.renderFrame.bind(this));
   },
-  
+
   renderFrame: function() {
     Filter.nextTick();
     requestAnimationFrame( this.renderFrame.bind(this));
 
-    this.onChange();    
+    this.onChange();
     gl.clearColor(this.fogColor[0], this.fogColor[1], this.fogColor[2], 0.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -5759,20 +5759,20 @@ var render = {
         render.cameraGBuffer.render(this.viewMatrix, this.projMatrix, viewSize, true);
         render.Picking.render(viewSize);
         render.OutlineMap.render(
-          render.cameraGBuffer.getDepthTexture(), 
-          render.cameraGBuffer.getFogNormalTexture(), 
+          render.cameraGBuffer.getDepthTexture(),
+          render.cameraGBuffer.getFogNormalTexture(),
           render.Picking.framebuffer.renderTexture, viewSize, 1.0);
           render.blurredOutlineMap.render(render.OutlineMap.framebuffer.renderTexture, viewSize);
       }
 
       gl.enable(gl.BLEND);
       if (render.effects.outlines) {
-        gl.blendFuncSeparate(gl.ZERO, gl.SRC_COLOR, gl.ZERO, gl.ONE); 
+        gl.blendFuncSeparate(gl.ZERO, gl.SRC_COLOR, gl.ZERO, gl.ONE);
         render.Overlay.render(render.blurredOutlineMap.framebuffer.renderTexture, viewSize);
       }
 
-      gl.blendFuncSeparate(gl.ONE_MINUS_DST_ALPHA, gl.DST_ALPHA, gl.ONE, gl.ONE); 
-      gl.disable(gl.DEPTH_TEST);      
+      gl.blendFuncSeparate(gl.ONE_MINUS_DST_ALPHA, gl.DST_ALPHA, gl.ONE, gl.ONE);
+      gl.disable(gl.DEPTH_TEST);
       render.sky.render();
       gl.disable(gl.BLEND);
       gl.enable(gl.DEPTH_TEST);
@@ -5787,8 +5787,8 @@ var render = {
       if (render.effects.outlines) {
         render.Picking.render(viewSize);
         render.OutlineMap.render(
-          render.cameraGBuffer.getDepthTexture(), 
-          render.cameraGBuffer.getFogNormalTexture(), 
+          render.cameraGBuffer.getDepthTexture(),
+          render.cameraGBuffer.getFogNormalTexture(),
           render.Picking.framebuffer.renderTexture, viewSize, 1.0
         );
         render.blurredOutlineMap.render(render.OutlineMap.framebuffer.renderTexture, viewSize);
@@ -5800,7 +5800,7 @@ var render = {
         // this aplies the shadow and SSAO effects (which selectively darken the scene)
         // while keeping the alpha channel (that corresponds to how much the
         // geometry should be blurred into the background in the next step) intact
-        gl.blendFuncSeparate(gl.ZERO, gl.SRC_COLOR, gl.ZERO, gl.ONE); 
+        gl.blendFuncSeparate(gl.ZERO, gl.SRC_COLOR, gl.ZERO, gl.ONE);
         if (render.effects.outlines) {
           render.Overlay.render(render.blurredOutlineMap.framebuffer.renderTexture, viewSize);
         }
@@ -5808,7 +5808,7 @@ var render = {
         render.MapShadows.render(Sun, render.sunGBuffer.framebuffer, 0.5);
         render.Overlay.render( render.blurredAmbientMap.framebuffer.renderTexture, viewSize);
 
-        // linear interpolation between the colors of the current framebuffer 
+        // linear interpolation between the colors of the current framebuffer
         // ( =building geometries) and of the sky. The interpolation factor
         // is the geometry alpha value, which contains the 'foggyness' of each pixel
         // the alpha interpolation functions is set to gl.ONE for both operands
@@ -5828,7 +5828,7 @@ var render = {
     if (this.screenshotCallback) {
       this.screenshotCallback(gl.canvas.toDataURL());
       this.screenshotCallback = null;
-    }  
+    }
   },
 
   stop: function() {
@@ -5837,7 +5837,7 @@ var render = {
 
   updateFogDistance: function() {
     var inverse = glx.Matrix.invert(this.viewProjMatrix.data);
-    
+
     //need to store this as a reference point to determine fog distance
     this.lowerLeftOnMap = getIntersectionWithXYPlane(-1, -1, inverse);
     if (this.lowerLeftOnMap === undefined) {
@@ -5854,7 +5854,7 @@ var render = {
   },
 
   onChange: function() {
-    var 
+    var
       scale = 1.38*Math.pow(2, MAP.zoom-17),
       width = MAP.width,
       height = MAP.height,
@@ -5873,13 +5873,13 @@ var render = {
 
 
     // OSMBuildings' perspective camera is ... special: The reference point for
-    // camera movement, rotation and zoom is at the screen center (as usual). 
+    // camera movement, rotation and zoom is at the screen center (as usual).
     // But the center of projection is not at the screen center as well but at
     // the bottom center of the screen. This projection was chosen for artistic
     // reasons so that when the map is seen from straight above, vertical building
     // walls would not be seen to face towards the screen center but would
     // uniformly face downward on the screen.
-    
+
     // To achieve this projection, we need to
     // 1. shift the whole geometry up half a screen (so that the desired
     //    center of projection aligns with the view center) *in world coordinates*.
@@ -5888,7 +5888,7 @@ var render = {
     // 3. shift the geometry back down half a screen now *in screen coordinates*
 
     this.projMatrix = new glx.Matrix()
-      .translate(0, -height/(2.0*scale), 0) // 0, MAP y offset to neutralize camera y offset, 
+      .translate(0, -height/(2.0*scale), 0) // 0, MAP y offset to neutralize camera y offset,
       .scale(1, -1, 1) // flip Y
       .multiply(new glx.Matrix.Perspective(refVFOV * height / refHeight, width/height, 1, 7500))
       .translate(0, -1, 0); // camera y offset
@@ -5916,11 +5916,11 @@ var render = {
     if (render.cameraGBuffer) {
       render.cameraGBuffer.destroy();
     }
-    
+
     if (render.sunGBuffer) {
-      render.sunGBuffer.destroy();  
+      render.sunGBuffer.destroy();
     }
-    
+
     render.AmbientMap.destroy();
     render.blurredAmbientMap.destroy();
     render.blurredOutlineMap.destroy();
@@ -5958,7 +5958,7 @@ render.Picking = {
       framebuffer = this.framebuffer;
 
     framebuffer.setSize(framebufferSize[0], framebufferSize[1]);
-    
+
     shader.enable();
     framebuffer.enable();
     gl.viewport(0, 0, framebufferSize[0], framebufferSize[1]);
@@ -6003,7 +6003,7 @@ render.Picking = {
     this.framebuffer.disable();
     gl.viewport(0, 0, MAP.width, MAP.height);
   },
-  
+
   // TODO: throttle calls
   getTarget: function(x, y, callback) {
     requestAnimationFrame(function() {
@@ -6062,7 +6062,7 @@ var Sun = {
       .translate(0, 0, -5000)
       .scale(1, -1, 1); // flip Y
   },
-  
+
   updateView: function(coveredGroundVertices) {
     // TODO: could parts be pre-calculated?
     this.projMatrix = getCoveringOrthoProjection(
@@ -6078,7 +6078,7 @@ var Sun = {
 
 
 render.SkyWall = function() {
-    
+
   this.v1 = this.v2 = this.v3 = this.v4 = [false, false, false];
   this.updateGeometry( [[0,0,0], [0,0,0], [0,0,0], [0,0,0]]);
 
@@ -6089,14 +6089,14 @@ render.SkyWall = function() {
     attributes: ['aPosition', 'aTexCoord'],
     uniforms: ['uAbsoluteHeight', 'uMatrix', 'uTexIndex', 'uFogColor']
   });
-  
+
   this.floorShader = new glx.Shader({
     vertexShader:   Shaders.flatColor.vertex,
     fragmentShader: Shaders.flatColor.fragment,
     attributes: ['aPosition'],
     uniforms:   ['uColor', 'uMatrix']
   });
-  
+
   Activity.setBusy();
   var url = APP.baseURL + '/skydome.jpg';
   this.texture = new glx.texture.Image().load(url, function(image) {
@@ -6108,7 +6108,7 @@ render.SkyWall = function() {
 };
 
 render.SkyWall.prototype.updateGeometry = function(viewTrapezoid) {
-  
+
   var v1 = [viewTrapezoid[3][0], viewTrapezoid[3][1], 0.0];
   var v2 = [viewTrapezoid[2][0], viewTrapezoid[2][1], 0.0];
   var v3 = [viewTrapezoid[2][0], viewTrapezoid[2][1], SKYWALL_HEIGHT];
@@ -6136,12 +6136,12 @@ render.SkyWall.prototype.updateGeometry = function(viewTrapezoid) {
 
   var inverse = glx.Matrix.invert(render.viewProjMatrix.data);
   var vBottomCenter = getIntersectionWithXYPlane(0, -1, inverse);
-  
+
   var vLeftDir = norm2(sub2( v1, vBottomCenter));
   var vRightDir =norm2(sub2( v2, vBottomCenter));
   var vLeftArc = Math.atan2(vLeftDir[1],  vLeftDir[0])/  (2*Math.PI);
   var vRightArc= Math.atan2(vRightDir[1], vRightDir[0])/ (2*Math.PI);
-  
+
   if (vLeftArc > vRightArc)
     vRightArc +=1;
   //console.log(vLeftArc, vRightArc);
@@ -6149,18 +6149,18 @@ render.SkyWall.prototype.updateGeometry = function(viewTrapezoid) {
   var visibleSkyDiameterFraction = Math.asin(dot2( vLeftDir, vRightDir))/ (2*Math.PI);
   var tcLeft = vLeftArc;//MAP.rotation/360.0;
   var tcRight =vRightArc;//MAP.rotation/360.0 + visibleSkyDiameterFraction*3;
-        
+
   this.texCoordBuffer = new glx.Buffer(2, new Float32Array(
     [tcLeft, 1, tcRight, 1, tcRight, 0, tcLeft, 1, tcRight, 0, tcLeft, 0]));
-    
+
   v1 = [viewTrapezoid[0][0], viewTrapezoid[0][1], 1.0];
   v2 = [viewTrapezoid[1][0], viewTrapezoid[1][1], 1.0];
   v3 = [viewTrapezoid[2][0], viewTrapezoid[2][1], 1.0];
   v4 = [viewTrapezoid[3][0], viewTrapezoid[3][1], 1.0];
-  
+
   if (this.floorVertexBuffer)
     this.floorVertexBuffer.destroy();
-    
+
   this.floorVertexBuffer = new glx.Buffer(3, new Float32Array(
     [].concat( v1, v2, v3, v4)));
 };
@@ -6190,16 +6190,16 @@ render.SkyWall.prototype.render = function() {
 
   gl.drawArrays(gl.TRIANGLES, 0, this.vertexBuffer.numItems);
   shader.disable();
-  
+
 
   this.floorShader.enable();
   this.floorShader.setUniform('uColor', '4fv', fogColor.concat([1.0]));
   this.floorShader.setUniformMatrix('uMatrix', '4fv', render.viewProjMatrix.data);
   this.floorShader.bindBuffer(this.floorVertexBuffer, 'aPosition');
   gl.drawArrays(gl.TRIANGLE_FAN, 0, this.floorVertexBuffer.numItems);
-  
+
   this.floorShader.disable();
-  
+
 };
 
 render.SkyWall.prototype.destroy = function() {
@@ -6211,7 +6211,7 @@ render.SkyWall.prototype.destroy = function() {
 render.Buildings = {
 
   init: function() {
-  
+
     this.shader = !render.effects.shadows ?
       new glx.Shader({
         vertexShader: Shaders.buildings.vertex,
@@ -6256,7 +6256,7 @@ render.Buildings = {
           'uWallTexIndex'
         ]
     });
-    
+
     this.wallTexture = new glx.texture.Image();
     this.wallTexture.color( [1,1,1]);
     this.wallTexture.load( BUILDING_TEXTURE);
@@ -6292,7 +6292,7 @@ render.Buildings = {
     }
 
     shader.bindTexture('uWallTexIndex', 0, this.wallTexture);
-    
+
     if (depthFramebuffer) {
       shader.setUniform('uShadowTexDimensions', '2fv', [depthFramebuffer.width, depthFramebuffer.height]);
       shader.bindTexture('uShadowTexIndex', 1, depthFramebuffer.depthTexture);
@@ -6316,7 +6316,7 @@ render.Buildings = {
         ['uModelMatrix', '4fv', modelMatrix.data],
         ['uMatrix',      '4fv', glx.Matrix.multiply(modelMatrix, render.viewProjMatrix)]
       ]);
-      
+
       if (render.effects.shadows) {
         shader.setUniformMatrix('uSunMatrix', '4fv', glx.Matrix.multiply(modelMatrix, Sun.viewProjMatrix));
       }
@@ -6363,13 +6363,13 @@ render.MapShadows = {
         'uLowerEdgePoint',
         'uFogDistance',
         'uFogBlurDistance',
-        'uShadowTexDimensions', 
+        'uShadowTexDimensions',
         'uShadowStrength',
         'uShadowTexIndex',
         'uSunMatrix',
       ]
     });
-    
+
     this.mapPlane = new mesh.MapPlane();
   },
 
@@ -6454,14 +6454,14 @@ render.Basemap = {
       zoom = Math.round(MAP.zoom);
 
     shader.enable();
-    
+
     shader.setUniforms([
       ['uFogDistance',     '1f',  render.fogDistance],
       ['uFogBlurDistance', '1f',  render.fogBlurDistance],
       ['uViewDirOnMap',    '2fv', render.viewDirOnMap],
       ['uLowerEdgePoint',  '2fv', render.lowerLeftOnMap]
     ]);
-    
+
     for (var key in layer.visibleTiles) {
       tile = layer.tiles[key];
 
@@ -6495,7 +6495,7 @@ render.Basemap = {
   },
 
   renderTile: function(tile, shader) {
-    var metersPerDegreeLongitude = METERS_PER_DEGREE_LATITUDE * 
+    var metersPerDegreeLongitude = METERS_PER_DEGREE_LATITUDE *
                                    Math.cos(MAP.position.latitude / 180 * Math.PI);
 
     var modelMatrix = new glx.Matrix();
@@ -6503,9 +6503,9 @@ render.Basemap = {
                           -(tile.latitude - MAP.position.latitude) * METERS_PER_DEGREE_LATITUDE, 0);
 
     gl.enable(gl.POLYGON_OFFSET_FILL);
-    gl.polygonOffset(MAX_USED_ZOOM_LEVEL - tile.zoom, 
+    gl.polygonOffset(MAX_USED_ZOOM_LEVEL - tile.zoom,
                      MAX_USED_ZOOM_LEVEL - tile.zoom);
-                     
+
     shader.setUniforms([
       ['uViewDirOnMap', '2fv',   render.viewDirOnMap],
       ['uLowerEdgePoint', '2fv', render.lowerLeftOnMap]
@@ -6534,7 +6534,7 @@ render.Basemap = {
 render.HudRect = {
 
   init: function() {
-  
+
     var geometry = this.createGeometry();
     this.vertexBuffer   = new glx.Buffer(3, new Float32Array(geometry.vertices));
     this.texCoordBuffer = new glx.Buffer(2, new Float32Array(geometry.texCoords));
@@ -6554,7 +6554,7 @@ render.HudRect = {
     vertices.push(0, 0, 1E-5,
                   1, 0, 1E-5,
                   1, 1, 1E-5);
-    
+
     vertices.push(0, 0, 1E-5,
                   1, 1, 1E-5,
                   0, 1, 1E-5);
@@ -6574,7 +6574,7 @@ render.HudRect = {
     var shader = this.shader;
 
     shader.enable();
-    
+
     gl.uniformMatrix4fv(shader.uniforms.uMatrix, false, glx.Matrix.identity().data);
     this.vertexBuffer.enable();
 
@@ -6595,9 +6595,9 @@ render.HudRect = {
 };
 
 
-/* 'DepthFogNormalMap' renders the depth buffer and the scene's camera-space 
-   normals and fog intensities into textures. Depth is stored as a 24bit depth 
-   texture using the WEBGL_depth_texture extension, and normals and fog 
+/* 'DepthFogNormalMap' renders the depth buffer and the scene's camera-space
+   normals and fog intensities into textures. Depth is stored as a 24bit depth
+   texture using the WEBGL_depth_texture extension, and normals and fog
    intensities are stored as the 'rgb' and 'a' of a shared 32bit texture.
    Note that there is no dedicated shader to create the depth texture. Rather,
    the depth buffer used by the GPU in depth testing while rendering the normals
@@ -6612,7 +6612,7 @@ render.DepthFogNormalMap = function() {
     attributes: ['aPosition', 'aFilter', 'aNormal'],
     uniforms: ['uMatrix', 'uModelMatrix', 'uNormalMatrix', 'uTime', 'uFogDistance', 'uFogBlurDistance', 'uViewDirOnMap', 'uLowerEdgePoint']
   });
-  
+
   this.framebuffer = new glx.Framebuffer(128, 128, /*depthTexture=*/true); //dummy sizes, will be resized dynamically
 
   this.mapPlane = new mesh.MapPlane();
@@ -6636,7 +6636,7 @@ render.DepthFogNormalMap.prototype.render = function(viewMatrix, projMatrix, fra
 
   framebufferSize = framebufferSize || this.framebufferSize;
   framebuffer.setSize( framebufferSize[0], framebufferSize[1] );
-    
+
   shader.enable();
   framebuffer.enable();
   gl.viewport(0, 0, framebufferSize[0], framebufferSize[1]);
@@ -6675,7 +6675,7 @@ render.DepthFogNormalMap.prototype.render = function(viewMatrix, projMatrix, fra
       ['uModelMatrix',  '4fv', modelMatrix.data],
       ['uNormalMatrix', '3fv', glx.Matrix.transpose3(glx.Matrix.invert3(glx.Matrix.multiply(modelMatrix, viewMatrix)))]
     ]);
-    
+
     shader.bindBuffer(item.vertexBuffer, 'aPosition');
     shader.bindBuffer(item.normalBuffer, 'aNormal');
     shader.bindBuffer(item.filterBuffer, 'aFilter');
@@ -6704,7 +6704,7 @@ render.AmbientMap = {
     });
 
     this.framebuffer = new glx.Framebuffer(128, 128); //dummy value, size will be set dynamically
-    
+
     this.vertexBuffer = new glx.Buffer(3, new Float32Array([
       -1, -1, 1E-5,
        1, -1, 1E-5,
@@ -6713,7 +6713,7 @@ render.AmbientMap = {
        1,  1, 1E-5,
       -1,  1, 1E-5
     ]));
-       
+
     this.texCoordBuffer = new glx.Buffer(2, new Float32Array([
       0,0,
       1,0,
@@ -6775,7 +6775,7 @@ render.AmbientMap = {
 render.Overlay = {
 
   init: function() {
-  
+
     var geometry = this.createGeometry();
     this.vertexBuffer   = new glx.Buffer(3, new Float32Array(geometry.vertices));
     this.texCoordBuffer = new glx.Buffer(2, new Float32Array(geometry.texCoords));
@@ -6795,7 +6795,7 @@ render.Overlay = {
     vertices.push(-1,-1, 1E-5,
                    1,-1, 1E-5,
                    1, 1, 1E-5);
-    
+
     vertices.push(-1,-1, 1E-5,
                    1, 1, 1E-5,
                   -1, 1, 1E-5);
@@ -6818,8 +6818,8 @@ render.Overlay = {
     shader.enable();
     /* we are rendering an *overlay*, which is supposed to be rendered on top of the
      * scene no matter what its actual depth is. */
-    gl.disable(gl.DEPTH_TEST);    
-    
+    gl.disable(gl.DEPTH_TEST);
+
     shader.setUniformMatrix('uMatrix', '4fv', glx.Matrix.identity().data);
 
     shader.bindBuffer(this.vertexBuffer,  'aPosition');
@@ -6848,7 +6848,7 @@ render.OutlineMap = {
     });
 
     this.framebuffer = new glx.Framebuffer(128, 128); //dummy value, size will be set dynamically
-    
+
     this.vertexBuffer = new glx.Buffer(3, new Float32Array([
       -1, -1, 1E-5,
        1, -1, 1E-5,
@@ -6857,7 +6857,7 @@ render.OutlineMap = {
        1,  1, 1E-5,
       -1,  1, 1E-5
     ]));
-       
+
     this.texCoordBuffer = new glx.Buffer(2, new Float32Array([
       0,0,
       1,0,
@@ -6893,7 +6893,7 @@ render.OutlineMap = {
       ['uInverseTexSize', '2fv', [1/framebufferSize[0], 1/framebufferSize[1]]],
       ['uEffectStrength', '1f',  effectStrength],
       ['uNearPlane',      '1f',  1.0], //FIXME: use actual near and far planes of the projection matrix
-      ['uFarPlane',       '1f',  7500.0]      
+      ['uFarPlane',       '1f',  7500.0]
     ]);
 
     shader.bindBuffer(this.vertexBuffer,   'aPosition');
@@ -6926,7 +6926,7 @@ render.Blur = function() {
   });
 
   this.framebuffer = new glx.Framebuffer(128, 128); //dummy value, size will be set dynamically
-  
+
   this.vertexBuffer = new glx.Buffer(3, new Float32Array([
     -1, -1, 1E-5,
      1, -1, 1E-5,
@@ -6935,7 +6935,7 @@ render.Blur = function() {
      1,  1, 1E-5,
     -1,  1, 1E-5
   ]));
-     
+
   this.texCoordBuffer = new glx.Buffer(2, new Float32Array([
     0,0,
     1,0,
@@ -6973,7 +6973,7 @@ render.Blur.prototype.render = function(inputTexture, framebufferSize) {
   gl.viewport(0, 0, MAP.width, MAP.height);
 };
 
-render.Blur.prototype.destroy = function() 
+render.Blur.prototype.destroy = function()
 {
   if (this.framebuffer) {
     this.framebuffer.destroy();
@@ -6995,7 +6995,7 @@ basemap.Tile = function(x, y, zoom) {
   // note: due to the Mercator projection the tile width in meters is equal
   //       to the tile height in meters.
   var size = getTileSizeInMeters( this.latitude, zoom);
-  
+
   var vertices = [
     size, size, 0,
     size,    0, 0,
