@@ -56,6 +56,14 @@
       opacity: 1;
       cursor: pointer;
     }
+
+    #start {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background-color: black;
+    }
+
   </style>
   <link rel="stylesheet" href="OSMBuildings/OSMBuildings.css">
   <script src="OSMBuildings/OSMBuildings.debug.js"></script>
@@ -63,6 +71,7 @@
 </head>
 
 <body>
+
 <div id="map"></div>
 
 <div class="control tilt">
@@ -82,7 +91,7 @@
 
 <script>
   var map = new GLMap('map', {
-    position: { latitude:40.79361, longitude:(-73.97323) },
+    // position: { latitude:40.79361, longitude:(-73.97323) },
     zoom: 16,
     minZoom: 12,
     maxZoom: 20,
@@ -107,7 +116,25 @@
 
   osmb.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json');
 
-  //***************************************************************************
+
+//***************************************************************************
+
+  $(document).ready(function(){
+    navigator.geolocation.getCurrentPosition(function(position){
+      console.log("asdf");
+      console.log(position);
+      map.setPosition({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+    },
+    function(error){
+      console.log(error);
+    }
+    )
+  });
+
+
 
   map.on('pointermove', function(e) {
     var id = osmb.getTarget(e.x, e.y, function(id) {
