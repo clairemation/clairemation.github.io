@@ -181,6 +181,18 @@
 
   //***************************************************************************
 
+  $(window).on("deviceOrientation", function(e){
+    map.setRotation(e.alpha);
+  });
+
+
+
+
+
+
+
+  //***************************************************************************
+
   var controlButtons = document.querySelectorAll('.control button');
 
   for (var i = 0, il = controlButtons.length; i < il; i++) {
