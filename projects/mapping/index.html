@@ -120,25 +120,23 @@
 //***************************************************************************
 
   $(document).ready(function(){
+    setPos();
+    map.setZoom(22);
+    map.setTilt(70);
+    window.addEventListener('deviceorientation', function(e){
+      map.setRotation(360 - e.alpha);
+      setPos();
+    });
+  });
+
+  function setPos(){
     navigator.geolocation.getCurrentPosition(function(position){
       console.log(position);
       map.setPosition({
         latitude: position.coords.latitude,
-        longitude: position.coords.longitude
+        longitude: position.coords.longitude,
       });
-      window.addEventListener('deviceorientation', function(e){
-        map.setRotation(0 - e.alpha);
-      });
-
-
-    },
-    function(error){
-      console.log(error);
-    }
-    )
-  });
-
-
+  }
 
   map.on('pointermove', function(e) {
     var id = osmb.getTarget(e.x, e.y, function(id) {
