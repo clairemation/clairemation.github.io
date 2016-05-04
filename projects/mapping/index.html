@@ -121,12 +121,16 @@
 
   $(document).ready(function(){
     navigator.geolocation.getCurrentPosition(function(position){
-      console.log("asdf");
       console.log(position);
       map.setPosition({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
       });
+      window.addEventListener('deviceorientation', function(e){
+        map.setRotation(e.alpha);
+      });
+
+
     },
     function(error){
       console.log(error);
@@ -181,9 +185,6 @@
 
   //***************************************************************************
 
-  window.addEventListener("deviceOrientation", function(e){
-    map.setRotation(e.alpha);
-  });
 
 
 
