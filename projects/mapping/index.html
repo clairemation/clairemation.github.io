@@ -181,7 +181,7 @@
 
   //***************************************************************************
 
-  $(window).on("deviceOrientation", function(e){
+  window.addEventListener("deviceOrientation", function(e){
     map.setRotation(e.alpha);
   });
 
