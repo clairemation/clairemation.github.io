@@ -127,7 +127,7 @@
         longitude: position.coords.longitude
       });
       window.addEventListener('deviceorientation', function(e){
-        map.setRotation(e.alpha);
+        map.setRotation(0 - e.alpha);
       });
 
 
