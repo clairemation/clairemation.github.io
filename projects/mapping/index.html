@@ -122,7 +122,7 @@
   $(document).ready(function(){
     setPos();
     map.setZoom(22);
-    map.setTilt(70);
+    map.setTilt(45);
     window.addEventListener('deviceorientation', function(e){
       map.setRotation(360 - e.alpha);
       setPos();
