@@ -11,7 +11,7 @@
 
   <body scroll="no">
 
-    <div with=1024 height=768 style="background: url('lavabg4.jpg'); background-repeat: no-repeat; padding: 0">
+    <div with=1024 height=768 style="background: url('lavabg5.jpg'); background-repeat: no-repeat; padding: 0">
       <canvas id="display" width=1024 height=768></canvas>
     </div>
 
@@ -27,15 +27,21 @@
 
 function main(){
 
-      var RUN_RIGHT = 0;
-      var RUN_LEFT = 1;
-      var RUN_UP = 2;
-      var RUN_DOWN = 3;
-      var STOP_LEFT = 4;
-      var STOP_RIGHT = 5;
-      var STOP_UP = 6;
-      var STOP_DOWN = 7;
-      var HIT = 8;
+      var UP_PRESS = 0,
+          LEFT_PRESS = 1,
+          DOWN_PRESS = 2,
+          RIGHT_PRESS = 3,
+          UP_RELEASE = 4,
+          LEFT_RELEASE = 5,
+          DOWN_RELEASE = 6,
+          RIGHT_RELEASE = 7,
+          RUN_RIGHT = 8,
+          RUN_LEFT = 9,
+          RUN_UP = 10,
+          RUN_DOWN = 11,
+          STOP_X = 12,
+          STOP_Y = 13,
+          HIT = 8;
       var FRAMERATE = 150; // milliseconds per frame
       var SCALE = .3;
       var WALKMASK_SCALE = 0.25 // 1/4th
@@ -48,71 +54,29 @@ function main(){
 
       //* COMPONENTS ====================
 
-      //* MOVEMENT COMPONENT ================
+      //* IMPULSE COMPONENT ==========================
 
-      function movementComponent(obj){
-        if (obj.acceleration == [0,0]){
-          return;
+      function impulseComponent(obj){
+        // Apply impulse to entity's acceleration, clamp to max speed
+        obj.acceleration[0] += 1.25 * obj.impulse.x
+        obj.acceleration[1] += 1.25 * obj.impulse.y;
+        if (Math.abs(obj.acceleration[0]) > obj.maxSpeed){
+          obj.acceleration[0] = obj.impulse.x * obj.maxSpeed;
         }
-        obj.x += Math.floor(obj.acceleration[0]);
-        obj.y += Math.floor(obj.acceleration[1]);
-        if (obj.onGround){
-          obj.zIndex = obj.y + obj.height*SCALE;
+        if (Math.abs(obj.acceleration[1]) > obj.maxSpeed){
+          obj.acceleration[1] = obj.impulse.y * obj.maxSpeed;
         }
       }
 
-      //* COLLISION COMPONENT =============
-
-      function detectCollisionComponent(obj){
-        if (obj.acceleration == [0,0]){
-          return;
-        }
-        if (entities.length == 1){
-          return;
-        }
-        for (var i = 0; i < entities.length; i++){
-          if (entities[i] != obj) {
-
-            if (obj.facing == "W" && obj.x < entities[i].x){
-              break;
-            }
-            if (obj.facing == "E" && obj.x > entities[i].x){
-              break;
-            }
-
-            // if our feet are not roughly at the same depth, no collision
-            if (Math.abs((entities[i].zIndex) - (obj.zIndex)) >= Math.max(obj.depth, entities[i].depth) * SCALE){
-              break;
-            }
-
-            // if my left side is greater than its right side
-            if ((obj.x + obj.hitbox[0]) - 1> (entities[i].x + entities[i].hitbox[2])){
-                break;
-            }
-            // if my right is less than its left
-            if ((obj.x + obj.hitbox[2] + 1) < (entities[i].x + entities[i].hitbox[0])){
-                break;
-            }
-            // if my top is below its bottom
-            if ((obj.y + obj.hitbox[1]) - 1 > (entities[i].y + entities[i].hitbox[3])){
-                break;
-            }
-            // if my bottom is above its top
-            if ((obj.y + obj.hitbox[3] + 1) < (entities[i].y + entities[i].hitbox[1])){
-                break;
-            }
-            obj.message(entities[i], HIT);
-            if (obj.solid){
-              obj.acceleration = [0,0];
-            }
-          }
-        }
-      };
-
-      // GROUND COMPONENT =================
+      //* GROUND CHECK COMPONENT =======================
 
       function groundIsWalkableComponent(obj){
-        // check character's test pixel for given direction
+        var accelerationDirection =
+        ["N", "", "S"][Math.sign(obj.acceleration[1]) + 1]
+        +
+        ["W", "", "E"][Math.sign(obj.acceleration[0]) + 1];
+
+        // check character's test pixel in given direction
         function groundSpotCheck(obj, direction){
           var sample = walkmask.getImageData(
                 (Math.floor((obj.x + (obj.feetpoint[direction][0] * SCALE)) * WALKMASK_SCALE)),
@@ -132,27 +96,18 @@ function main(){
           "E": ["SE", "NE"],
           "NE": ["N", "E"]
         };
-        var directionToMovement = {
-          "N": [0,-1],
-          "NW": [-1,-1],
-          "W": [-1,0],
-          "SW": [-1,1],
-          "S": [0,1],
-          "SE": [1,1],
-          "E": [1,0],
-          "NE": [1,-1]
-        }
-        if (obj.acceleration == [0,0]){
+
+        if (accelerationDirection == ""){
           //if stopped, never mind
           return;
         }
-        if (groundSpotCheck(obj, obj.facing) == true){
+        if (groundSpotCheck(obj, accelerationDirection)){
           // if walkable, go ahead
           return;
         }
-        // Next test diagonals
-        var secondaryDirection = directionNeighbors[obj.facing][0];
-        var tertiaryDirection = directionNeighbors[obj.facing][1];
+        // Next test nearby diagonals
+        var secondaryDirection = directionNeighbors[accelerationDirection][0];
+        var tertiaryDirection = directionNeighbors[accelerationDirection][1];
         // Original speed = whichever acceleration factor wasn't 0
         if (obj.acceleration[0] == 0){
           var oldSpeed = Math.abs(obj.acceleration[1]);
@@ -160,8 +115,9 @@ function main(){
           var oldSpeed = Math.abs(obj.acceleration[0]);
         }
         // If new direction is ok, apply new direction while continuing to accelerate
+        // TO DO: DRY this up
         if (groundSpotCheck(obj, secondaryDirection) == true){
-          var newVector = directionToMovement[secondaryDirection];
+          var newVector = obj.directionToImpulse(secondaryDirection);
           var newSpeedX = oldSpeed + 1.25;
           if (newSpeedX > obj.maxSpeed){
             newSpeedX = obj.maxSpeed;
@@ -174,7 +130,7 @@ function main(){
           return;
         };
         if (groundSpotCheck(obj, tertiaryDirection) == true){
-          var newVector = directionToMovement[tertiaryDirection];
+          var newVector = obj.directionToImpulse(tertiaryDirection);
           var newSpeedX = oldSpeed + 1.25;
           if (newSpeedX > obj.maxSpeed){
             newSpeedX = obj.maxSpeed;
@@ -187,11 +143,25 @@ function main(){
           return;
         };
         // If all directions fail, stop
-        obj.acceleration = [0,0]
+        obj.acceleration = [0,0];
         return;
       };
 
-      //* MOMENTUM COMPONENT ===============
+      //* MOVE COMPONENT ==========================
+
+      function moveComponent(obj){
+        if (obj.acceleration == [0,0]){
+          return;
+        }
+        obj.x += Math.floor(obj.acceleration[0]);
+        obj.y += Math.floor(obj.acceleration[1]);
+        if (obj.onGround){
+          obj.zIndex = obj.y + obj.height*SCALE;
+        }
+      }
+
+      //* INERTIA COMPONENT ===============
+      // TO DO: DRY this up
 
       function inertiaComponent(obj){
         // Always nudge acceleration back towards 0, clamp to 0
@@ -221,303 +191,63 @@ function main(){
         }
       }
 
-      //* IMPULSE COMPONENT ==========================
+      //* COLLISION COMPONENT =============
+      // Could optimize with quad trees etc. but right now there are so few entities onscreen it's not really a big deal.
+      // TO DO: change how this works — base on relative positions of entities, not object facing. Determine relative direction of the obstacle entity to the object, and negate acceleration in that direction
 
-      function impulseComponent(obj){
-        // Apply movement (impulse) to entity's acceleration, clamp to max speed
-        obj.acceleration[0] += 1.25 * obj.movement.x
-        obj.acceleration[1] += 1.25 * obj.movement.y;
-        if (Math.abs(obj.acceleration[0]) > obj.maxSpeed){
-          obj.acceleration[0] = obj.movement.x * obj.maxSpeed;
+      function detectCollisionComponent(obj){
+        if (obj.acceleration == [0,0]
+          || entities.length == 1){
+          return;
         }
-        if (Math.abs(obj.acceleration[1]) > obj.maxSpeed){
-          obj.acceleration[1] = obj.movement.y * obj.maxSpeed;
-        }
-      }
 
-      //* COMMAND COMPONENTS ===================
+        for (var i = 0; i < entities.length; i++){
+          if (entities[i] != obj) {
 
-      // FSM for X and Y control states, to manage multiple-key inputs
-      // A direction command affects entity's state, "facing" direction, and movement (impulse)
+            // TO DO: make this more precise
+            // if (obj.facing == "W" && obj.x < entities[i].x){
+            //   break;
+            // }
+            // if (obj.facing == "E" && obj.x > entities[i].x){
+            //   break;
+            // }
 
-      var xNeutralCommandComponent = function(obj, input){
-        switch (input){
-          case (RUN_RIGHT):
-            switch (obj.movement.y){
-              case -1:
-                obj.facing = "NE";
-                break;
-              case 0:
-                obj.facing = "E";
-                break;
-              case 1:
-                obj.facing = "SE";
-                break;
-            }
-            obj.changeState("running");
-            obj.movement.x = 1;
-            obj.xCommand = xRightCommandComponent;
-            break;
-          case (RUN_LEFT):
-            switch (obj.movement.y){
-              case -1:
-                obj.facing = "NW";
-                break;
-              case 0:
-                obj.facing = "W";
-                break;
-              case 1:
-                obj.facing = "SW";
-                break;
-            }
-            obj.changeState("running")
-            obj.movement.x = -1;
-            obj.xCommand = xLeftCommandComponent;
-          break;
-        }
-      };
+            // collision if:
+            if (
 
-      var xLeftCommandComponent = function(obj, input){
-        switch (input){
-          case (STOP_LEFT):
-            obj.movement.x = 0;
-            switch (obj.movement.y){
-              case -1:
-                obj.facing = "N";
-              break;
-              case 0:
-                obj.changeState("standing");
-              break;
-              case 1:
-                obj.facing = "S";
-              break;
+            // -our feet are roughly at the same depth, and NOT...
+              (Math.abs((entities[i].zIndex) - (obj.zIndex)) < Math.max(obj.depth, entities[i].depth) * SCALE)
+              &&
+            // -my left side is greater than its right side
+            // AKA it clears me on my left side
+              ((obj.x + obj.hitbox[0] - 1) <= (entities[i].x + entities[i].hitbox[2]))
+              &&
+            // -my right is less than its left
+            // AKA clears me on my right
+              ((obj.x + obj.hitbox[2] + 1) >= (entities[i].x + entities[i].hitbox[0]))
+              &&
+            // -my top is below its bottom
+              ((obj.y + obj.hitbox[1]) - 1 <= (entities[i].y + entities[i].hitbox[3]))
+              &&
+            // -my bottom is above its top
+            ((obj.y + obj.hitbox[3] + 1) >= (entities[i].y + entities[i].hitbox[1]))
+            ){
+              // collision!
+              // get direction of obstacle in [x,y] form
+              var direction = obj.directionToImpulse(obj.directionTo( entities[i]));
+              // message obstacle and pass it that info
+              obj.message(entities[i], direction);
+              //bounce obj back if both are solid
+              if (obj.solid && entities[i].solid){
+                if (Math.sign(obj.acceleration[0]) == direction[0]){
+                  obj.acceleration[0] *= -1;
+                }
+                if (Math.sign(obj.acceleration[1]) == direction[1]){
+                  obj.acceleration[1] *= -1;
+                }
+              }
             }
-            obj.xCommand = xNeutralCommandComponent;
-            break;
-          case (RUN_RIGHT):
-            switch (obj.movement.y){
-              case -1:
-                obj.facing = "NE";
-                break;
-              case 0:
-                obj.facing = "E";
-                break;
-              case 1:
-                obj.facing = "SE";
-                break;
-            }
-            obj.movement.x = 1;
-            obj.xCommand = xLeftRightCommandComponent;
-            break;
-        }
-      };
-
-      var xRightCommandComponent = function(obj, input){
-        switch (input){
-          case (STOP_RIGHT):
-            obj.movement.x = 0;
-            if (obj.movement.y == 0){
-              obj.changeState("standing");
-            }
-            switch (obj.movement.y){
-              case -1:
-                obj.facing = "N";
-              break;
-              case 0:
-                obj.changeState("standing");
-              break;
-              case 1:
-                obj.facing = "S";
-              break;
-            }
-            obj.xCommand = xNeutralCommandComponent;
-            break;
-          case (RUN_LEFT):
-            switch (obj.movement.y){
-              case -1:
-                obj.facing = "NW";
-                break;
-              case 0:
-                obj.facing = "W";
-                break;
-              case 1:
-                obj.facing = "SW";
-                break;
-            }
-            obj.movement.x = -1;
-            obj.xCommand = xLeftRightCommandComponent;
-            break;
-        }
-      };
-
-      var xLeftRightCommandComponent = function(obj, input){
-        switch (input){
-          case (STOP_LEFT):
-            switch (obj.movement.y){
-              case -1:
-                obj.facing = "NE";
-                break;
-              case 0:
-                obj.facing = "E";
-                break;
-              case 1:
-                obj.facing = "SE";
-                break;
-            }
-            obj.movement.x = 1;
-            obj.xCommand = xRightCommandComponent;
-            break;
-          case (STOP_RIGHT):
-            switch (obj.movement.y){
-              case -1:
-                obj.facing = "NW";
-                break;
-              case 0:
-                obj.facing = "W";
-                break;
-              case 1:
-                obj.facing = "SW";
-                break;
-            }
-            obj.movement.x = -1;
-            obj.xCommand = xLeftCommandComponent;
-            break;
-        }
-      };
-
-      var yNeutralCommandComponent = function(obj, input){
-        switch (input){
-          case (RUN_UP):
-            switch (obj.movement.x){
-              case -1:
-                obj.facing = "NW";
-                break;
-              case 0:
-                obj.facing = "N";
-                break;
-              case 1:
-                obj.facing = "NE";
-                break;
-            }
-            obj.changeState("running")
-            obj.movement.y = -1;
-            obj.yCommand = yUpCommandComponent;
-          break;
-          case (RUN_DOWN):
-            switch (obj.movement.x){
-              case -1:
-                obj.facing = "SW";
-                break;
-              case 0:
-                obj.facing = "S";
-                break;
-              case 1:
-                obj.facing = "SE";
-                break;
-            }
-            obj.changeState("running")
-            obj.movement.y = 1;
-            obj.yCommand = yDownCommandComponent;
-          break;
-        }
-      };
-
-      var yUpCommandComponent = function(obj, input){
-        switch (input){
-          case (STOP_UP):
-            obj.movement.y = 0;
-            switch (obj.movement.x){
-              case -1:
-                obj.facing = "W";
-              break;
-              case 0:
-                obj.changeState("standing");
-              break;
-              case 1:
-                obj.facing = "E";
-              break;
-            }
-            obj.yCommand = yNeutralCommandComponent;
-            break;
-          case (RUN_DOWN):
-            switch (obj.movement.x){
-              case -1:
-                obj.facing = "SW";
-                break;
-              case 0:
-                obj.facing = "S";
-                break;
-              case 1:
-                obj.facing = "SE";
-                break;
-            }
-            obj.movement.y = 1;
-            obj.yCommand = yUpDownCommandComponent;
-            break;
-        }
-      };
-
-      var yDownCommandComponent = function(obj, input){
-        switch (input){
-          case (STOP_DOWN):
-            obj.movement.y = 0;
-            switch (obj.movement.x){
-              case -1:
-                obj.facing = "W";
-              break;
-              case 0:
-                obj.changeState("standing");
-              break;
-              case 1:
-                obj.facing = "E";
-              break;
-            }
-            obj.yCommand = yNeutralCommandComponent;
-            break;
-          case (RUN_UP):
-            switch (obj.movement.x){
-              case -1:
-                obj.facing = "NW";
-                break;
-              case 0:
-                obj.facing = "N";
-                break;
-              case 1:
-                obj.facing = "NE";
-                break;
-            }
-            obj.movement.y = -1;
-            obj.yCommand = yUpDownCommandComponent;
-            break;
-        }
-      };
-
-      var yUpDownCommandComponent = function(obj, input){
-        switch (input){
-          case (STOP_UP):
-            obj.movement.y = 1;
-            switch (obj.movement.x){
-              case -1:
-                obj.facing = "W";
-                break;
-              case 1:
-                obj.facing = "E";
-                break;
-            }
-            obj.yCommand = yDownCommandComponent;
-            break;
-          case (STOP_DOWN):
-            obj.movement.y = -1;
-            switch (obj.movement.x){
-              case -1:
-                obj.facing = "W";
-                break;
-              case 1:
-                obj.facing = "E";
-                break;
-            }
-            obj.yCommand = yUpCommandComponent;
-            break;
+          }
         }
       };
 
@@ -528,23 +258,31 @@ function main(){
 
       function GameEntity(){
         this.onGround = true;
+        this.commandEnabled = false;
       };
 
       GameEntity.prototype.changeState = function(targetState){
-        this.state = targetState;
-        this.currentAnimationFrameNumber = 0;
+        if (this.state != targetState){
+          this.state = targetState;
+          this.currentAnimationFrameNumber = 0;
+        }
       }
 
       GameEntity.prototype.message = function(recipient, message){
-        recipient.receiver(message, this);
+        recipient.receiver(this.hitMessage, this);
       };
+
       GameEntity.prototype.receiver = function(message){};
+
+      GameEntity.prototype.execute = function(script){
+
+      }
 
       GameEntity.prototype.update = function(){};
 
       GameEntity.prototype.advanceFrame = function(timestamp){
         if (!this.lastTime){
-          this.lastTime = timestamp
+          this.lastTime = timestamp;
         }
         var delta = timestamp - this.lastTime;
         var frameAdvance = Math.floor(delta / FRAMERATE);
@@ -555,8 +293,9 @@ function main(){
             this.currentAnimationFrameNumber = this.animation[this.state][this.facing].frames[0];
           }
         }
-        this.currentAnimationFrame.getContext("2d").clearRect(0,0,this.width, this.height);
-        this.currentAnimationFrame.getContext("2d").drawImage(
+        var c = this.currentAnimationFrame.getContext("2d");
+        c.clearRect(0,0,this.width, this.height);
+        c.drawImage(
           this.currentSpriteSheet, //source image
           (this.currentAnimationFrameNumber * this.width), //origin x
           0, //origin y
@@ -565,6 +304,58 @@ function main(){
           0,0,
           this.width, this.height
         );
+        // this.frameEffects(c);
+      }
+
+      // GameEntity.prototype.frameEffects = function(context){};
+
+      GameEntity.prototype.setFrameEffects = function(effectFunction, duration){
+
+      }
+
+      GameEntity.prototype.updateFacing = function(){
+        if (this.impulse.x == 0 && this.impulse.y == 0){
+          return;
+        }
+        this.facing =
+          ["N", "", "S"][this.impulse.y + 1]
+          +
+          ["W", "", "E"][this.impulse.x + 1];
+      }
+
+      GameEntity.prototype.directionTo = function(other){
+        if (this.zIndex > other.zIndex){
+          var y = -1;
+        } else if (this.zIndex == other.zIndex) {
+          var y = 0;
+        } else {
+          var y = 1;
+        }
+        if ((this.x + this.width/2) > (other.x + other.width/2)){
+          var x = -1;
+        } else if ((this.x + this.width/2) == (other.x + other.width/2)) {
+          var x = 0;
+        } else {
+          var x = 1;
+        }
+        return (
+        ["N", "", "S"][y + 1]
+        +
+        ["W", "", "E"][x + 1]
+        );
+      }
+
+      GameEntity.prototype.directionToImpulse = function(direction){
+        return {
+          "N": [0,-1],
+          "NW": [-1,-1],
+          "W": [-1,0],
+          "SW": [-1,1],
+          "S": [0,1],
+          "SE": [1,1],
+          "E": [1,0],
+          "NE": [1,-1]
+        }[direction];
       }
 
       //* GAME OBJECTS ====================
@@ -576,6 +367,7 @@ function main(){
 
         //* STATE ==================
         this.name = "hero";
+        this.commandEnabled = true;
         this.state = "standing";
         this.solid = true;
         this.width = 400;
@@ -583,11 +375,11 @@ function main(){
         this.depth = 50;
         this.x = 0;
         this.y = 0;
-        this.movement = {x: 0, y:0}; // aka impulse
+        this.impulse = {x: 0, y:0};
         this.facing = "E";
         this.maxSpeed = 7;
         this.acceleration = [0,0];
-        this.hitbox = [25,0,75,75];
+        this.hitbox = [125*SCALE,30*SCALE,265*SCALE,380*SCALE];
         this.feetpoint = { // test pixels for ground checks
           "N": [200, 345],
           "NW": [120, 345],
@@ -709,45 +501,103 @@ function main(){
         this.currentAnimationFrame.width = this.width;
         this.currentAnimationFrame.height = this.height;
         this.lastTime = undefined;
-
-        //* BEHAVIOR COMPONENTS ============
-        this.xCommand = xNeutralCommandComponent;
-        this.yCommand = yNeutralCommandComponent;
-
       };
 
       //* METHODS =================
 
-      //* INHERIT FROM BASE GAME ENTITY ===========
+      //* INHERIT METHODS FROM BASE GAME ENTITY ===========
       Actor.prototype = Object.create(GameEntity.prototype);
       Actor.prototype.constructor = Actor;
-      //* NEW ===============
+      //* OWN METHODS ===============
       Actor.prototype.command = function(input){
-        this.xCommand(this, input);
-        this.yCommand(this, input);
-
+        if (!this.commandEnabled){
+          return;
+        }
+        switch (input){
+          case (RUN_UP):
+            this.impulse.y = -1;
+            this.changeState("running");
+          break;
+          case (RUN_LEFT):
+            this.impulse.x = -1;
+            this.changeState("running");
+          break;
+          case(RUN_DOWN):
+            this.impulse.y = 1;
+            this.changeState("running");
+          break;
+          case(RUN_RIGHT):
+            this.impulse.x = 1;
+            this.changeState("running");
+          break;
+          case (STOP_X):
+            this.impulse.x = 0;
+            if (this.impulse.y == 0){
+              this.changeState("standing");
+            }
+          break;
+          case (STOP_Y):
+            this.impulse.y = 0;
+            if (this.impulse.x == 0){
+              this.changeState("standing");
+            }
+          break;
+        }
+        this.updateFacing();
       }
+
+      Actor.prototype.receiver = function(message, sender){
+        if (message == "burn"){
+          this.recoil();
+        }
+      }
+
       Actor.prototype.update = function(timestamp){
-        // Careful of the order!
-        if (this.state == "hurt"){
-          this.hurtCounter ++;
-        }
-        if (this.hurtCounter > 4){
-          this.changeState("standing");
-          this.hurtCounter = 0;
-        }
-        impulseComponent(this); // apply impulse
-        inertiaComponent(this); // add/subtract inertia
-        groundIsWalkableComponent(this); // bump into walls
-        detectCollisionComponent(this); // bump into obstacles
-        movementComponent(this); // apply movement calc to position
+        // Hot-swappable -- but careful of the order!
+        // Check for walls and obstacles AFTER all updates are made to impulse and inertia
+        impulseComponent(this); // apply impulse to acceleration
+        inertiaComponent(this); // acceleration falls off gradually
+        groundIsWalkableComponent(this); // walls stop you or nudge you along at a diagonal
+        detectCollisionComponent(this); // you stop at obstacles and send them a message
+        moveComponent(this); // apply movement calculations to position
         this.currentSpriteSheet.src = this.animation[this.state][this.facing].filename;
         this.advanceFrame(timestamp); // advance animation frame
       };
-      Actor.prototype.receiver = function(message, sender){
-        if (message == HIT && sender == fireball){
-          this.changeState("hurt");
-          this.hurtCounter = 0;
+
+      Actor.prototype.recoil = function(){
+        switch (this.facing){
+          case ("N"):
+            this.acceleration[0] = 0;
+            this.acceleration[1] = (this.maxSpeed);
+          break;
+          case ("NW"):
+            this.acceleration[0] = (this.maxSpeed);
+            this.acceleration[1] = (this.maxSpeed);
+          break;
+          case ("W"):
+            this.acceleration[0] = (this.maxSpeed);
+            this.acceleration[1] = 0;
+          break;
+          case ("SW"):
+            this.acceleration[0] = (this.maxSpeed);
+            this.acceleration[1] = -(this.maxSpeed);
+          break;
+          case ("S"):
+            this.acceleration[0] = 0;
+            this.acceleration[1] = -(this.maxSpeed);
+          break;
+          case ("SE"):
+            this.acceleration[0] = -(this.maxSpeed);
+            this.acceleration[1] = -(this.maxSpeed);
+          break;
+          case ("E"):
+            this.acceleration[0] = -(this.maxSpeed);
+            this.acceleration[1] = 0;
+          break;
+          case ("NE"):
+            this.acceleration[0] = -(this.maxSpeed);
+            this.acceleration[1] = (this.maxSpeed);
+          break;
         }
       }
 
@@ -761,13 +611,14 @@ function main(){
         this.onGround = false;
         this.width = 200;
         this.height = 200;
-        this.depth = 100;
+        this.depth = 30;
         this.x = -200;
         this.y = -200;
         this.zIndex = 400;
         this.acceleration = [9, 0];
         this.originalAcceleration = [9, 0];
         this.hitbox = [50,50,150,150];
+        this.hitMessage = "burn";
         this.currentAnimationFrame = document.createElement("canvas");
         this.currentAnimationFrame.width = this.width;
         this.currentAnimationFrame.height = this.height;
@@ -787,7 +638,6 @@ function main(){
         ctx.beginPath();
         ctx.arc(100,100,25,0,2*Math.PI, false);
         ctx.fillStyle = "yellow";
-        // ctx.fill();
       }
 
       Fireball.prototype = Object.create(GameEntity.prototype);
@@ -795,7 +645,7 @@ function main(){
 
       Fireball.prototype.update = function(){
         detectCollisionComponent(this);
-        movementComponent(this);
+        moveComponent(this);
         if (this.y >= (this.zIndex - (this.height)*SCALE)){
           //restart
           this.x = -200;
@@ -806,6 +656,8 @@ function main(){
       }
 
       //* ===============================
+
+      //* GLOBAL ===========================
 
       function drawEntity(entity, context){
         context.drawImage(
@@ -827,7 +679,7 @@ function main(){
           ctx = canvas.getContext('2d');
 
       var entities = [hero,twin,fireball];
-      var entitiesDepthOrder = [hero,twin,fireball];
+      var entitiesByDepthOrder = [hero,fireball,twin];
 
       hero.x = 160;
       hero.y = 210;
@@ -841,17 +693,17 @@ function main(){
       var gameLoop = window.requestAnimationFrame(tick);
 
       function tick(timestamp){
+        window.requestAnimationFrame(tick);
         for (var i = 0; i < entities.length; i++){
           entities[i].update(timestamp);
         };
-        entitiesDepthOrder.sort(function(a, b){ //sort by y position
+        entitiesByDepthOrder.sort(function(a, b){
           return ((a.zIndex) - (b.zIndex));
         });
         ctx.clearRect(0, 0, 1200, 800);
-        for (var i = 0; i < entitiesDepthOrder.length; i++){
-          drawEntity(entitiesDepthOrder[i], ctx);
+        for (var i = 0; i < entitiesByDepthOrder.length; i++){
+          drawEntity(entitiesByDepthOrder[i], ctx);
         }
-        window.requestAnimationFrame(tick);
       };
 
       //* KEY LISTENERS ========================
@@ -860,19 +712,19 @@ function main(){
         switch (e.keyCode){
           case 37:
               e.preventDefault();
-              hero.command(RUN_LEFT);
+              keyHandler.register(LEFT_PRESS);
               break;
           case 38:
               e.preventDefault();
-              hero.command(RUN_UP);
+              keyHandler.register(UP_PRESS);
               break;
           case 39:
               e.preventDefault();
-              hero.command(RUN_RIGHT);
+              keyHandler.register(RIGHT_PRESS);
               break;
           case 40:
               e.preventDefault();
-              hero.command(RUN_DOWN);
+              keyHandler.register(DOWN_PRESS);
               break;
         }
       });
@@ -880,20 +732,150 @@ function main(){
       window.addEventListener("keyup", function(e){
         switch (e.keyCode){
           case 37:
-            hero.command(STOP_LEFT);
+            keyHandler.register(LEFT_RELEASE);
             break;
           case 38:
-            hero.command(STOP_UP);
+            keyHandler.register(UP_RELEASE);
             break;
           case 39:
-            hero.command(STOP_RIGHT);
+            keyHandler.register(RIGHT_RELEASE);
             break;
           case 40:
-            hero.command(STOP_DOWN);
+            keyHandler.register(DOWN_RELEASE);
             break;
         }
       });
 
+
+      //* GAME CONTROLLER ====================
+      function GameController(){
+
+      }
+      GameController.prototype.command = function(obj, input){
+        obj.command(input);
+      }
+
+
+      //* BUTTON COMPONENTS ===================
+
+      // TO DO: put inside keyhandler class
+
+      // FSM for X and Y button states, to manage multiple-key inputs
+
+      var xNeutral = function(input){
+        switch (input){
+          case (LEFT_PRESS):
+            hero.command(RUN_LEFT);
+            keyHandler.xArrowKeyHandler = leftArrowPressed;
+          break;
+          case (RIGHT_PRESS):
+            hero.command(RUN_RIGHT);
+            keyHandler.xArrowKeyHandler = rightArrowPressed;
+          break;
+        }
+      };
+
+      var leftArrowPressed = function(input){
+        switch (input){
+          case (LEFT_RELEASE):
+            hero.command(STOP_X)
+            keyHandler.xArrowKeyHandler = xNeutral;
+          break;
+          case (RIGHT_PRESS):
+            hero.command(RUN_RIGHT)
+            keyHandler.xArrowKeyHandler = leftAndRightArrowsPressed;
+          break;
+        }
+      };
+
+      var rightArrowPressed = function(input){
+        switch (input){
+          case (RIGHT_RELEASE):
+            hero.command(STOP_X);
+            keyHandler.xArrowKeyHandler = xNeutral;
+          break;
+          case (LEFT_PRESS):
+            hero.command(RUN_LEFT);
+            keyHandler.xArrowKeyHandler = leftAndRightArrowsPressed
+            break;
+        }
+      };
+
+      var leftAndRightArrowsPressed = function(input){
+        switch (input){
+          case (LEFT_RELEASE):
+            hero.command(RUN_RIGHT);
+            keyHandler.xArrowKeyHandler = rightArrowPressed;
+          break;
+          case (RIGHT_RELEASE):
+            hero.command(RUN_LEFT);
+            keyHandler.xArrowKeyHandler = leftArrowPressed;
+          break;
+        }
+      };
+
+      var yNeutral = function(input){
+        switch (input){
+          case (UP_PRESS):
+            hero.command(RUN_UP);
+            keyHandler.yArrowKeyHandler = upArrowPressed;
+          break;
+          case (DOWN_PRESS):
+            hero.command(RUN_DOWN);
+            keyHandler.yArrowKeyHandler = downArrowPressed;
+          break;
+        }
+      };
+
+      var upArrowPressed = function(input){
+        switch (input){
+          case (UP_RELEASE):
+            hero.command(STOP_Y);
+            keyHandler.yArrowKeyHandler = yNeutral;
+          break;
+          case (DOWN_PRESS):
+            hero.command(RUN_DOWN);
+            keyHandler.yArrowKeyHandler = upAndDownArrowsPressed;
+          break;
+        }
+      };
+
+      var downArrowPressed = function(input){
+        switch (input){
+          case (DOWN_RELEASE):
+            hero.command(STOP_Y);
+            keyHandler.yArrowKeyHandler = yNeutral;
+          break;
+          case (UP_PRESS):
+            hero.command(RUN_UP);
+            keyHandler.yArrowKeyHandler = upAndDownArrowsPressed;
+            break;
+        }
+      };
+
+      var upAndDownArrowsPressed = function(input){
+        switch (input){
+          case (UP_RELEASE):
+            hero.command(RUN_DOWN);
+            keyHandler.yArrowKeyHandler = downArrowPressed;
+          break;
+          case (DOWN_RELEASE):
+            hero.command(RUN_UP);
+            keyHandler.yArrowKeyHandler = upArrowPressed;
+          break;
+        }
+      };
+
+      function KeyHandlerClass(){
+        this.xArrowKeyHandler = xNeutral,
+        this.yArrowKeyHandler = yNeutral
+      }
+      KeyHandlerClass.prototype.register = function(input){
+        this.xArrowKeyHandler(input);
+        this.yArrowKeyHandler(input);
+      }
+
+      var keyHandler = new KeyHandlerClass();
 
 };
 
