@@ -11,6 +11,7 @@
 
   <body scroll="no">
 
+    <p>Control the scientist using the arrow keys. Get the crystal!</p>
     <div with=1024 height=768 style="background: url('lavabg5.jpg'); background-repeat: no-repeat; padding: 0">
       <canvas id="display" width=1024 height=768></canvas>
     </div>
@@ -142,8 +143,8 @@ function main(){
           obj.acceleration = [newSpeedX * newVector[0], newSpeedY * newVector[1]];
           return;
         };
-        // If all directions fail, stop
-        obj.acceleration = [0,0];
+        // If all directions fail, bounce off
+        obj.acceleration = [obj.acceleration[0] * -.75, obj.acceleration[1] * -.75];
         return;
       };
 
@@ -193,7 +194,9 @@ function main(){
 
       //* COLLISION COMPONENT =============
       // Could optimize with quad trees etc. but right now there are so few entities onscreen it's not really a big deal.
-      // TO DO: change how this works — base on relative positions of entities, not object facing. Determine relative direction of the obstacle entity to the object, and negate acceleration in that direction
+      // TO DO: make this run outside of the entities. Register entities & what they have to check collision with.
+      // E.g. Fireball-class objects only have to check for collision with the Hero, the Hero checks for collision with basically everything, nonmoving objects aren't even registered.
+      // This should save a lot of checks.
 
       function detectCollisionComponent(obj){
         if (obj.acceleration == [0,0]
@@ -233,18 +236,13 @@ function main(){
             ((obj.y + obj.hitbox[3] + 1) >= (entities[i].y + entities[i].hitbox[1]))
             ){
               // collision!
-              // get direction of obstacle in [x,y] form
-              var direction = obj.directionToImpulse(obj.directionTo( entities[i]));
-              // message obstacle and pass it that info
+              // message the obstacle
               obj.message(entities[i], direction);
-              //bounce obj back if both are solid
+              // get direction of obstacle in [x,y] form
+              // bounce obj back if both are solid
+              var direction = obj.directionToImpulse(obj.directionTo( entities[i]));
               if (obj.solid && entities[i].solid){
-                if (Math.sign(obj.acceleration[0]) == direction[0]){
-                  obj.acceleration[0] *= -1;
-                }
-                if (Math.sign(obj.acceleration[1]) == direction[1]){
-                  obj.acceleration[1] *= -1;
-                }
+                obj.bounceBack(direction);
               }
             }
           }
@@ -358,6 +356,15 @@ function main(){
         }[direction];
       }
 
+      GameEntity.prototype.bounceBack = function(direction){
+        if (Math.sign(this.acceleration[0]) == direction[0]){
+          this.acceleration[0] *= -.85;
+        }
+        if (Math.sign(this.acceleration[1]) == direction[1]){
+          this.acceleration[1] *= -.85;
+        }
+      }
+
       //* GAME OBJECTS ====================
 
       //* ACTOR ======================
@@ -367,7 +374,7 @@ function main(){
 
         //* STATE ==================
         this.name = "hero";
-        this.commandEnabled = true;
+        this.behavior = new NormalState(this);
         this.state = "standing";
         this.solid = true;
         this.width = 400;
@@ -510,9 +517,6 @@ function main(){
       Actor.prototype.constructor = Actor;
       //* OWN METHODS ===============
       Actor.prototype.command = function(input){
-        if (!this.commandEnabled){
-          return;
-        }
         switch (input){
           case (RUN_UP):
             this.impulse.y = -1;
@@ -548,56 +552,64 @@ function main(){
 
       Actor.prototype.receiver = function(message, sender){
         if (message == "burn"){
-          this.recoil();
+          // recoil
+          var direction = this.directionToImpulse(this.directionTo(sender));
+          this.acceleration[0] = direction[0] * -6;
+          this.acceleration[1] = direction[1] * -6;
+          // sprite effect
+          this.behavior = new HurtState(this);
         }
       }
 
       Actor.prototype.update = function(timestamp){
+        this.behavior.update(timestamp);
+      }
+
+
+      //* BEHAVIOR STATES ======================
+
+      function NormalState(obj){
+        this.obj = obj;
+      }
+
+      NormalState.prototype.update = function(timestamp){
         // Hot-swappable -- but careful of the order!
         // Check for walls and obstacles AFTER all updates are made to impulse and inertia
-        impulseComponent(this); // apply impulse to acceleration
-        inertiaComponent(this); // acceleration falls off gradually
-        groundIsWalkableComponent(this); // walls stop you or nudge you along at a diagonal
-        detectCollisionComponent(this); // you stop at obstacles and send them a message
-        moveComponent(this); // apply movement calculations to position
-        this.currentSpriteSheet.src = this.animation[this.state][this.facing].filename;
-        this.advanceFrame(timestamp); // advance animation frame
+        impulseComponent(this.obj); // apply impulse to acceleration
+        inertiaComponent(this.obj); // acceleration falls off gradually
+        groundIsWalkableComponent(this.obj); // walls stop you or nudge you along at a diagonal
+        detectCollisionComponent(this.obj); // you stop at obstacles and send them a message
+        moveComponent(this.obj); // apply movement calculations to position
+        this.obj.currentSpriteSheet.src = this.obj.animation[this.obj.state][this.obj.facing].filename;
+        this.obj.advanceFrame(timestamp); // advance animation frame
       };
 
-      Actor.prototype.recoil = function(){
-        switch (this.facing){
-          case ("N"):
-            this.acceleration[0] = 0;
-            this.acceleration[1] = (this.maxSpeed);
-          break;
-          case ("NW"):
-            this.acceleration[0] = (this.maxSpeed);
-            this.acceleration[1] = (this.maxSpeed);
-          break;
-          case ("W"):
-            this.acceleration[0] = (this.maxSpeed);
-            this.acceleration[1] = 0;
-          break;
-          case ("SW"):
-            this.acceleration[0] = (this.maxSpeed);
-            this.acceleration[1] = -(this.maxSpeed);
-          break;
-          case ("S"):
-            this.acceleration[0] = 0;
-            this.acceleration[1] = -(this.maxSpeed);
-          break;
-          case ("SE"):
-            this.acceleration[0] = -(this.maxSpeed);
-            this.acceleration[1] = -(this.maxSpeed);
-          break;
-          case ("E"):
-            this.acceleration[0] = -(this.maxSpeed);
-            this.acceleration[1] = 0;
-          break;
-          case ("NE"):
-            this.acceleration[0] = -(this.maxSpeed);
-            this.acceleration[1] = (this.maxSpeed);
-          break;
+
+      function HurtState(obj){
+        this.obj = obj;
+        this.countdown = 5;
+      };
+
+      HurtState.prototype.update = function(timestamp){
+        // impulseComponent(this.obj);
+        inertiaComponent(this.obj);
+        groundIsWalkableComponent(this.obj);
+        detectCollisionComponent(this.obj);
+        moveComponent(this.obj);
+        this.obj.currentSpriteSheet.src = this.obj.animation[this.obj.state][this.obj.facing].filename;
+        this.obj.advanceFrame(timestamp);
+
+        // hurt frame effect
+        var ctx = this.obj.currentAnimationFrame.getContext("2d");
+        ctx.globalCompositeOperation = "source-in";
+        ctx.fillStyle = "red";
+        ctx.fillRect(0,0,this.obj.width,this.obj.height);
+        ctx.globalCompositeOperation = "source-over";
+
+        // effect countdown
+        this.countdown --;
+        if (this.countdown <= 0){
+          this.obj.behavior = new NormalState(this.obj);
         }
       }
 
@@ -611,17 +623,20 @@ function main(){
         this.onGround = false;
         this.width = 200;
         this.height = 200;
-        this.depth = 30;
+        this.depth = 100;
         this.x = -200;
         this.y = -200;
-        this.zIndex = 400;
-        this.acceleration = [9, 0];
-        this.originalAcceleration = [9, 0];
+        this.originalX = 1100;
+        this.originalY = -100;
+        this.zIndex = 500;
+        this.acceleration = [-7, 1];
+        this.originalAcceleration = [-7, 1];
         this.hitbox = [50,50,150,150];
         this.hitMessage = "burn";
         this.currentAnimationFrame = document.createElement("canvas");
         this.currentAnimationFrame.width = this.width;
         this.currentAnimationFrame.height = this.height;
+
         var ctx = this.currentAnimationFrame.getContext("2d");
         ctx.beginPath();
         ctx.arc(100,100,100,0,2*Math.PI, false);
@@ -648,14 +663,40 @@ function main(){
         moveComponent(this);
         if (this.y >= (this.zIndex - (this.height)*SCALE)){
           //restart
-          this.x = -200;
-          this.y = -200;
+          this.x = this.originalX;
+          this.y = this.originalY;
           this.acceleration = [this.originalAcceleration[0], this.originalAcceleration[1]];
         }
-        this.acceleration[1] += .5;
+        this.acceleration[1] *= 1.06;
       }
 
-      //* ===============================
+      //* CRYSTAL CLASS ===============================
+      function Crystal(){ // < GameEntity
+        GameEntity.call(this);
+        this.x = 550;
+        this.y = 200;
+        this.width = 100;
+        this.height = 100;
+        this.zIndex = this.y + (this.height * SCALE);
+        this.depth = 10;
+        this.hitbox = [0,0,this.width,this.height];
+        this.solid = true;
+        this.currentAnimationFrame = document.createElement("canvas");
+        this.currentAnimationFrame.width = this.width;
+        this.currentAnimationFrame.height = this.height;
+
+        var ctx = this.currentAnimationFrame.getContext("2d");
+        ctx.fillStyle = "aqua";
+        ctx.fillRect(0,0,this.width,this.height);
+      }
+
+      Crystal.prototype = Object.create(GameEntity.prototype);
+      Crystal.prototype.constructor = Crystal;
+
+      Crystal.prototype.receiver = function(message,sender){
+        alert("You win!");
+      }
+
 
       //* GLOBAL ===========================
 
@@ -674,12 +715,14 @@ function main(){
 
       var hero = new Actor(),
           twin = new Actor(),
-          fireball = new Fireball();
+          fireball = new Fireball(),
+          fireball2 = new Fireball(),
+          crystal = new Crystal();
           canvas = document.getElementById("display"),
           ctx = canvas.getContext('2d');
 
-      var entities = [hero,twin,fireball];
-      var entitiesByDepthOrder = [hero,fireball,twin];
+      var entities = [hero,twin,fireball,fireball2,crystal];
+      var entitiesByDepthOrder = [hero,fireball,twin,fireball2,crystal];
 
       hero.x = 160;
       hero.y = 210;
@@ -688,6 +731,14 @@ function main(){
       twin.x = 600;
       twin.y = 200;
       twin.command = function(){};
+
+      fireball2.x = -100;
+      fireball2.y = -75;
+      fireball2.originalX = 1100;
+      fireball2.originalY = -75
+      fireball2.acceleration = [-15,1];
+      fireball2.originalAcceleration = [-15,1];
+      fireball2.zIndex = 500;
 
       //* BEGIN GAME LOOP ====================
       var gameLoop = window.requestAnimationFrame(tick);
