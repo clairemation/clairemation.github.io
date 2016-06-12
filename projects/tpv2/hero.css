@@ -12,4 +12,20 @@
 
 body {
   background-color: black;
+  font-family: Avenir, sans-serif;
+  color: white;
+}
+
+p {
+  margin: auto;
+  text-align: center;
+}
+
+div {
+  width: 1024px;
+  margin: auto;
+  }
+
+canvas {
+  /*margin: auto;*/
 }
