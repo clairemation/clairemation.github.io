@@ -6,12 +6,61 @@
 
     <meta charset="utf-8">
 
-    <link type="text/css" rel="stylesheet" href="../../stylesheets/fonts.css">
-    <link type="text/css" rel="stylesheet" href="../../stylesheets/default.css">
-    <link type="text/css" rel="stylesheet" href="../../stylesheets/blog.css">
-    <link type="text/css" rel="stylesheet" href="../../stylesheets/projects.css">
+    <link type="text/css" rel="stylesheet" href="../../main.css">
 
     <title>Claire's Projects: Time's Prisoner</title>
+
+    <style>
+    body {
+      text-align: center;
+    }
+
+    main {
+      text-align: center;
+    }
+
+    h3 {
+      text-align: left;
+    }
+    p, li {
+      width: 25em;
+      text-align: left;
+      margin: .5em auto .5em auto;
+    }
+
+    img {
+      max-width: 200px;
+    }
+
+    #original, #spritebased {
+      display: inline-block;
+      width: 40%;
+      float: left;
+      margin: 2%;
+      padding: 0;
+    }
+
+    li {
+      position: relative;
+      left: 1em;
+      font-size: .8em;
+      width: 100%;
+      list-style-type: disc;
+      list-style-position: outside;
+    }
+
+    footer {
+      position: absolute;
+      top: 5px;
+      right: 100px;
+    }
+
+    footer img {
+      width: 30px;
+      height: 30px;
+    }
+
+    </style>
 
   </head>
 
@@ -20,31 +69,39 @@
     <section id="main-pane">
 
     <header>
-      <div id="photo"></div>
-      <h3><a href="../index.html">* Claire's Projects *</a></h3>
-      <ul class="site-sections">
-        <li><a href="../../about.html">About</a></li><li class='selected'>Projects</li><li><a href="../../resume.pdf">Resume</a></li>
-      </ul>
-
-      <ul class="breadcrumbs">
-        <li><a href="../../index.html">Home</a> ></li>
-        <li><a href="../index.html">Projects</a> ></li>
-        <li>Chrono Boots</li>
-      </ul>
-
-      <h1>Time's Prisoner</h1>
-
+      <h3><a href="../../index.html">< Claire's Dev Site</a></h3>
+      <div id="maintitle">
+        <h1>Time's Prisoner</h1>
+      </div>
     </header>
 
     <main>
 
-      <img src="../imgs/tpscreenshot.jpg">
+      <p>I made this little game demo a while ago. Now I'm working on making it as a "real" graphical game using the HTML5 canvas.</p>
+      <p>It's about a time traveler who's had a little accident. Now you have to help her brave prehistoric dangers to collect the scattered chrono crystals and return home.</p>
 
+      <div id="original">
+        <a href="timesprisoner.html">
+        <h2>Original demo level</h2>
+        <img src="../imgs/tpscreenshot.jpg">
+        </a>
+        <ul>
+          <li>pulse-pounding, play-tested level design</li>
+          <li>awesome CC-licensed soundtrack courtesy of Kevin MacLeod</li>
+        </ul>
+      </div>
 
-      <p>Time's Prisoner is my first (little) game in JavaScript! Help a stranded time traveler collect chrono crystals to return to their own time.</p>
-      <p><a href="timesprisoner.html">Play it now!</a></p>
-      <p>(Note: Mobile devices are not yet supported.)</p>
-      <p><strong>Update:</strong> I'm currently working on making this into a fully-fledged game using the HTML5 canvas. You can see a demo of my WIP sprite engine <a href="../tpv2/spritedemo.html">here.</a></p>
+      <div id="spritebased">
+        <a href="../tpv2/spritedemo.html">
+        <h2>New WIP sprite engine</h2>
+        <img src="../../imgs/spritescreenshot.jpg">
+        </a>
+        <ul>
+          <li>smooth, non-tile-based movement in 8 directions</li>
+          <li>atmospheric hand-drawn graphics (by me)</li>
+          <li>suble natural physics including inertia, collision, and wall "sliding"</li>
+        </ul>
+      </div>
 
     </main>
 
