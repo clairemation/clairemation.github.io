@@ -17,13 +17,20 @@ html, body {
 
 body {
   font-family: 'Avenir Next', Avenir, sans-serif;
+  /*font-weight: 400;*/
   text-align: center;
   background: linear-gradient(hsl(175,80%,20%) -300%,white 70%, hsl(20,100%,70%) 300%);
   background-size: 100%;
   background-attachment: fixed;
 }
 
+strong {
+  font-weight: 600;
+  /*color: orange;*/
+}
+
 #main-pane {
+  position: relative;
   width: 600px;
   margin: auto;
   background-color: white;
@@ -31,8 +38,67 @@ body {
   box-shadow: 0 0 25px 0 hsla(0,0%,0%,.5);
 }
 
+/*#main-pane::before {
+  content: "";
+  background-color: orange;
+  width: 60px;
+  height: 60px;
+  z-index: -1;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}*/
+
 header {
   text-align: center;
+  position: relative;
+}
+
+#maintitle {
+  width: 750px;
+  position: relative;
+  left: -100px;
+  overflow: hidden;
+  padding-bottom: 3px;
+}
+
+#maintitle h1 {
+  padding-left: 70px;
+  background: orange;
+  background: linear-gradient(90deg, hsl(25,90%,20%) 0%,  hsl(27,90%,40%) 1.5%, hsl(30,90%,60%) 5%, orange 10%, hsl(39,100%,70%) 50%, orange 100%);
+  height: 60px;
+  box-shadow: 0 5px 0 0 hsla(0,0%,100%,.5) inset,
+    0 -5px 0 0 hsla(0,0%,100%,.5) inset,
+    7px 2px 2px 2px hsla(0,0%,0%,.4);
+  /*border: 1px solid black;*/
+}
+
+#main-pane::before {
+  content: "";
+  width: 60px;
+  height: 60px;
+  transform: rotate(45deg);
+  background-color: hsl(25,100%,30%);
+  box-shadow: 0 0 0 5px hsla(0,0%,100%,.5) inset;
+  position: absolute;
+  left: -7px;
+  top: 38px;
+  z-index: -1;
+}
+
+#maintitle h1::after {
+  content: "";
+  vertical-align: middle;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 0;
+  right: -30px;
+  width: 60px;
+  height: 60px;
+  background: white;
+  /*border: 1px solid black;*/
+  box-shadow: 0 2px 0px 2px hsla(0,0%,0%,.4) inset;
+
 }
 
 header img {
@@ -42,12 +108,22 @@ header img {
 
 header h1 {
 font-size: 3em;
-font-weight: 300;
+font-family: inherit;
+color: inherit;
+/*color: hsla(50,0%,100%,.7);*/
+font-weight: 800;
 }
 
 h1 {
-  font-size: 1.5em;
-  /*font-weight: 600;*/
+  font-size: 2em;
+  color: orange;
+  /*font-weight: 400;*/
+  text-shadow: 1px 1px 0 hsla(0,0%,0%,.2);
+}
+
+header nav {
+  margin-top: .3em;
+  font-weight: 700;
 }
 
 nav ul li {
@@ -62,12 +138,20 @@ nav ul li a, nav ul li a:visited, nav ul li a:hover {
 section {
   text-align: left;
   display: inline-block;
-  margin: 2em 0 2em 0;
+  margin: 1em 0 1em 0;
 }
 
 li {
   list-style-type: none;
   position: relative;
+}
+
+#intro {
+  /*height: 100px;*/
+  width: 100%;
+  text-align: center;
+  /*background: orange;*/
+  font-size: 1.5em;
 }
 
 #projects {}
@@ -84,7 +168,7 @@ li {
 
 #projects a {
   text-decoration: none;
-  font-weight: 500;
+  /*font-weight: 500;*/
 }
 
 #projects a:hover {
@@ -118,7 +202,7 @@ li {
 }
 
 .gameType {
-  background-color: hsl(339,100%,76%);
+  background-color: hsl(359,100%,76%);
 }
 
 .utilType {
@@ -127,8 +211,10 @@ li {
 
 #tech h1 {
   font-size: 1em;
-  font-weight: 600;
+  /*font-weight: 600;*/
   color: hsl(0,0%,80%);
+  margin-bottom: .2em;
+  /*text-shadow: none;*/
 }
 
 #tech h1.active {
@@ -173,10 +259,6 @@ li {
 #desc.active {
   color: black;
   /*transition: color .2s;*/
-}
-
-section > h1 {
-  /*color: red;*/
 }
 
 #about p {
