@@ -78,6 +78,10 @@ header {
   width: 60px;
   height: 60px;
   transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
   background-color: hsl(25,100%,30%);
   box-shadow: 0 0 0 5px hsla(0,0%,100%,.5) inset;
   position: absolute;
@@ -92,7 +96,7 @@ header {
   transform: rotate(45deg);
   position: absolute;
   top: 0;
-  right: -30px;
+  right: -35px;
   width: 60px;
   height: 60px;
   background: white;
@@ -203,10 +207,12 @@ li {
 
 .gameType {
   background-color: hsl(359,100%,76%);
+  color: white;
 }
 
 .utilType {
-  background-color: hsl(180,90%,90%);
+  background-color: hsl(180,90%,38%);
+  color: white;
 }
 
 #tech h1 {
