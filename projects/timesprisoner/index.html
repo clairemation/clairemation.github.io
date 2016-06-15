@@ -19,6 +19,11 @@
       text-align: center;
     }
 
+    #main-pane {
+      margin: 1em;
+      border-radius: 1em;
+    }
+
     h3 {
       text-align: left;
     }
@@ -28,25 +33,38 @@
       margin: .5em auto .5em auto;
     }
 
-    img {
+    main img {
       max-width: 200px;
+      margin: .2em;
+      box-shadow: 2px 0 15px -5px black;
     }
 
     #original, #spritebased {
       display: inline-block;
       width: 40%;
-      float: left;
       margin: 2%;
       padding: 0;
+      text-align: center;
+    }
+
+    ul {
+      font-size: .8em;
+      text-align: center;
+    }
+
+    ul p {
+      text-align: center;
+      width: inherit;
+      font-weight: 600;
     }
 
     li {
       position: relative;
-      left: 1em;
-      font-size: .8em;
+      text-align: center;
+      /*left: 1em;*/
       width: 100%;
       list-style-type: disc;
-      list-style-position: outside;
+      list-style-position: inside;
     }
 
     footer {
@@ -79,7 +97,6 @@
 
       <p>I made this little game demo a while ago. Now I'm working on making it as a "real" graphical game using the HTML5 canvas.</p>
       <p>It's about a time traveler who's had a little accident. Now you have to help her brave prehistoric dangers to collect the scattered chrono crystals and return home.</p>
-      <p>Currently unsupported by mobile or Internet Explorer/Edge.</p>
 
       <div id="original">
         <a href="timesprisoner.html">
@@ -87,8 +104,9 @@
         <img src="../imgs/tpscreenshot.jpg">
         </a>
         <ul>
-          <li>pulse-pounding, play-tested level design</li>
+          <li>tense, play-tested level design</li>
           <li>awesome CC-licensed soundtrack courtesy of Kevin MacLeod</li>
+        <p>Note: Requires a desktop browser</p>
         </ul>
       </div>
 
@@ -99,8 +117,9 @@
         </a>
         <ul>
           <li>smooth, non-tile-based movement in 8 directions</li>
+          <li>subtle natural physics including inertia, collision, and wall "sliding"</li>
           <li>atmospheric hand-drawn graphics (by me)</li>
-          <li>suble natural physics including inertia, collision, and wall "sliding"</li>
+          <p>Note: Currently requires desktop version of Safari, Firefox, Chrome, or Opera browsers</p>
         </ul>
       </div>
 

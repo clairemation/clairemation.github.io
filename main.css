@@ -34,7 +34,7 @@ strong {
   width: 600px;
   margin: auto;
   background-color: white;
-  padding: .5em 5em 0 5em;
+  padding: .5em 5em .5em 5em;
   box-shadow: 0 0 25px 0 hsla(0,0%,0%,.5);
 }
 
@@ -63,7 +63,7 @@ header {
 }
 
 #maintitle h1 {
-  padding-left: 70px;
+  padding-left: 1em;
   background: orange;
   background: linear-gradient(90deg, hsl(25,90%,20%) 0%,  hsl(27,90%,40%) 1.5%, hsl(30,90%,60%) 5%, orange 10%, hsl(39,100%,70%) 50%, orange 100%);
   height: 60px;
@@ -289,4 +289,10 @@ li {
 
 #about p:nth-child(odd) img, #about p:nth-child(even) iframe {
   float: right;
+}
+
+.breakout {
+  text-align: center;
+  clear: both;
+  font-size: 1.5em;
 }
