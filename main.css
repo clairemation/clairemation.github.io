@@ -94,6 +94,10 @@ header {
   content: "";
   vertical-align: middle;
   transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
   position: absolute;
   top: 0;
   right: -30px;
