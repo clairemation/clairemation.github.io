@@ -44,6 +44,7 @@ function groundIsWalkableComponent(obj){
   }
   // If new direction is ok, apply new direction while continuing to accelerate
   // TO DO: DRY this up
+  // also check max speed first instead of clamping, to avoid inadvertantly neutralizing non-impulse-caused acceleration
   if (groundSpotCheck(obj, secondaryDirection) == true){
     var newVector = obj.directionToImpulse(secondaryDirection);
     var newSpeedX = oldSpeed + 1.25;
