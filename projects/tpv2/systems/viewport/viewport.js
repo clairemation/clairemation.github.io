@@ -6,6 +6,7 @@ function CameraMode(scene){
 function StaticMode(scene){
   CameraMode.call(this, scene);
 }
+
 StaticMode.prototype.update = function(){}
 
 
@@ -16,17 +17,20 @@ function FollowMode(scene, target){
     top: 200,
     left: 200,
     right: 200,
-    bottom: 100
+    bottom: 150
   };
 }
 
 FollowMode.prototype.update = function(){
+
   var scrollX = 0,
       scrollY = 0,
+
       targetTop = this.target.y,
       targetBottom = this.target.y + (this.target.height * SCALE),
       targetLeft = this.target.x,
       targetRight = this.target.x + (this.target.width * SCALE),
+
       topBoundary = this.scene.scrollY + this.margin.top,
       bottomBoundary = this.scene.scrollY + this.scene.height - this.margin.bottom;
       leftBoundary = this.scene.scrollX + this.margin.left,
@@ -45,12 +49,12 @@ FollowMode.prototype.update = function(){
   }
 
   this.scene.scrollBy(scrollX, scrollY);
+
 }
 
 
 function Scene(){
-  this.layers = [];
-  // order - bottom to top
+  this.layers = []; // layer order: bottom to top
   this.width = 1024;
   this.height = 768;
   this.scrollX = 0;
@@ -79,9 +83,23 @@ Scene.prototype.scrollBy = function(x, y){
   }
 }
 
+// Scene.prototype.scrollTo = function(x, y){
+//   this.scrollX = 0;
+//   this.scrollY = 0;
+// }
+
+Scene.prototype.follow = function(target){
+  this.cameraMode = new FollowMode(this, target);
+}
+
+Scene.prototype.unfollow = function(){
+  this.cameraMode = new StaticMode(this);
+}
+
 Scene.prototype.update = function(){
   this.cameraMode.update();
 }
+
 
 function Layer(args){
   this.scene = args.scene;
@@ -103,14 +121,14 @@ Layer.prototype.updatePosition = function(){
 }
 
 Layer.prototype.moveBy = function(x, y){
-  this.left -= x;
-  this.top -= y;
+  this.left += x;
+  this.top += y;
   this.updatePosition();
 }
 
 Layer.prototype.moveTo = function(x, y){
-  this.left = -x;
-  this.top = -y;
+  this.left = x;
+  this.top = y;
   this.updatePosition();
 }
 
@@ -127,7 +145,7 @@ ImageLayer.prototype = Object.create(Layer.prototype);
 ImageLayer.prototype.constructor = ImageLayer;
 
 ImageLayer.prototype.scrollBy = function(x, y){
-  this.moveBy(x * this.parallaxScale, y * this.parallaxScale);
+  this.moveBy(-x * this.parallaxScale, -y * this.parallaxScale);
 }
 
 
@@ -137,7 +155,6 @@ function CanvasLayer(args){ // < DisplayLayer
   this.content.width = args.width || this.scene.width;
   this.content.height = args.height || this.scene.height;
   this.context = this.content.getContext("2d");
-  this.renderOffset = args.renderOffset || [0,0];
   this.html.appendChild(this.content);
 }
 

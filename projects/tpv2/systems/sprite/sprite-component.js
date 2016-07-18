@@ -52,7 +52,7 @@ AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
 }
 
 AnimatedSpriteComponent.prototype.hurtEffect = function(){
-  // color whole sprite solid red
+  // color whole sprite solid white
   this.drawingContext.globalCompositeOperation = "source-in";
   this.drawingContext.fillStyle = "white";
   this.drawingContext.fillRect(0,0,this.subject.width,this.subject.height);

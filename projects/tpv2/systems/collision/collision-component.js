@@ -15,5 +15,5 @@ CollisionComponent.prototype.update = function(){
 }
 
 CollisionComponent.prototype.reactToCollisionWith = function(object){
-  // implement individually for each class
+  // implement individually for each subject class
 }

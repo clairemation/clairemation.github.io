@@ -179,6 +179,7 @@ function Actor(className){ // < GameEntity
   };
 
   this.impulseHandler = new ImpulseComponent(this);
+
   this.inertiaHandler = new InertiaComponent(this);
 
   this.collisionHandler = new CollisionComponent(this,collisionEngine);
@@ -189,8 +190,8 @@ function Actor(className){ // < GameEntity
     var direction = this.subject.directionToImpulse(this.subject.directionTo(object.subject));
     // if the object is solid, bounce back
     if (this.subjectIsSolid && object.subjectIsSolid){
-        this.subject.bounceBack(direction);
-      }
+      this.subject.bounceBack(direction);
+    }
 
   };
 
@@ -212,16 +213,23 @@ function Actor(className){ // < GameEntity
 //* INHERIT METHODS FROM BASE GAME ENTITY ===========
 Actor.prototype = Object.create(GameEntity.prototype);
 Actor.prototype.constructor = Actor;
+
 //* OWN METHODS ===============
+
 Actor.prototype.receiver = function(message, sender){
+
   if (message == "burn"){
+
     // recoil
     var direction = this.directionToImpulse(this.directionTo(sender));
     this.acceleration[0] = direction[0] * -10;
     this.acceleration[1] = direction[1] * -10;
-    // sprite effect
+
+    // hurt effects
     this.behavior = new HurtState(this);
+
   }
+
 }
 
 Actor.prototype.update = function(timestamp){
@@ -277,8 +285,6 @@ function Fireball(className){ // < GameEntity
   GameEntity.call(this, (className || 'Fireball'));
   this.name = "fireball";
   this.facing = null;
-  this.solid = false;
-  this.canCollideWith = [Player];
   this.onGround = false;
   this.width = 400;
   this.height = 400;
@@ -293,6 +299,7 @@ function Fireball(className){ // < GameEntity
   this.hitMessage = "burn";
 
   this.spriteHandler = new SpriteComponent(this, spriteEngine);
+  // draw fireball
   this.spriteHandler.drawingContext.beginPath();
   this.spriteHandler.drawingContext.arc(200,200,200,0,2*Math.PI, this.false);
   var gradient = this.spriteHandler.drawingContext.createRadialGradient(200,200,0,310,100,180);
@@ -308,8 +315,8 @@ function Fireball(className){ // < GameEntity
   this.collisionHandler.hitbox = [100*SCALE,100*SCALE,300*SCALE,300*SCALE];
   this.collisionHandler.subjectIsSolid = false;
   this.collisionHandler.subjectCanCollideWith = ['Player'];
-  this.collisionHandler.reactToCollisionWith = function(playerComponent){
-    this.subject.message(playerComponent.subject, "burn");
+  this.collisionHandler.reactToCollisionWith = function(component){
+    this.subject.message(component.subject, "burn");
   }
 }
 
@@ -317,14 +324,19 @@ Fireball.prototype = Object.create(GameEntity.prototype);
 Fireball.prototype.constructor = Fireball;
 
 Fireball.prototype.update = function(){
+
+  // Fall in an arc, reset upon hitting the ground
+
   this.collisionHandler.update();
   moveComponent(this);
+
   if (this.y >= (this.zIndex - (this.height)*SCALE)){
     //restart
     this.x = this.originalX;
     this.y = this.originalY;
     this.acceleration = [this.originalAcceleration[0], this.originalAcceleration[1]];
   }
+
   this.acceleration[1] *= 1.06;
 }
 

@@ -19,7 +19,6 @@
     </div>
 
     <script src = "globals.js"></script>
-    <script src = "baseobjectclass.js"></script>
     <script src = "systems/collision/collision-component.js"></script>
     <script src = "systems/collision/collision-engine.js"></script>
     <script src = "systems/impulse/impulse-component.js"></script>
@@ -40,8 +39,6 @@
 
       //* CONSTANTS ====================
 
-      // var walkmaskSrc = "data:image/gif;base64,R0lGODlhAAHAAIAAAP///wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEgNjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOkMxQTgwNTNGQUIyMDY4MTE4QzE0RUVCNUY2MjY3MDUzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjEwMUFBRTdFMUVBNTExRTY5NjNFQjYyMTM5NkY4MzEwIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjEwMUFBRTdEMUVBNTExRTY5NjNFQjYyMTM5NkY4MzEwIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzYgKE1hY2ludG9zaCkiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowNTgwMTE3NDA3MjA2ODExODIyQUQ3OTg2QUVFMzE3MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpDMUE4MDUzRkFCMjA2ODExOEMxNEVFQjVGNjI2NzA1MyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAAAAAAALAAAAAAAAcAAAAL/jI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6/f8vv8PGCg4SFhoeIiYqLjI2Oj4CBkpOVkFYAmwcGlJSabp+YnJ6QVK6inaVZp6eZql6rrJWvnqGis7q1o7dUubG7WL2wv1mxosPFxa/HRMmqy8/Nnc9AwdzTStWS19HZqttM3dnfQd7r3NSmx9fTq7ZE75G/NsMP4+zfGN/yqZ35Dvrw7p34F/BN01KogwobyDChs6fAjuDcSJFCuWqYgxI8Yt/xo7enTY6qPIkfyukDyJcpnJlCxbAqPiMqZMbLpm2oxZ86ZOlr52+kRp7KfQj0GHGs3o7KhSikmXOm1Y9KlUgT2nWqUn5arWhai2ejU15uvWi2Ktki0r9Szak3nWptRT0ArWO1TlGsSDjyPAtnOx2NvTN+QxPoEFw+N7l4tKvHm/cK1TctRiO40dT4ZcWMvjOZUtD6acWfNlzoklf6bT2fRp0qUVb44TWvRria1dz26TWvVqOLm73mbT2/ZoN5FX8DL+F3bwEuyQJ6ddm3lzFdHTLB9xOEX1M8VN7Pa+l/h1D8/Blwc+/l546efV+DsRm/z2Tt1FpNdwX8x78+tD5P8Psx9782XwHxj12XdgBwV6NuAGAfq3oG8N4vfgBwmacaGFFcoXX1gRWkAQgh3q9yGIG6pXomz9YXeigxnSNyGFL17QIoYjophiPzXCuKKIOTJQl3BQaRekgjvmBBF1ReJ4Y1MPKXmkiTvCog1TRC5JIFtEIHVllBO8FURHUHoZQUs+iDTmjBK4tMNILMTlwFI5kPSmW2qm6VGddjaJgpZ47vmbnm46B2iMLNIpaKE9/qmRC4r+6CKajj5qKIREvUBppSBICkOm7RHaqAyefpcol6KOmh2medaA6i6nhmpDq/q8uhEOsh5Ha5I63IrODBbxwCszNFgJbLDU+KrrmcZU0jQsSGEuGxGyCQ2haFTD/TCTH8gYUSs5sSbrra1DhtsmnOSei2666q7LbrvuvgtvvPLOS2+99t6Lb7767stvv/7+C3DAAg9McMEGH4xwwgovjEIBADs=";
-
       var walkmaskCvs = document.createElement("canvas");
       walkmaskCvs.width = 2048;
       walkmaskCvs.height = 1700;
@@ -57,7 +54,7 @@
         ["heroStandingRight", "assets/hero_standing_right.png", 400, 400],
         ["heroRunLeft", "assets/hero_run_left.png", 1600, 400],
         ["heroRunRight", "assets/hero_run_right.png", 1600, 400],
-        ["walkmask", walkmaskSrc, 2048, 1700]
+        ["walkmask", walkmaskSrc, 2048, 1700] // walkmaskSrc  is in globals.js
       ];
 
       // Create the Image objects from the specs in imagesToLoad
@@ -71,12 +68,17 @@
       // Wait until all images are loaded
       // must check at intervals so it does not block loading and get stuck forever
       loadCheckLoop = setInterval(function(){
+
         if (imagesToLoad.length <= 0){
           // Once all images are loaded, do stuff that had to wait for this, then start game loop
+
           clearInterval(loadCheckLoop);
+
           walkmask.drawImage(images.walkmask,0,0,2048,1700,0,0,2048,1700);
+
           beginGameLoop();
         }
+
         for (var i = 0; i < imagesToLoad.length; i++){
           if (images[imagesToLoad[i][0]].complete){
             imagesToLoad.splice(i,1);
@@ -85,18 +87,9 @@
       }, 10);
 
 
-
-
-
-
       //* ===============================
 
       var scene = new Scene();
-
-      // var bglayer = new ImageLayer({
-      //   scene: scene,
-      //   content: images.background
-      // });
 
       var backbglayer = new ImageLayer({
         scene: scene,
@@ -124,8 +117,7 @@
           fireball = new Fireball(),
           fireball2 = new Fireball();
 
-
-      scene.cameraMode = new FollowMode(scene, hero);
+      scene.follow(hero);
 
       var entities = [hero,twin,fireball,fireball2,scene,spriteEngine];
 

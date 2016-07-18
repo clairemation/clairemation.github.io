@@ -8,18 +8,19 @@ NormalState.prototype.update = function(timestamp){
   // Hot-swappable -- but careful of the order!
   // Check for walls and obstacles AFTER all updates are made to impulse and inertia
   this.subject.impulseHandler.update(); // apply impulse to acceleration
-  this.subject.inertiaHandler.update(); // gradual falloff
+  this.subject.inertiaHandler.update(); // gradual acceleration falloff
   groundIsWalkableComponent(this.subject); // walls stop you or nudge you along at a diagonal
-  this.subject.collisionHandler.update(); // you stop at obstacles and send them a message
-  moveComponent(this.subject); // apply movement calculations to position
-  this.subject.spriteHandler.update(timestamp);
+  this.subject.collisionHandler.update(); // you react to obstacles
+  moveComponent(this.subject); // finally apply all movement calculations to position
+  this.subject.spriteHandler.update(timestamp); // update sprite
 };
 
+
+// Hurt state: remove control and add flashing-white sprite effect for 5 ticks
 
 function HurtState(subject){
   this.subject = subject;
   this.countdown = 5;
-  this.subject.spriteHandler.stateDidChange = true;
 };
 
 HurtState.prototype.update = function(timestamp){
@@ -33,7 +34,6 @@ HurtState.prototype.update = function(timestamp){
   this.countdown --;
   if (this.countdown <= 0){
     this.subject.behavior = new NormalState(this.subject);
-    this.subject.spriteHandler.stateDidChange = true;
   }
 }
 
