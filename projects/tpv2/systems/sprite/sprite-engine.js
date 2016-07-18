@@ -19,7 +19,6 @@ SpriteEngine.prototype.update = function(){
   this.entitiesByDepthOrder.sort(function(a, b){
     return ((a.subject.zIndex) - (b.subject.zIndex));
   });
-  // this.output.width = this.output.width;
   this.ctx.save();
   this.ctx.setTransform(1, 0, 0, 1, 0, 0);
   this.ctx.clearRect(0, 0, 1024, 768);

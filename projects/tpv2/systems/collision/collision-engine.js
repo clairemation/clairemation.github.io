@@ -47,7 +47,8 @@ CollisionEngine.prototype.checkForCollisionsWithClass = function(myComponent, cl
         }
 
       // it clears me on my left side
-        if ((subject.x + myComponent.hitbox[0]) > (otherObject.x  + otherComponent.hitbox[2])){continue;
+        if ((subject.x + myComponent.hitbox[0]) > (otherObject.x  + otherComponent.hitbox[2])){
+          continue;
         }
 
       // it clears me on my right
