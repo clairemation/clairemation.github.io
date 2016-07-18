@@ -1,6 +1,8 @@
-function BaseGameObject(args, defaults){
-  var assignments = defaults;
-  // overwrite defaults with provided args
+function BaseGameObject(){
+}
+
+BaseGameObject.prototype.initValues = function(args, defaults){
+  var assignments = defaults
   for (var key in args){
     assignments[key] = args[key];
   }

@@ -1,7 +1,7 @@
-function SpriteEngine(){
+function SpriteEngine(args){
+  this.output = args.output;
   this.entitiesByDepthOrder = [];
-  this.canvas = document.getElementById("display");
-  this.ctx = this.canvas.getContext('2d');
+  this.ctx = this.output.getContext('2d');
 };
 
 SpriteEngine.prototype.registerComponent = function(component){
@@ -19,7 +19,11 @@ SpriteEngine.prototype.update = function(){
   this.entitiesByDepthOrder.sort(function(a, b){
     return ((a.subject.zIndex) - (b.subject.zIndex));
   });
-  this.ctx.clearRect(0, 0, 1200, 800);
+  // this.output.width = this.output.width;
+  this.ctx.save();
+  this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+  this.ctx.clearRect(0, 0, 1024, 768);
+  this.ctx.restore();
   for (var i = 0; i < this.entitiesByDepthOrder.length; i++){
           this.drawEntity(this.entitiesByDepthOrder[i]);
   }

@@ -18,6 +18,8 @@ GameEntity.prototype.changeState = function(targetState){
   }
 }
 
+// TO DO: pass message in parameters
+// Move hitMessage into collision component
 GameEntity.prototype.message = function(recipient, message){
   recipient.receiver(this.hitMessage, this);
 };
@@ -85,6 +87,9 @@ GameEntity.prototype.bounceBack = function(direction){
 
 //* ACTOR ======================
 
+// TODO: broaden, move hero-specific stuff into hero init
+// max speed is really max impulse, move into impulse component
+
 function Actor(className){ // < GameEntity
   GameEntity.call(this, (className || 'Actor'));
 
@@ -99,7 +104,7 @@ function Actor(className){ // < GameEntity
   this.y = 0;
   this.acceleration = [0,0];
   this.facing = "E";
-  this.maxSpeed = 7;
+  this.maxSpeed = 12;
 
   this.spriteHandler = new AnimatedSpriteComponent(this, spriteEngine);
   this.spriteHandler.frameSequence = {
@@ -212,8 +217,8 @@ Actor.prototype.receiver = function(message, sender){
   if (message == "burn"){
     // recoil
     var direction = this.directionToImpulse(this.directionTo(sender));
-    this.acceleration[0] = direction[0] * -6;
-    this.acceleration[1] = direction[1] * -6;
+    this.acceleration[0] = direction[0] * -10;
+    this.acceleration[1] = direction[1] * -10;
     // sprite effect
     this.behavior = new HurtState(this);
   }
@@ -275,22 +280,22 @@ function Fireball(className){ // < GameEntity
   this.solid = false;
   this.canCollideWith = [Player];
   this.onGround = false;
-  this.width = 200;
-  this.height = 200;
-  this.depth = 200;
-  this.x = -200;
-  this.y = -200;
-  this.originalX = 1100;
-  this.originalY = -100;
-  this.zIndex = 500;
-  this.acceleration = [-7, 1];
-  this.originalAcceleration = [-7, 1];
+  this.width = 400;
+  this.height = 400;
+  this.depth = 400;
+  this.x = -400;
+  this.y = -400;
+  this.originalX = 2200;
+  this.originalY = -50;
+  this.zIndex = 1150;
+  this.acceleration = [-14, 2];
+  this.originalAcceleration = [-14, 2];
   this.hitMessage = "burn";
 
   this.spriteHandler = new SpriteComponent(this, spriteEngine);
   this.spriteHandler.drawingContext.beginPath();
-  this.spriteHandler.drawingContext.arc(100,100,100,0,2*Math.PI, this.false);
-  var gradient = this.spriteHandler.drawingContext.createRadialGradient(100,100,0,160,50,90);
+  this.spriteHandler.drawingContext.arc(200,200,200,0,2*Math.PI, this.false);
+  var gradient = this.spriteHandler.drawingContext.createRadialGradient(200,200,0,310,100,180);
   gradient.addColorStop('0', 'hsl(350, 10%, 20%)');
   gradient.addColorStop('.4', 'hsl(350,10%,20%)');
   gradient.addColorStop('.4', 'hsla(50,100%,75%,1)');
@@ -300,7 +305,7 @@ function Fireball(className){ // < GameEntity
   this.spriteHandler.drawingContext.fill();
 
   this.collisionHandler = new CollisionComponent(this, collisionEngine);
-  this.collisionHandler.hitbox = [50*SCALE,50*SCALE,150*SCALE,150*SCALE];
+  this.collisionHandler.hitbox = [100*SCALE,100*SCALE,300*SCALE,300*SCALE];
   this.collisionHandler.subjectIsSolid = false;
   this.collisionHandler.subjectCanCollideWith = ['Player'];
   this.collisionHandler.reactToCollisionWith = function(playerComponent){

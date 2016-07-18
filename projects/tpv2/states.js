@@ -19,6 +19,7 @@ NormalState.prototype.update = function(timestamp){
 function HurtState(subject){
   this.subject = subject;
   this.countdown = 5;
+  this.subject.spriteHandler.stateDidChange = true;
 };
 
 HurtState.prototype.update = function(timestamp){
@@ -32,6 +33,7 @@ HurtState.prototype.update = function(timestamp){
   this.countdown --;
   if (this.countdown <= 0){
     this.subject.behavior = new NormalState(this.subject);
+    this.subject.spriteHandler.stateDidChange = true;
   }
 }
 
