@@ -89,12 +89,14 @@
 
       //* ===============================
 
-      var scene = new Scene();
+      var scene = new Scene({
+        htmlElement: document.getElementById("display")
+      });
 
       var backbglayer = new ImageLayer({
         scene: scene,
         content: images.backgroundback,
-        parallaxScale: .6
+        parallaxScale: .2
       });
 
       var frontbglayer = new ImageLayer({

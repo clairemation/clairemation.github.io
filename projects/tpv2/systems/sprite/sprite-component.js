@@ -1,8 +1,8 @@
 //* GENERIC SPRITE COMPONENT
 
-function SpriteComponent(subject, engine){
+function SpriteComponent(subject, engine, sprite){
   this.subject = subject;
-  this.sprite = document.createElement("canvas");
+  this.sprite = sprite || document.createElement("canvas");
   this.sprite.width = this.subject.width;
   this.sprite.height = this.subject.height;
   this.drawingContext = this.sprite.getContext("2d");
@@ -15,9 +15,13 @@ function SpriteComponent(subject, engine){
 // TO DO: optimize so frame only redraws upon a state change
 
 
-function AnimatedSpriteComponent(subject, engine){ // < SpriteComponent
+function AnimatedSpriteComponent(subject, engine, args){ // < SpriteComponent
+  if (!args){
+    var args = {};
+  }
   SpriteComponent.apply(this,[subject,engine]);
-  this.currentAnimationFrameNumber = 0;
+  this.frameSequence = args.frameSequence;
+  this.currentAnimationFrameNumber = args.currentAnimationFrameNumber || 0;
   this.lastTime = undefined;
 }
 

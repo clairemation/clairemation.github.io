@@ -106,94 +106,97 @@ function Actor(className){ // < GameEntity
   this.facing = "E";
   this.maxSpeed = 12;
 
-  this.spriteHandler = new AnimatedSpriteComponent(this, spriteEngine);
-  this.spriteHandler.frameSequence = {
-    "standing": {
-      "N": {
-        frames: [0],
-        spritesheet: images.heroStandingLeft
+  this.spriteHandler = new AnimatedSpriteComponent(this, spriteEngine, {
+    frameSequence: {
+      "standing": {
+        "N": {
+          frames: [0],
+          spritesheet: images.heroStandingLeft
+        },
+        "NW": {
+          frames: [0],
+          spritesheet: images.heroStandingLeft
+        },
+        "W": {
+          frames: [0],
+          spritesheet: images.heroStandingLeft
+        },
+        "SW": {
+          frames: [0],
+          spritesheet: images.heroStandingLeft
+        },
+        "S": {
+          frames: [0],
+          spritesheet: images.heroStandingRight
+        },
+        "SE": {
+          frames: [0],
+          spritesheet: images.heroStandingRight
+        },
+        "E": {
+          frames: [0],
+          spritesheet: images.heroStandingRight
+        },
+        "NE": {
+          frames: [0],
+          spritesheet: images.heroStandingRight
+        },
       },
-      "NW": {
-        frames: [0],
-        spritesheet: images.heroStandingLeft
-      },
-      "W": {
-        frames: [0],
-        spritesheet: images.heroStandingLeft
-      },
-      "SW": {
-        frames: [0],
-        spritesheet: images.heroStandingLeft
-      },
-      "S": {
-        frames: [0],
-        spritesheet: images.heroStandingRight
-      },
-      "SE": {
-        frames: [0],
-        spritesheet: images.heroStandingRight
-      },
-      "E": {
-        frames: [0],
-        spritesheet: images.heroStandingRight
-      },
-      "NE": {
-        frames: [0],
-        spritesheet: images.heroStandingRight
-      },
-    },
-    "running": {
-      "N": {
-        frames: [0,1,2,3],
-        spritesheet: images.heroRunLeft
-      },
-      "NW": {
-        frames: [0,1,2,3],
-        spritesheet: images.heroRunLeft
-      },
-      "W": {
-        frames: [0,1,2,3],
-        spritesheet: images.heroRunLeft
-      },
-      "SW": {
-        frames: [0,1,2,3],
-        spritesheet: images.heroRunLeft
-      },
-      "S": {
-        frames: [0,1,2,3],
-        spritesheet: images.heroRunRight
-      },
-      "SE": {
-        frames: [0,1,2,3],
-        spritesheet: images.heroRunRight
-      },
-      "E": {
-        frames: [0,1,2,3],
-        spritesheet: images.heroRunRight
-      },
-      "NE": {
-        frames: [0,1,2,3],
-        spritesheet: images.heroRunRight
-      },
+      "running": {
+        "N": {
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunLeft
+        },
+        "NW": {
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunLeft
+        },
+        "W": {
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunLeft
+        },
+        "SW": {
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunLeft
+        },
+        "S": {
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunRight
+        },
+        "SE": {
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunRight
+        },
+        "E": {
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunRight
+        },
+        "NE": {
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunRight
+        }
+      }
     }
-  };
+  });
 
   this.impulseHandler = new ImpulseComponent(this);
 
   this.inertiaHandler = new InertiaComponent(this);
 
-  this.collisionHandler = new CollisionComponent(this,collisionEngine);
-  this.collisionHandler.subjectIsSolid = true;
-  this.collisionHandler.subjectCanCollideWith = ['Actor', 'Fireball', 'Crystal'];
-  this.collisionHandler.hitbox = [125*SCALE,30*SCALE,265*SCALE,380*SCALE];
-  this.collisionHandler.reactToCollisionWith = function(object){
-    var direction = this.subject.directionToImpulse(this.subject.directionTo(object.subject));
-    // if the object is solid, bounce back
-    if (this.subjectIsSolid && object.subjectIsSolid){
-      this.subject.bounceBack(direction);
+  this.collisionHandler = new CollisionComponent({
+    subject: this,
+    engine: collisionEngine,
+    subjectIsSolid: true,
+    hitbox: [125*SCALE,30*SCALE,265*SCALE,380*SCALE],
+    subjectCanCollideWith: ['Actor', 'Fireball', 'Crystal'],
+    reactToCollisionWith: function(object){
+      var direction = this.subject.directionToImpulse(this.subject.directionTo(object.subject));
+      // if the object is solid, bounce back
+      if (this.subjectIsSolid && object.subjectIsSolid){
+        this.subject.bounceBack(direction);
+      }
     }
-
-  };
+  });
 
   this.impulse = {x: 0, y:0};
   this.feetpoint = { // test pixels for ground checks
@@ -311,13 +314,16 @@ function Fireball(className){ // < GameEntity
   this.spriteHandler.drawingContext.fillStyle = gradient;
   this.spriteHandler.drawingContext.fill();
 
-  this.collisionHandler = new CollisionComponent(this, collisionEngine);
-  this.collisionHandler.hitbox = [100*SCALE,100*SCALE,300*SCALE,300*SCALE];
-  this.collisionHandler.subjectIsSolid = false;
-  this.collisionHandler.subjectCanCollideWith = ['Player'];
-  this.collisionHandler.reactToCollisionWith = function(component){
-    this.subject.message(component.subject, "burn");
-  }
+  this.collisionHandler = new CollisionComponent({
+    subject: this,
+    engine: collisionEngine,
+    hitbox: [100*SCALE,100*SCALE,300*SCALE,300*SCALE],
+    subjectIsSolid: false,
+    subjectCanCollideWith: ['Player'],
+    reactToCollisionWith: function(componentHit){
+      this.subject.message(componentHit.subject, "burn");
+    }
+  });
 }
 
 Fireball.prototype = Object.create(GameEntity.prototype);
