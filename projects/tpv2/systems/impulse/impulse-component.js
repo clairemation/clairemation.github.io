@@ -1,6 +1,6 @@
-function ImpulseComponent(subject){
+function ImpulseComponent(subject, accelRate){
   this.subject = subject;
-  this.rateOfAcceleration = 2 // default
+  this.rateOfAcceleration = accelRate || 2 // default
 }
 
 ImpulseComponent.prototype.update = function(){

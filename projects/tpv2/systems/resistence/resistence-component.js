@@ -1,6 +1,6 @@
-function InertiaComponent(subject){
+function InertiaComponent(subject, decelRate){
   this.subject = subject;
-  this.rateOfDeceleration = 1.5; //default
+  this.rateOfDeceleration = decelRate || 1.5;
 }
 
 InertiaComponent.prototype.update = function(){

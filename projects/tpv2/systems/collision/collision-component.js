@@ -1,10 +1,11 @@
-function CollisionComponent(subject,engine){
-  this.subject = subject;
-  this.className = subject.className;
-  this.engine = engine;
-  this.subjectIsSolid = false;
-  this.subjectCanCollideWith = [];
-  this.hitbox = [0,0,this.subject.width,this.subject.height];
+function CollisionComponent(args){
+  this.subject = args.subject;
+  this.engine = args.engine;
+  this.className = this.subject.className;
+  this.subjectIsSolid = args.subjectIsSolid || false;
+  this.subjectCanCollideWith = args.subjectCanCollideWith || [];
+  this.hitbox = args.hitbox || [0,0,this.subject.width,this.subject.height];
+  this.reactToCollisionWith = args.reactToCollisionWith || undefined;
   this.engine.registerComponent(this)
 }
 

@@ -10,10 +10,10 @@ function StaticMode(scene){
 StaticMode.prototype.update = function(){}
 
 
-function FollowMode(scene, target){
-  CameraMode.call(this, scene);
-  this.target = target;
-  this.margin = {
+function FollowMode(args){
+  CameraMode.call(this, args.scene);
+  this.target = args.target;
+  this.margin = args.margin || {
     top: 200,
     left: 200,
     right: 200,
@@ -53,16 +53,25 @@ FollowMode.prototype.update = function(){
 }
 
 
-function Scene(){
-  this.layers = []; // layer order: bottom to top
-  this.width = 1024;
-  this.height = 768;
-  this.scrollX = 0;
-  this.scrollY = 0;
+function Scene(args){
+  if (!args){
+    var args = {};
+  }
+  this.layers = args.layers || []; // layer order: bottom to top
+  this.htmlElement = args.htmlElement || document.getElementById("display");
+  if (args.width){
+    this.width = args.width
+  } else {
+    var width = this.htmlElement.style.width;
+    this.width = parseInt(width.substring(0, width.length - 2));
+    var height = this.htmlElement.style.height;
+    this.height = parseInt(height.substring(0, height.length - 2));
+  };
+  this.scrollX = args.scrollX || 0;
+  this.scrollY = args.scrollY || 0;
   this.cameraMode = new StaticMode({
     scene: this
   })
-  this.htmlElement = document.getElementById("display");
 };
 
 Scene.prototype.addInFront = function(layer){
@@ -89,7 +98,10 @@ Scene.prototype.scrollBy = function(x, y){
 // }
 
 Scene.prototype.follow = function(target){
-  this.cameraMode = new FollowMode(this, target);
+  this.cameraMode = new FollowMode({
+    scene: this,
+    target: target
+  });
 }
 
 Scene.prototype.unfollow = function(){
