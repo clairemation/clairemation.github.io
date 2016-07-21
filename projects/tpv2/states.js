@@ -1,7 +1,14 @@
 //* BEHAVIOR STATES ======================
 
+// TODO: Store an instance of NormalState in the subject, so as not to allocate & destroy it every time we return from e.g. SlashingState
+
 function NormalState(subject){
   this.subject = subject;
+  if (this.subject.impulse.x == 0 && this.subject.impulse.y == 0){
+    this.subject.state = "standing"
+  } else {
+    this.subject.state = "running";
+  }
 }
 
 NormalState.prototype.update = function(timestamp){
@@ -29,6 +36,7 @@ HurtState.prototype.update = function(timestamp){
   this.subject.collisionHandler.update();
   moveComponent(this.subject);
   this.subject.spriteHandler.update(timestamp);
+
   this.subject.spriteHandler.hurtEffect();
 
   this.countdown --;
