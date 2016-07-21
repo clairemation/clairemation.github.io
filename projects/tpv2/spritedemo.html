@@ -11,7 +11,8 @@
 
   <body scroll="no">
 
-    <p>Control the scientist using the arrow keys. Avoid fireballs.</p>
+    <p>You are a scientist stuck in the Archean Eon.<br />
+      &larr;&rarr;&uarr;&darr; : move around / spacebar: attack</p>
 
     <div id = "display" style="width: 1024px; height: 768px; position: relative; overflow: hidden;">
       <h1>Loading...</h1>
@@ -30,6 +31,7 @@
     <script src = "systems/viewport/viewport.js"></script>
 
     <script src = "classes.js"></script>
+    <script src = "weapons.js"></script>
     <script src = "states.js"></script>
 
 
@@ -54,6 +56,8 @@
         ["heroStandingRight", "assets/hero_standing_right.png", 400, 400],
         ["heroRunLeft", "assets/hero_run_left.png", 1600, 400],
         ["heroRunRight", "assets/hero_run_right.png", 1600, 400],
+        ["heroSlashLeft", "assets/hero_slash_left.png", 400, 400],
+        ["heroSlashRight", "assets/hero_slash_right.png", 400, 400],
         ["walkmask", walkmaskSrc, 2048, 1700] // walkmaskSrc  is in globals.js
       ];
 
@@ -104,7 +108,7 @@
         content: images.backgroundfront
       })
 
-      var spriteLayer = new CanvasLayer({
+      var spriteLayer = new SpriteLayer({
         scene: scene
       });
 
@@ -158,21 +162,25 @@
       window.addEventListener("keydown", function(e){
         switch (e.keyCode){
           case 37:
-              e.preventDefault();
-              keyHandler.register(LEFT_PRESS);
-              break;
+            e.preventDefault();
+            keyHandler.register(LEFT_PRESS);
+            break;
           case 38:
-              e.preventDefault();
-              keyHandler.register(UP_PRESS);
-              break;
+            e.preventDefault();
+            keyHandler.register(UP_PRESS);
+            break;
           case 39:
-              e.preventDefault();
-              keyHandler.register(RIGHT_PRESS);
-              break;
+            e.preventDefault();
+            keyHandler.register(RIGHT_PRESS);
+            break;
           case 40:
-              e.preventDefault();
-              keyHandler.register(DOWN_PRESS);
-              break;
+            e.preventDefault();
+            keyHandler.register(DOWN_PRESS);
+            break;
+          case 32:
+            e.preventDefault();
+            hero.command(SLASH);
+            break;
         }
       });
 
@@ -243,7 +251,7 @@
           break;
           case (LEFT_PRESS):
             hero.command(RUN_LEFT);
-            keyHandler.xArrowKeyHandler = leftAndRightArrowsPressed
+            keyHandler.xArrowKeyHandler = leftAndRightArrowsPressed;
             break;
         }
       };

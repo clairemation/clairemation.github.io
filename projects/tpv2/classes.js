@@ -21,7 +21,7 @@ GameEntity.prototype.changeState = function(targetState){
 // TO DO: pass message in parameters
 // Move hitMessage into collision component
 GameEntity.prototype.message = function(recipient, message){
-  recipient.receiver(this.hitMessage, this);
+  recipient.receiver(message, this);
 };
 
 GameEntity.prototype.receiver = function(message, sender){};
@@ -96,6 +96,7 @@ function Actor(className){ // < GameEntity
   //* STATE ==================
   this.name = "hero";
   this.state = "standing";
+  this.impulse = {x: 0, y:0};
   this.behavior = new NormalState(this);
   this.width = 400;
   this.height = 400;
@@ -104,6 +105,7 @@ function Actor(className){ // < GameEntity
   this.y = 0;
   this.acceleration = [0,0];
   this.facing = "E";
+  this.pushability = 1.7;
   this.maxSpeed = 12;
 
   this.spriteHandler = new AnimatedSpriteComponent(this, spriteEngine, {
@@ -175,6 +177,40 @@ function Actor(className){ // < GameEntity
           frames: [0,1,2,3],
           spritesheet: images.heroRunRight
         }
+      },
+      "slashing": {
+        "N": {
+          frames: [0],
+          spritesheet: images.heroSlashLeft
+        },
+        "NW": {
+          frames: [0],
+          spritesheet: images.heroSlashLeft
+        },
+        "W": {
+          frames: [0],
+          spritesheet: images.heroSlashLeft
+        },
+        "SW": {
+          frames: [0],
+          spritesheet: images.heroSlashLeft
+        },
+        "S": {
+          frames: [0],
+          spritesheet: images.heroSlashRight
+        },
+        "SE": {
+          frames: [0],
+          spritesheet: images.heroSlashRight
+        },
+        "E": {
+          frames: [0],
+          spritesheet: images.heroSlashRight
+        },
+        "NE": {
+          frames: [0],
+          spritesheet: images.heroSlashRight
+        }
       }
     }
   });
@@ -193,12 +229,16 @@ function Actor(className){ // < GameEntity
       var direction = this.subject.directionToImpulse(this.subject.directionTo(object.subject));
       // if the object is solid, bounce back
       if (this.subjectIsSolid && object.subjectIsSolid){
+        this.subject.message(object.subject, "push");
         this.subject.bounceBack(direction);
       }
     }
   });
 
-  this.impulse = {x: 0, y:0};
+  this.weapon = new Knife({
+    owner: this
+  });
+
   this.feetpoint = { // test pixels for ground checks
     "N": [200, 345],
     "NW": [120, 345],
@@ -221,7 +261,7 @@ Actor.prototype.constructor = Actor;
 
 Actor.prototype.receiver = function(message, sender){
 
-  if (message == "burn"){
+  if (message == "damage"){
 
     // recoil
     var direction = this.directionToImpulse(this.directionTo(sender));
@@ -231,6 +271,11 @@ Actor.prototype.receiver = function(message, sender){
     // hurt effects
     this.behavior = new HurtState(this);
 
+  }
+
+  else if (message == "push"){
+    this.acceleration[0] += sender.acceleration[0] * this.pushability;
+    this.acceleration[1] += sender.acceleration[1] * this.pushability;
   }
 
 }
@@ -278,6 +323,9 @@ Player.prototype.command = function(input){
         this.changeState("standing");
       }
     break;
+    case (SLASH):
+      this.changeState("slashing");
+      this.behavior = this.weapon.useState;
   }
   this.updateFacing();
 }
@@ -299,7 +347,6 @@ function Fireball(className){ // < GameEntity
   this.zIndex = 1150;
   this.acceleration = [-14, 2];
   this.originalAcceleration = [-14, 2];
-  this.hitMessage = "burn";
 
   this.spriteHandler = new SpriteComponent(this, spriteEngine);
   // draw fireball
@@ -321,13 +368,19 @@ function Fireball(className){ // < GameEntity
     subjectIsSolid: false,
     subjectCanCollideWith: ['Player'],
     reactToCollisionWith: function(componentHit){
-      this.subject.message(componentHit.subject, "burn");
+      this.subject.message(componentHit.subject, "damage");
     }
   });
 }
 
 Fireball.prototype = Object.create(GameEntity.prototype);
 Fireball.prototype.constructor = Fireball;
+
+Fireball.prototype.receiver = function(message, sender){
+  if (message == "damage"){
+    this.acceleration[0] *= -1;
+  }
+}
 
 Fireball.prototype.update = function(){
 

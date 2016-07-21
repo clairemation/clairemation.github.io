@@ -161,7 +161,7 @@ ImageLayer.prototype.scrollBy = function(x, y){
 }
 
 
-function CanvasLayer(args){ // < DisplayLayer
+function SpriteLayer(args){ // < DisplayLayer
   Layer.call(this, args);
   this.content = args.content || document.createElement("canvas");
   this.content.width = args.width || this.scene.width;
@@ -170,9 +170,9 @@ function CanvasLayer(args){ // < DisplayLayer
   this.html.appendChild(this.content);
 }
 
-CanvasLayer.prototype = Object.create(Layer.prototype);
-CanvasLayer.prototype.constructor = CanvasLayer;
+SpriteLayer.prototype = Object.create(Layer.prototype);
+SpriteLayer.prototype.constructor = SpriteLayer;
 
-CanvasLayer.prototype.scrollBy = function(x, y){
+SpriteLayer.prototype.scrollBy = function(x, y){
   this.context.translate(-x * this.parallaxScale, -y * this.parallaxScale);
 }
