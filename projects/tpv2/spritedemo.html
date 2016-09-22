@@ -11,87 +11,43 @@
 
   <body scroll="no">
 
-    <p>You are a scientist stuck in the Archean Eon.<br />
-      &larr;&rarr;&uarr;&darr; : move around / spacebar: attack</p>
+    <p>Control the scientist using the arrow keys. Avoid fireballs.</p>
 
     <div id = "display" style="width: 1024px; height: 768px; position: relative; overflow: hidden;">
       <h1>Loading...</h1>
       </div>
     </div>
 
+    <script src = "libraries/vector.js"></script>
+    <script src = "libraries/vendor/bezierjs-gh-pages/bezier.js"></script>
+
     <script src = "globals.js"></script>
     <script src = "systems/collision/collision-component.js"></script>
     <script src = "systems/collision/collision-engine.js"></script>
     <script src = "systems/impulse/impulse-component.js"></script>
     <script src = "systems/move/move-component.js"></script>
+    <script src = "systems/movement/movement-component.js"></script>
     <script src = "systems/resistence/resistence-component.js"></script>
     <script src = "systems/sprite/sprite-component.js"></script>
     <script src = "systems/sprite/sprite-engine.js"></script>
     <script src = "systems/travel-map/travel-map-component.js"></script>
+    <script src = "systems/terrain/terrain.js"></script>
+    <script src = "systems/viewport/viewport.js"></script>
     <script src = "systems/viewport/viewport.js"></script>
 
-    <script src = "classes.js"></script>
+    <script src = "classes/game-entity.js"></script>
+    <script src = "classes/actor.js"></script>
+    <script src = "classes/player.js"></script>
+    <script src = "classes/fireball.js"></script>
     <script src = "weapons.js"></script>
     <script src = "states.js"></script>
 
+    <script src = "initializer.js"></script>
 
+    <script src = "view/keyhandlers.js"></script>
 
 
     <script>
-
-      //* CONSTANTS ====================
-
-      var walkmaskCvs = document.createElement("canvas");
-      walkmaskCvs.width = 2048;
-      walkmaskCvs.height = 1700;
-      var walkmask = walkmaskCvs.getContext("2d");
-
-      var images = {}; // will contain all Image objects
-      var imagesToLoad = [
-        // name, src, width, height
-        ["background", "assets/lavabg5big.jpg", 2048, 1536],
-        ["backgroundfront", "assets/lavabg-front.png", 2048, 1700],
-        ["backgroundback", "assets/lavabg-back.jpg", 2048, 1700],
-        ["heroStandingLeft", "assets/hero_standing_left.png", 400, 400],
-        ["heroStandingRight", "assets/hero_standing_right.png", 400, 400],
-        ["heroRunLeft", "assets/hero_run_left.png", 1600, 400],
-        ["heroRunRight", "assets/hero_run_right.png", 1600, 400],
-        ["heroSlashLeft", "assets/hero_slash_left.png", 400, 400],
-        ["heroSlashRight", "assets/hero_slash_right.png", 400, 400],
-        ["walkmask", walkmaskSrc, 2048, 1700] // walkmaskSrc  is in globals.js
-      ];
-
-      // Create the Image objects from the specs in imagesToLoad
-      for (var i = 0; i < imagesToLoad.length; i++){
-        images[imagesToLoad[i][0]] = new Image(imagesToLoad[i][2], imagesToLoad[i][3]);
-        // e.g. images['background'] = new Image(w, h)
-        images[imagesToLoad[i][0]].src = imagesToLoad[i][1];
-        // e.g. images['background'].src = 'backgroundimage.jpg'
-      }
-
-      // Wait until all images are loaded
-      // must check at intervals so it does not block loading and get stuck forever
-      loadCheckLoop = setInterval(function(){
-
-        if (imagesToLoad.length <= 0){
-          // Once all images are loaded, do stuff that had to wait for this, then start game loop
-
-          clearInterval(loadCheckLoop);
-
-          walkmask.drawImage(images.walkmask,0,0,2048,1700,0,0,2048,1700);
-
-          beginGameLoop();
-        }
-
-        for (var i = 0; i < imagesToLoad.length; i++){
-          if (images[imagesToLoad[i][0]].complete){
-            imagesToLoad.splice(i,1);
-          }
-        }
-      }, 10);
-
-
-      //* ===============================
 
       var scene = new Scene({
         htmlElement: document.getElementById("display")
@@ -106,10 +62,20 @@
       var frontbglayer = new ImageLayer({
         scene: scene,
         content: images.backgroundfront
-      })
+      });
+
+      // var testpath = new ImageLayer({
+      //   scene: scene,
+      //   content: images.bgmask
+      // });
 
       var spriteLayer = new SpriteLayer({
         scene: scene
+      });
+
+      var initialTerrain = new Terrain({
+        map: walkmask,
+        values: {}
       });
 
       var spriteEngine = new SpriteEngine({
@@ -156,185 +122,7 @@
         };
       };
 
-      //* KEY LISTENERS ========================
-      // TODO: move into separate file
-
-      window.addEventListener("keydown", function(e){
-        switch (e.keyCode){
-          case 37:
-            e.preventDefault();
-            keyHandler.register(LEFT_PRESS);
-            break;
-          case 38:
-            e.preventDefault();
-            keyHandler.register(UP_PRESS);
-            break;
-          case 39:
-            e.preventDefault();
-            keyHandler.register(RIGHT_PRESS);
-            break;
-          case 40:
-            e.preventDefault();
-            keyHandler.register(DOWN_PRESS);
-            break;
-          case 32:
-            e.preventDefault();
-            hero.command(SLASH);
-            break;
-        }
-      });
-
-      window.addEventListener("keyup", function(e){
-        switch (e.keyCode){
-          case 37:
-            keyHandler.register(LEFT_RELEASE);
-            break;
-          case 38:
-            keyHandler.register(UP_RELEASE);
-            break;
-          case 39:
-            keyHandler.register(RIGHT_RELEASE);
-            break;
-          case 40:
-            keyHandler.register(DOWN_RELEASE);
-            break;
-        }
-      });
-
-
-      //* GAME CONTROLLER ====================
-      function GameController(){
-
-      }
-      GameController.prototype.command = function(obj, input){
-        obj.command(input);
-      }
-
-
-      //* BUTTON COMPONENTS ===================
-
-      // TO DO: put inside keyhandler class
-
-      // FSM for X and Y button states, to manage multiple-key inputs
-
-      var xNeutral = function(input){
-        switch (input){
-          case (LEFT_PRESS):
-            hero.command(RUN_LEFT);
-            keyHandler.xArrowKeyHandler = leftArrowPressed;
-          break;
-          case (RIGHT_PRESS):
-            hero.command(RUN_RIGHT);
-            keyHandler.xArrowKeyHandler = rightArrowPressed;
-          break;
-        }
-      };
-
-      var leftArrowPressed = function(input){
-        switch (input){
-          case (LEFT_RELEASE):
-            hero.command(STOP_X)
-            keyHandler.xArrowKeyHandler = xNeutral;
-          break;
-          case (RIGHT_PRESS):
-            hero.command(RUN_RIGHT)
-            keyHandler.xArrowKeyHandler = leftAndRightArrowsPressed;
-          break;
-        }
-      };
-
-      var rightArrowPressed = function(input){
-        switch (input){
-          case (RIGHT_RELEASE):
-            hero.command(STOP_X);
-            keyHandler.xArrowKeyHandler = xNeutral;
-          break;
-          case (LEFT_PRESS):
-            hero.command(RUN_LEFT);
-            keyHandler.xArrowKeyHandler = leftAndRightArrowsPressed;
-            break;
-        }
-      };
-
-      var leftAndRightArrowsPressed = function(input){
-        switch (input){
-          case (LEFT_RELEASE):
-            hero.command(RUN_RIGHT);
-            keyHandler.xArrowKeyHandler = rightArrowPressed;
-          break;
-          case (RIGHT_RELEASE):
-            hero.command(RUN_LEFT);
-            keyHandler.xArrowKeyHandler = leftArrowPressed;
-          break;
-        }
-      };
-
-      var yNeutral = function(input){
-        switch (input){
-          case (UP_PRESS):
-            hero.command(RUN_UP);
-            keyHandler.yArrowKeyHandler = upArrowPressed;
-          break;
-          case (DOWN_PRESS):
-            hero.command(RUN_DOWN);
-            keyHandler.yArrowKeyHandler = downArrowPressed;
-          break;
-        }
-      };
-
-      var upArrowPressed = function(input){
-        switch (input){
-          case (UP_RELEASE):
-            hero.command(STOP_Y);
-            keyHandler.yArrowKeyHandler = yNeutral;
-          break;
-          case (DOWN_PRESS):
-            hero.command(RUN_DOWN);
-            keyHandler.yArrowKeyHandler = upAndDownArrowsPressed;
-          break;
-        }
-      };
-
-      var downArrowPressed = function(input){
-        switch (input){
-          case (DOWN_RELEASE):
-            hero.command(STOP_Y);
-            keyHandler.yArrowKeyHandler = yNeutral;
-          break;
-          case (UP_PRESS):
-            hero.command(RUN_UP);
-            keyHandler.yArrowKeyHandler = upAndDownArrowsPressed;
-            break;
-        }
-      };
-
-      var upAndDownArrowsPressed = function(input){
-        switch (input){
-          case (UP_RELEASE):
-            hero.command(RUN_DOWN);
-            keyHandler.yArrowKeyHandler = downArrowPressed;
-          break;
-          case (DOWN_RELEASE):
-            hero.command(RUN_UP);
-            keyHandler.yArrowKeyHandler = upArrowPressed;
-          break;
-        }
-      };
-
-      function KeyHandlerClass(){
-        this.xArrowKeyHandler = xNeutral,
-        this.yArrowKeyHandler = yNeutral
-      }
-      KeyHandlerClass.prototype.register = function(input){
-        this.xArrowKeyHandler(input);
-        this.yArrowKeyHandler(input);
-      }
-
-      var keyHandler = new KeyHandlerClass();
-
-
-
-      </script>
+    </script>
 
 
 

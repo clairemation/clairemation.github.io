@@ -1,3 +1,6 @@
+// TODO
+// Change ALL this to simple vector math. Walkmask will be a path. On collision we simply nullify the normal vector.
+
 function groundIsWalkableComponent(obj){
   var accelerationDirection =
   ["N", "", "S"][Math.sign(obj.acceleration[1]) + 1]
