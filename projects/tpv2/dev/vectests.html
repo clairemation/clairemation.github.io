@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+  </head>
+
+  <body scroll="no">
+
+    <script src="../libraries/vendor/bezierjs-gh-pages/bezier.js"></script>
+    <script src="../libraries/vendor/bezierjs-gh-pages/js/draw.js"></script>
+    <script src="../libraries/vendor/bezierjs-gh-pages/js/interaction.js"></script>
+    <script src="../libraries/vendor/bezierjs-gh-pages/js/loader.js"></script>
+    <script src = "../libraries/vector.js"></script>
+
+
+    <figure class="quadratic" width=500 height=500><script type="text/beziercode">
+      new Bezier(300,80 , 160,60 , 210,300, 40, 140);
+      var draw = function() {
+        drawSkeleton(curve);
+        drawCurve(curve);
+      }
+      console.log("asdf");
+    </script></figure>
+
+</body>
+
+</html>

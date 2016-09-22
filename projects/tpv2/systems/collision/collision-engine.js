@@ -1,3 +1,7 @@
+// TODO
+// Redo using vectors, force, acceleration, etc.
+// Optimize with quadtree or prune & sweep
+
 function CollisionEngine(){
   this.entitiesByClass = {};
   // entitiesByClass = {

@@ -3,6 +3,7 @@ function CollisionComponent(args){
   this.engine = args.engine;
   this.className = this.subject.className;
   this.subjectIsSolid = args.subjectIsSolid || false;
+  this.mass = args.mass || 0;
   this.subjectCanCollideWith = args.subjectCanCollideWith || [];
   this.hitbox = args.hitbox || [0,0,this.subject.width,this.subject.height];
   this.reactToCollisionWith = args.reactToCollisionWith || undefined;
