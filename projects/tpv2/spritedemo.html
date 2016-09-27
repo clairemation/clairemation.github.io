@@ -20,14 +20,60 @@
 
     <div id = 'controller'>
 
-      <div onmousedown="keyHandler.register(UP_PRESS);" onmouseup="keyHandler.register(UP_RELEASE);" id="up" style="display: block;">&#9650;</div>
+      <div class = "up" id="up" style="display: block;">&#9650;</div>
 
-      <div onmousedown="keyHandler.register(LEFT_PRESS);" onmouseup="keyHandler.register(LEFT_RELEASE);" id="left" style="display: inline-block; margin-right: 30px">&#9664;</div>
+      <div class = "left" id="left" style="display: inline-block; margin-right: 30px">&#9664;</div>
 
-      <div onmousedown="keyHandler.register(RIGHT_PRESS);" onmouseup="keyHandler.register(RIGHT_RELEASE);" id="right" style="display: inline-block;">&#9654;</div>
+      <div class = "right" id="right" style="display: inline-block;">&#9654;</div>
 
-      <div onmousedown="keyHandler.register(DOWN_PRESS);" onmouseup="keyHandler.register(DOWN_RELEASE);" id="down" style="display: block;">&#9660;</div>
+      <div class = "down" id="down" style="display: block;">&#9660;</div>
     </div>
+
+
+    <script>
+
+      var upButton = document.getElementById("controller").getElementsByClassName("up")[0];
+      var leftButton = document.getElementById("controller").getElementsByClassName("left")[0];
+      var rightButton = document.getElementById("controller").getElementsByClassName("right")[0];
+      var downButton = document.getElementById("controller").getElementsByClassName("down")[0];
+
+      upButton.addEventListener("touchstart", function(e) {
+        e.preventDefault();
+        keyHandler.register(UP_PRESS);
+      });
+      upButton.addEventListener("touchend", function(e) {
+        e.preventDefault();
+        keyHandler.register(UP_RELEASE);
+      });
+
+      leftButton.addEventListener("touchstart", function(e) {
+        e.preventDefault();
+        keyHandler.register(LEFT_PRESS);
+      });
+      leftButton.addEventListener("touchend", function(e) {
+        e.preventDefault();
+        keyHandler.register(LEFT_RELEASE);
+      });
+
+      rightButton.addEventListener("touchstart", function(e) {
+        e.preventDefault();
+        keyHandler.register(RIGHT_PRESS);
+      });
+      rightButton.addEventListener("touchend", function(e) {
+        e.preventDefault();
+        keyHandler.register(RIGHT_RELEASE);
+      });
+
+      downButton.addEventListener("touchstart", function(e) {
+        e.preventDefault();
+        keyHandler.register(DOWN_PRESS);
+      });
+      downButton.addEventListener("touchend", function(e) {
+        e.preventDefault();
+        keyHandler.register(DOWN_RELEASE);
+      });
+    </script>
+
 
     <script src = "libraries/vector.js"></script>
     <script src = "libraries/vendor/bezierjs-gh-pages/bezier.js"></script>
