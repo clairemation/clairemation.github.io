@@ -18,6 +18,17 @@
       </div>
     </div>
 
+    <div id = 'controller'>
+
+      <div onmousedown="keyHandler.register(UP_PRESS);" onmouseup="keyHandler.register(UP_RELEASE);" id="up" style="display: block;">&#9650;</div>
+
+      <div onmousedown="keyHandler.register(LEFT_PRESS);" onmouseup="keyHandler.register(LEFT_RELEASE);" id="left" style="display: inline-block; margin-right: 30px">&#9664;</div>
+
+      <div onmousedown="keyHandler.register(RIGHT_PRESS);" onmouseup="keyHandler.register(RIGHT_RELEASE);" id="right" style="display: inline-block;">&#9654;</div>
+
+      <div onmousedown="keyHandler.register(DOWN_PRESS);" onmouseup="keyHandler.register(DOWN_RELEASE);" id="down" style="display: block;">&#9660;</div>
+    </div>
+
     <script src = "libraries/vector.js"></script>
     <script src = "libraries/vendor/bezierjs-gh-pages/bezier.js"></script>
 
