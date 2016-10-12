@@ -37,87 +37,87 @@ function Actor(className){ // < GameEntity
         },
         "S": {
           frames: [0],
-          spritesheet: images.heroStandingRight
+          spritesheet: images.heroStandingLeft
         },
         "SE": {
           frames: [0],
-          spritesheet: images.heroStandingRight
+          spritesheet: images.heroStandingLeft
         },
         "E": {
           frames: [0],
-          spritesheet: images.heroStandingRight
+          spritesheet: images.heroStandingLeft
         },
         "NE": {
           frames: [0],
-          spritesheet: images.heroStandingRight
+          spritesheet: images.heroStandingLeft
         },
       },
       "running": {
         "N": {
-          frames: [0,1,2,3],
-          spritesheet: images.heroRunLeft
+          frames: [0],
+          spritesheet: images.heroStandingLeft
         },
         "NW": {
-          frames: [0,1,2,3],
-          spritesheet: images.heroRunLeft
+          frames: [0],
+          spritesheet: images.heroStandingLeft
         },
         "W": {
-          frames: [0,1,2,3],
-          spritesheet: images.heroRunLeft
+          frames: [0],
+          spritesheet: images.heroStandingLeft
         },
         "SW": {
-          frames: [0,1,2,3],
-          spritesheet: images.heroRunLeft
+          frames: [0],
+          spritesheet: images.heroStandingLeft
         },
         "S": {
-          frames: [0,1,2,3],
-          spritesheet: images.heroRunRight
+          frames: [0],
+          spritesheet: images.heroStandingLeft
         },
         "SE": {
-          frames: [0,1,2,3],
-          spritesheet: images.heroRunRight
+          frames: [0],
+          spritesheet: images.heroStandingLeft
         },
         "E": {
-          frames: [0,1,2,3],
-          spritesheet: images.heroRunRight
+          frames: [0],
+          spritesheet: images.heroStandingLeft
         },
         "NE": {
-          frames: [0,1,2,3],
-          spritesheet: images.heroRunRight
+          frames: [0],
+          spritesheet: images.heroStandingLeft
         }
       },
       "slashing": {
         "N": {
           frames: [0],
-          spritesheet: images.heroSlashLeft
+          spritesheet: images.heroStandingLeft
         },
         "NW": {
           frames: [0],
-          spritesheet: images.heroSlashLeft
+          spritesheet: images.heroStandingLeft
         },
         "W": {
           frames: [0],
-          spritesheet: images.heroSlashLeft
+          spritesheet: images.heroStandingLeft
         },
         "SW": {
           frames: [0],
-          spritesheet: images.heroSlashLeft
+          spritesheet: images.heroStandingLeft
         },
         "S": {
           frames: [0],
-          spritesheet: images.heroSlashRight
+          spritesheet: images.heroStandingLeft
         },
         "SE": {
           frames: [0],
-          spritesheet: images.heroSlashRight
+          spritesheet: images.heroStandingLeft
         },
         "E": {
           frames: [0],
-          spritesheet: images.heroSlashRight
+          spritesheet: images.heroStandingLeft
         },
         "NE": {
           frames: [0],
-          spritesheet: images.heroSlashRight
+          spritesheet: images.heroStandingLeft
         }
       }
     }
