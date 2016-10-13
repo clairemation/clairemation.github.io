@@ -3,6 +3,12 @@ var light = {
   falloff: 400
 }
 
+var lightOverlay = document.createElement('canvas');
+lightOverlay.width = 400;
+lightOverlay.height = 400;
+
+var lctx = lightOverlay.getContext('2d');
+
 function dynamicLighting(subject){
 
   var map = images.normalmap;
@@ -10,7 +16,7 @@ function dynamicLighting(subject){
 
   var lightx = 50;
   var lighty = 400;
-  var lightz = 10;
+  var lightz = 200;
 
   var i = 0;
 
@@ -31,13 +37,13 @@ function dynamicLighting(subject){
   for (var x = 0; x < 400; x++){
     for (var y = 0; y < 400; y++){
 
-      lx = 255 - subject.x + lightx;
+      lx = lightx - subject.x;
       ly = lighty - subject.y;
       lz = lightz;
 
-      nx = imgData.data[i];
-      ny = imgData.data[i+1];
-      nz = imgData.data[i+2];
+      nx = 255 - imgData.data[i];
+      ny = 255 - imgData.data[i+1];
+      nz = 255 - imgData.data[i+2];
 
       // var length = Math.sqrt(nx * nx + ny * ny + nz * nz);
 
@@ -71,10 +77,7 @@ function dynamicLighting(subject){
     }
   }
 
-  var lightOverlay = document.createElement('canvas');
-  lightOverlay.width = 400;
-  lightOverlay.height = 400;
-  lightOverlay.getContext('2d').putImageData(imgData, 0, 0);
+  lctx.putImageData(imgData, 0, 0);
 
   subject.spriteHandler.paintIn(lightOverlay);
 
