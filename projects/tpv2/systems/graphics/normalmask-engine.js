@@ -11,12 +11,11 @@ var lctx = lightOverlay.getContext('2d');
 
 function dynamicLighting(subject){
 
-  var map = images.normalmap;
-  var imgData = normalmap.getImageData(0, 0, 400, 400);
+  imgData = normalmap.getImageData(0, 0, 400, 400);
 
-  var lightx = 50;
+  var lightx = 10;
   var lighty = 400;
-  var lightz = 200;
+  var lightz = 500;
 
   var i = 0;
 
@@ -38,32 +37,20 @@ function dynamicLighting(subject){
     for (var y = 0; y < 400; y++){
 
       lx = lightx - subject.x;
-      ly = lighty - subject.y;
-      lz = lightz;
+      ly = lighty;
+      lz = lightz - subject.y;
 
       nx = 255 - imgData.data[i];
       ny = 255 - imgData.data[i+1];
       nz = 255 - imgData.data[i+2];
 
-      // var length = Math.sqrt(nx * nx + ny * ny + nz * nz);
 
-      // nx /= length;
-      // ny /= length;
-      // nz /= length;
-
-      // length = Math.sqrt(lx * lx + ly * ly + lz * lz);
-
-      // lx /= length;
-      // ly /= length;
-      // lz /= length;
-
-      // normal.divideInPlace(normal.length());
-      // lightDirection.divideInPlace(lightDirection.length());
+      // took out normalization of both vectors - doesn't seem to make a difference and has a BIG performance hit
 
       dot = nx * lx + ny * ly + nz * lz;
-      intensity = Math.floor(dot / 20);
-      if (intensity > 255){
-        intensity = 255;
+      intensity = Math.floor(dot / 50); // divisor is amount of blur
+      if (intensity > 220){ // max opacity
+        intensity = 220;
       }
 
       imgData.data[i] = light.color[0];
