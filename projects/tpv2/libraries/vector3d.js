@@ -35,12 +35,30 @@ Vec3D.distance = function(a,b) {
   return (this.subtract(a, b)).length();
 }
 
+Vec3D.prototype.plusInPlace = function(s) {
+  this.x = this.x + s;
+  this.y = this.y + s;
+  this.z = this.z + s;
+}
+
+Vec3D.prototype.minusInPlace = function(s) {
+  this.x = this.x - s;
+  this.y = this.y - s;
+  this.z = this.z - s;
+}
+
 Vec3D.prototype.multiply = function(s) {
   return new Vec3D({x: this.x * s, y: this.y * s, z: this.z * s});
 }
 
 Vec3D.prototype.divide = function(s) {
   return new Vec3D({x: (this.x / s), y: (this.y / s), z: (this.z / s)});
+}
+
+Vec3D.prototype.divideInPlace = function(s){
+  this.x = (this.x / s);
+  this.y = (this.y / s);
+  this.z = (this.z / s);
 }
 
 Vec3D.prototype.length = function(s) {
@@ -55,6 +73,9 @@ Vec3D.prototype.unit = function(s) {
   return this.divide(this.length());
 }
 
+Vec3D.prototype.normalizeInPlace = function(){
+  this.divideInPlace(this.length());
+}
 
 Vec3D.prototype.directionTo = function(v) {
   return (Vec3D.subtract(v, this)).unit();

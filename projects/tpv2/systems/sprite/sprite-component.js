@@ -62,3 +62,13 @@ AnimatedSpriteComponent.prototype.hurtEffect = function(){
   this.drawingContext.fillRect(0,0,this.subject.width,this.subject.height);
   this.drawingContext.globalCompositeOperation = "source-over";
 }
+
+AnimatedSpriteComponent.prototype.paintIn =
+function(image){
+  this.drawingContext.globalCompositeOperation = 'source-atop';
+  this.drawingContext.drawImage(
+    image,
+    0, 0, image.width, image.height,
+    0, 0, this.subject.width, this.subject.height);
+  this.drawingContext.globalCompositeOperation = "source-over";
+}
