@@ -24,6 +24,9 @@ function dynamicLighting(subject){
   var ly = 0;
   var lz = 10;
 
+  var dot = 0;
+  var intensity = 0;
+
   //caulculate
   for (var x = 0; x < 400; x++){
     for (var y = 0; y < 400; y++){
@@ -51,10 +54,10 @@ function dynamicLighting(subject){
       // normal.divideInPlace(normal.length());
       // lightDirection.divideInPlace(lightDirection.length());
 
-      var dot = nx * lx + ny * ly + nz * lz;
-      var intensity = Math.floor(dot / 10);
-      if (intensity > 225){
-        intensity = 225;
+      dot = nx * lx + ny * ly + nz * lz;
+      intensity = Math.floor(dot / 20);
+      if (intensity > 215){
+        intensity = 215;
       }
 
       imgData.data[i] = light.color[0];
