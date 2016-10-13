@@ -1,5 +1,5 @@
 var light = {
-  color: [255, 200, 100],
+  color: [255, 190, 150],
   falloff: 400
 }
 
@@ -8,7 +8,7 @@ function dynamicLighting(subject){
   var map = images.normalmap;
   var imgData = normalmap.getImageData(0, 0, 400, 400);
 
-  var lightx = 100;
+  var lightx = 50;
   var lighty = 400;
   var lightz = 10;
 
@@ -32,7 +32,7 @@ function dynamicLighting(subject){
     for (var y = 0; y < 400; y++){
 
       lx = 255 - subject.x + lightx;
-      ly = 255 - lighty;
+      ly = lighty - subject.y;
       lz = lightz;
 
       nx = imgData.data[i];
@@ -56,8 +56,8 @@ function dynamicLighting(subject){
 
       dot = nx * lx + ny * ly + nz * lz;
       intensity = Math.floor(dot / 20);
-      if (intensity > 215){
-        intensity = 215;
+      if (intensity > 255){
+        intensity = 255;
       }
 
       imgData.data[i] = light.color[0];
