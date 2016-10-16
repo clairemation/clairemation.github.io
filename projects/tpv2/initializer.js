@@ -15,7 +15,7 @@ var imagesToLoad = [
   ["background", "assets/lavabg5big.jpg", 2048, 1536],
   ["backgroundfront", "assets/lavabg-front.png", 2048, 1700],
   ["backgroundback", "assets/lavabg-back.jpg", 2048, 1700],
-  ["heroStandingLeft", "assets/heronight.png", 400, 400],
+  ["heroStandingLeft", "assets/testball.png", 400, 400],
   ["heroStandingRight", "assets/hero_standing_right.png", 400, 400],
   ["heroRunLeft", "assets/hero_run_left.png", 1600, 400],
   ["heroRunRight", "assets/hero_run_right.png", 1600, 400],
@@ -23,7 +23,8 @@ var imagesToLoad = [
   ["heroSlashRight", "assets/hero_slash_right.png", 400, 400],
   ["bgmask", "assets/lavabg7.svg", 2048, 1700],
   ["walkmask", walkmaskSrc, 2048, 1700], // walkmaskSrc is in ./globals.js
-  ["normalmap", normalMask, 400, 400] // in ./normalmask.js
+  ["testball", "assets/testball.png", 400, 400],
+  ["normalmap", "assets/ballnormalmap.png", 400, 400]
 ];
 
 // Create the Image objects from the specs in imagesToLoad

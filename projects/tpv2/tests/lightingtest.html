@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+
+  </head>
+
+  <body scroll="no">
+
+    <div style="position: absolute; left:0; top: 0;"><canvas width=400 height=400 id="base" style="position: absolute; left:0; top: 0;"></div>
+
+<!--     <canvas width=400 height=400 id="lights" style="position: absolute; left:0; top: 0;"> -->
+
+    <script src = "light.js"></script>
+    <script src = "../systems/graphics/normalmask-engine.js"></script>
+
+    <script>
+    normalmap('base', '../assets/heronight.png', '../assets/heroheightmap_NRM.png', 10, 1);
+    </script>
+
+    // <script>
+    //   var normalsData;
+
+
+    //   var baseCanvas = document.getElementById('base');
+    //   baseCanvas.width = 400;
+    //   baseCanvas.height = 400;
+    //   var base = baseCanvas.getContext('2d');
+
+    //   var lightingCanvas = document.getElementById('lights');
+    //   lightingCanvas.width = 400;
+    //   lightingCanvas.height = 400;
+    //   var lighting = lightingCanvas.getContext('2d');
+    //   var lightBuffer = lighting.getImageData(0, 0, 400, 400);
+
+
+    //   var normalsCanvas = document.createElement('canvas');
+    //   normalsCanvas.width = 400;
+    //   normalsCanvas.height = 400;
+    //   var normals = normalsCanvas.getContext('2d');
+
+    //   var baseImage = new Image(400,400);
+    //   baseImage.onload = function(){
+    //     base.drawImage(baseImage, 0, 0, 400, 400,
+    //       0, 0 ,400, 400);
+    //   };
+    //   baseImage.src = 'buddah.jpg';
+
+    //   var normalmapImg = new Image(400,400);
+
+    //   normalmapImg.onload = function(){
+    //     normals.drawImage(normalmapImg, 0, 0, 400, 400,
+    //       0, 0 ,400, 400);
+    //     normalsData = normals.getImageData(0,0,400,400);
+    //     lightingCanvas.addEventListener('mousemove', function(e){
+    //       lighting.clearRect(0, 0, 400, 400);
+    //       dynamicLighting({
+    //         ctx: lighting,
+    //         normalsData: normalsData,
+    //         lightx: e.clientX + 100,
+    //         lighty: e.clientY + 100,
+    //         lightz: 10
+    //       });
+    //     });
+    //   };
+
+    //   normalmapImg.src = 'buddah_normals.jpg';
+    // </script>
+
+
+  </body>
+
+</html>
