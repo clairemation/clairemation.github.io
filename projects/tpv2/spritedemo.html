@@ -44,7 +44,7 @@
       </div>
 
     </div>
-
+    <script src = "helpers/clamp.js"></script>
     <script src = "libraries/vector.js"></script>
     <script src = "libraries/vector3d.js"></script>
     <script src = "libraries/vendor/bezierjs-gh-pages/bezier.js"></script>
@@ -63,7 +63,7 @@
     <script src = "systems/terrain/terrain.js"></script>
     <script src = "systems/viewport/viewport.js"></script>
     <script src = "systems/viewport/viewport.js"></script>
-    <script src = "systems/graphics/normalmask-engine.js"></script>
+    <script src = "systems/graphics/dynamic-lighting/normalmap-engine.js"></script>
 
     <script src = "classes/game-entity.js"></script>
     <script src = "classes/actor.js"></script>
@@ -115,6 +115,24 @@
 
       var collisionEngine = new CollisionEngine();
 
+      var light = new Light({
+        position: new Vec3D({
+          x: 200,
+          y: 500,
+          z: 10
+        }),
+        color: {
+          r: 255,
+          g: 255,
+          b: 200
+        },
+        falloff: 300
+      });
+
+      var normalMapEngine = new NormalMapEngine({
+        lights: [light]
+      });
+
       var hero = new Player(),
           twin = new Actor(),
           fireball = new Fireball(),
@@ -122,7 +140,7 @@
 
       scene.follow(hero);
 
-      var entities = [hero,twin,fireball,fireball2,scene,spriteEngine];
+      var entities = [hero,twin,scene,spriteEngine];
 
       hero.x = 360;
       hero.y = 600;

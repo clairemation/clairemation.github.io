@@ -16,11 +16,11 @@ NormalState.prototype.update = function(timestamp){
   // Check for walls and obstacles AFTER all updates are made to impulse and inertia
   this.subject.impulseHandler.update(); // apply impulse to acceleration
   this.subject.inertiaHandler.update(); // gradual acceleration falloff
-  // groundIsWalkableComponent(this.subject); // walls stop you or nudge you along at a diagonal
+  groundIsWalkableComponent(this.subject); // walls stop you or nudge you along at a diagonal
   this.subject.collisionHandler.update(); // you react to obstacles
   moveComponent(this.subject); // finally apply all movement calculations to position
   this.subject.spriteHandler.update(timestamp); // update sprite
-  dynamicLighting(this.subject);
+  // dynamicLighting(this.subject);
 };
 
 

@@ -163,6 +163,12 @@ function Actor(className){ // < GameEntity
     "E": [280,390],
     "NE": [280,345]
   };
+
+  this.lightingHandler = new NormalMapComponent({
+    owner: this,
+    normalMapFile: '../assets/smoothedmap.jpg',
+    engine: normalMapEngine
+  });
 };
 
 //* METHODS =================

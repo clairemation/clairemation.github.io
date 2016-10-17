@@ -61,7 +61,7 @@ Vec3D.prototype.divideInPlace = function(s){
   this.z = (this.z / s);
 }
 
-Vec3D.prototype.length = function(s) {
+Vec3D.prototype.length = function() {
   return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 }
 
@@ -73,7 +73,7 @@ Vec3D.prototype.unit = function(s) {
   return this.divide(this.length());
 }
 
-Vec3D.prototype.normalizeInPlace = function(){
+Vec3D.prototype.normalize = function(){
   this.divideInPlace(this.length());
 }
 

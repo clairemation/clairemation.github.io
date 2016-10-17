@@ -9,65 +9,57 @@
 
   <body scroll="no">
 
-    <div style="position: absolute; left:0; top: 0;"><canvas width=400 height=400 id="base" style="position: absolute; left:0; top: 0;"></div>
+    <div style="position: absolute; left:0; top: 0;"><canvas width=400 height=400 id="base" style="position: absolute; left:0; top: 0; z-index: -1"></div>
 
-<!--     <canvas width=400 height=400 id="lights" style="position: absolute; left:0; top: 0;"> -->
+  <!--   <div id = "controller" style="width: 100px; height: 100px; border: 2px solid black; position: absolute; left: 0; top: 0; z-index: 2"> -->
 
-    <script src = "light.js"></script>
-    <script src = "../systems/graphics/normalmask-engine.js"></script>
+    <script src = "../helpers/clamp.js"></script>
+    <script src = "../libraries/vector3d.js"></script>
+    <script src = "../systems/graphics/dynamic-lighting/normalmap-engine.js"></script>
 
     <script>
-    normalmap('base', '../assets/heronight.png', '../assets/heroheightmap_NRM.png', 10, 1);
+
+      var controller = document.getElementById('controller');
+
+      var canvas = document.getElementById('base');
+      canvas.width = 400;
+      canvas.height = 400;
+      var ctx = canvas.getContext('2d');
+
+      var baseImage = new Image(400,400);
+      baseImage.onload = function(){
+        ctx.drawImage(baseImage, 0, 0, 400, 400,
+          0, 0 ,400, 400);
+      };
+      baseImage.src = '../assets/heronight.png';
+
+      var normalmapImg = new Image(400,400);
+
+      normalmapImg.onload = function(){
+        var info = getNormalsFromImg(normalmapImg);
+        var normals = info[0];
+        var depth = info[1];
+
+        var lightColor = new Vec3D({
+          x: 255,
+          y: 240,
+          z: 200
+        })
+
+        base.addEventListener('mousemove', function(e){
+          ctx.drawImage(baseImage,0,0);
+          var lightPosition = new Vec3D({
+            // transpose so 0 in in center, not upper-left corner
+            x: e.clientX,
+            y: e.clientY,
+            z: 100
+          });
+          normalMap(canvas, ctx, normals, depth, lightPosition, lightColor);
+        });
+      };
+
+      normalmapImg.src = '../assets/normalheightmap.png';
     </script>
-
-    // <script>
-    //   var normalsData;
-
-
-    //   var baseCanvas = document.getElementById('base');
-    //   baseCanvas.width = 400;
-    //   baseCanvas.height = 400;
-    //   var base = baseCanvas.getContext('2d');
-
-    //   var lightingCanvas = document.getElementById('lights');
-    //   lightingCanvas.width = 400;
-    //   lightingCanvas.height = 400;
-    //   var lighting = lightingCanvas.getContext('2d');
-    //   var lightBuffer = lighting.getImageData(0, 0, 400, 400);
-
-
-    //   var normalsCanvas = document.createElement('canvas');
-    //   normalsCanvas.width = 400;
-    //   normalsCanvas.height = 400;
-    //   var normals = normalsCanvas.getContext('2d');
-
-    //   var baseImage = new Image(400,400);
-    //   baseImage.onload = function(){
-    //     base.drawImage(baseImage, 0, 0, 400, 400,
-    //       0, 0 ,400, 400);
-    //   };
-    //   baseImage.src = 'buddah.jpg';
-
-    //   var normalmapImg = new Image(400,400);
-
-    //   normalmapImg.onload = function(){
-    //     normals.drawImage(normalmapImg, 0, 0, 400, 400,
-    //       0, 0 ,400, 400);
-    //     normalsData = normals.getImageData(0,0,400,400);
-    //     lightingCanvas.addEventListener('mousemove', function(e){
-    //       lighting.clearRect(0, 0, 400, 400);
-    //       dynamicLighting({
-    //         ctx: lighting,
-    //         normalsData: normalsData,
-    //         lightx: e.clientX + 100,
-    //         lighty: e.clientY + 100,
-    //         lightz: 10
-    //       });
-    //     });
-    //   };
-
-    //   normalmapImg.src = 'buddah_normals.jpg';
-    // </script>
 
 
   </body>
