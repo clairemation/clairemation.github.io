@@ -18,7 +18,7 @@ function getNormalsFromImg(img){
       z: normalsData[i+2]
     });
     normals.push(normal.unit());
-    depthData.push(400 / normalsData[i+4]);
+    depthData.push(normalsData[i+4] / 4);
   }
   return [normals, depthData];
 }

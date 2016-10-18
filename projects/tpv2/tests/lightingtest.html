@@ -46,19 +46,19 @@
           z: 200
         })
 
-        base.addEventListener('mousemove', function(e){
+        window.addEventListener('mousemove', function(e){
           ctx.drawImage(baseImage,0,0);
           var lightPosition = new Vec3D({
             // transpose so 0 in in center, not upper-left corner
             x: e.clientX,
             y: e.clientY,
-            z: 100
+            z: 300
           });
           normalMap(canvas, ctx, normals, depth, lightPosition, lightColor);
         });
       };
 
-      normalmapImg.src = '../assets/normalheightmap.png';
+      normalmapImg.src = '../assets/normaldepthmap.png';
     </script>
 
 
