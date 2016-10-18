@@ -11,7 +11,7 @@
 
     <div style="position: absolute; left:0; top: 0;"><canvas width=400 height=400 id="base" style="position: absolute; left:0; top: 0; z-index: -1"></div>
 
-    <script src = "../helpers/limits.js"></script>
+    <script src = "../helpers/limit.js"></script>
     <script src = "../libraries/vector3d.js"></script>
     <script src = "../systems/graphics/dynamic-lighting/normalmap-engine.js"></script>
 
@@ -51,7 +51,7 @@
             y: e.clientY,
             z: 300
           });
-          normalMap(canvas, ctx, normals, depth, lightPosition, lightColor);
+          lightCanvas(canvas, ctx, normals, depth, lightPosition, lightColor);
         });
       };
 

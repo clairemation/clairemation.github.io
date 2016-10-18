@@ -24,21 +24,24 @@ function getGeometryFromImg(img){
 }
 
 // applies lighting to a pixel and returns the new color
-function lightPixel(baseColor, lightDirection, normal, lightColor){
+function lightPixel(baseColor, lightDirection, normal, lightColor, chokeAmt, cel){
+  var choke = chokeAmt || 1;
   var dot = Vec3D.dot(lightDirection.unit(), normal);
-  var intensity = dot;
-  var color = Vec3D.interpolate(baseColor, lightColor, threshold(intensity, .6, 0, .85));
+  var intensity = Math.pow(dot, choke);
+  if (cel){
+    intensity = threshold(intensity, .6, 0, .9);
+  }
+  var color = Vec3D.interpolate(baseColor, lightColor, intensity);
   return color;
 }
 
-function normalMap(canvas, ctx, normals, depth, lightPosition, lightColor){
+function lightCanvas(canvas, ctx, normals, depth, lightPosition, lightColor){
 
   var texture = ctx.getImageData(0, 0, canvas.width, canvas.height);
   var textureData = texture.data;
 
-  var lightDirection = new Vec3D({});
-
-  var normal = new Vec3D({});
+  var texturePixel = new Vec3D()
+  var pixelPosition = new Vec3D();
 
   var ni = 0;
   var ti = 0;
@@ -46,22 +49,15 @@ function normalMap(canvas, ctx, normals, depth, lightPosition, lightColor){
   for (var x = 0; x < canvas.height; x++){
     for (var y = 0; y < canvas.width; y++){
 
-      // calc light direction
-      lightDirection.x = lightPosition.x - x;
-      lightDirection.y = lightPosition.y - y;
-      lightDirection.z = lightPosition.z - depth[ni];
+      pixelPosition.assign(x, y, depth[ni]);
 
-      // get normal
+      var lightDirection = Vec3D.subtract(lightPosition, pixelPosition);
+
       var normal = normals[ni];
 
-      // get texture pixel
-      var texturePixel = new Vec3D({
-        x: textureData[ti],
-        y: textureData[ti+1],
-        z: textureData[ti+2]
-      });
+      texturePixel.assign(textureData[ti],textureData[ti+1], textureData[ti+2]);
 
-      var litPixel = lightPixel(texturePixel, lightDirection, normal, lightColor);
+      var litPixel = lightPixel(texturePixel, lightDirection, normal, lightColor, 5, true);
 
       textureData[ti] = litPixel.x;
       textureData[ti+1] = litPixel.y;

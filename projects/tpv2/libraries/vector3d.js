@@ -1,7 +1,14 @@
 function Vec3D(args){
-  this.x = args.x || undefined;
-  this.y = args.y || undefined;
-  this.z = args.z || undefined;
+  if (args == undefined){
+    this.x=undefined;
+    this.y=undefined;
+    this.z=undefined;
+  }
+  else {
+    this.x = args.x;
+    this.y = args.y;
+    this.z = args.z;
+  }
 }
 
 Vec3D.add = function(a, b) {
@@ -33,6 +40,10 @@ Vec3D.interpolate = function(a, b, t) {
 
 Vec3D.distance = function(a,b) {
   return (this.subtract(a, b)).length();
+}
+
+Vec3D.prototype.assign = function(x, y, z){
+  Vec3D.call(this, {x: x, y: y, z: z});
 }
 
 Vec3D.prototype.plusInPlace = function(s) {
