@@ -11,9 +11,7 @@
 
     <div style="position: absolute; left:0; top: 0;"><canvas width=400 height=400 id="base" style="position: absolute; left:0; top: 0; z-index: -1"></div>
 
-  <!--   <div id = "controller" style="width: 100px; height: 100px; border: 2px solid black; position: absolute; left: 0; top: 0; z-index: 2"> -->
-
-    <script src = "../helpers/clamp.js"></script>
+    <script src = "../helpers/limits.js"></script>
     <script src = "../libraries/vector3d.js"></script>
     <script src = "../systems/graphics/dynamic-lighting/normalmap-engine.js"></script>
 
@@ -36,9 +34,9 @@
       var normalmapImg = new Image(400,400);
 
       normalmapImg.onload = function(){
-        var info = getNormalsFromImg(normalmapImg);
-        var normals = info[0];
-        var depth = info[1];
+        var geometry = getGeometryFromImg(normalmapImg);
+        var normals = geometry[0];
+        var depth = geometry[1];
 
         var lightColor = new Vec3D({
           x: 255,
@@ -49,7 +47,6 @@
         window.addEventListener('mousemove', function(e){
           ctx.drawImage(baseImage,0,0);
           var lightPosition = new Vec3D({
-            // transpose so 0 in in center, not upper-left corner
             x: e.clientX,
             y: e.clientY,
             z: 300

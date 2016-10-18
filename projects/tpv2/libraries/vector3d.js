@@ -1,7 +1,7 @@
 function Vec3D(args){
-  this.x = args.x;
-  this.y = args.y;
-  this.z = args.z;
+  this.x = args.x || undefined;
+  this.y = args.y || undefined;
+  this.z = args.z || undefined;
 }
 
 Vec3D.add = function(a, b) {

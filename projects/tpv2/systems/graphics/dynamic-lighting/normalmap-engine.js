@@ -3,11 +3,11 @@ function getImageData(img){
   tempCanvas.width = img.width;
   tempCanvas.height = img.height;
   var tempCtx = tempCanvas.getContext('2d');
-  tempCtx.drawImage(img, 0, 0);;
+  tempCtx.drawImage(img, 0, 0);
   return tempCtx.getImageData(0, 0, img.width, img.height).data;
 }
 
-function getNormalsFromImg(img){
+function getGeometryFromImg(img){
   var normalsData = getImageData(img);
   var normals = [];
   var depthData = [];
@@ -36,17 +36,9 @@ function normalMap(canvas, ctx, normals, depth, lightPosition, lightColor){
   var texture = ctx.getImageData(0, 0, canvas.width, canvas.height);
   var textureData = texture.data;
 
-  var lightDirection = new Vec3D({
-    x: lightPosition.x - x,
-    y: lightPosition.y - y,
-    z: lightPosition.z
-  });
+  var lightDirection = new Vec3D({});
 
-  var normal = new Vec3D({
-    x: 0,
-    y: 0,
-    z: 0
-  });
+  var normal = new Vec3D({});
 
   var ni = 0;
   var ti = 0;
