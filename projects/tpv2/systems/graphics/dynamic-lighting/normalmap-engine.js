@@ -24,12 +24,11 @@ function getGeometryFromImg(img){
 }
 
 // applies lighting to a pixel and returns the new color
-function lightPixel(baseColor, lightDirection, normal, lightColor, chokeAmt, cel){
-  var choke = chokeAmt || 1;
+function lightPixel(baseColor, lightDirection, normal, lightColor, choke, cel){
   var dot = Vec3D.dot(lightDirection.unit(), normal);
-  var intensity = Math.pow(dot, choke);
+  var intensity = Math.pow(dot, (choke || 1));
   if (cel){
-    intensity = threshold(intensity, .6, 0, .9);
+    intensity = threshold(intensity, .6, 0, .85);
   }
   var color = Vec3D.interpolate(baseColor, lightColor, intensity);
   return color;

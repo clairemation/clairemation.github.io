@@ -23,8 +23,6 @@ var imagesToLoad = [
   ["heroSlashRight", "assets/hero_slash_right.png", 400, 400],
   ["bgmask", "assets/lavabg7.svg", 2048, 1700],
   ["walkmask", walkmaskSrc, 2048, 1700], // walkmaskSrc is in ./globals.js
-  ["testball", "assets/testball.png", 400, 400],
-  ["normalmap", "assets/ballnormalmap.png", 400, 400]
 ];
 
 // Create the Image objects from the specs in imagesToLoad
@@ -45,8 +43,6 @@ loadCheckLoop = setInterval(function(){
     clearInterval(loadCheckLoop);
 
     walkmask.drawImage(images.walkmask,0,0,2048,1700,0,0,2048,1700);
-
-    normalmap.drawImage(images.normalmap, 0, 0, 400, 400, 0, 0, 400, 400);
 
     beginGameLoop();
   }
