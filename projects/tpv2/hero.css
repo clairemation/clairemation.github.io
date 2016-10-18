@@ -9,9 +9,10 @@ body {
   width: 100%;
 }
 
-.text {
+#text {
   flex-basis: 15%;
   margin: 0;
+  overflow: scroll;
 }
 
 p, h1, ul {
