@@ -1,3 +1,13 @@
+function PointLight(args){
+  this.position = {
+    x: args.x,
+    y: args.y,
+    z: args.z
+  };
+  this.color = args.color;
+  this.falloff = args.falloff;
+}
+
 function getImageData(img){
   var tempCanvas = document.createElement('canvas');
   tempCanvas.width = img.width;
@@ -24,11 +34,12 @@ function getGeometryFromImg(img){
 }
 
 // applies lighting to a pixel and returns the new color
-function lightPixel(baseColor, lightDirection, normal, lightColor, choke, cel){
+function lightPixel(baseColor, lightDirection, normal, lightColor, falloff, choke, cel){
+  var fade = lightDirection.length() / falloff;
   var dot = Vec3D.dot(lightDirection.unit(), normal);
   var intensity = Math.pow(dot, (choke || 1));
   if (cel){
-    intensity = threshold(intensity, .6, 0, .85);
+    intensity = threshold(intensity, .6, 0, clamp((.85/fade || 0), 0, .85));
   }
   var color = Vec3D.interpolate(baseColor, lightColor, intensity);
   return color;
@@ -56,7 +67,7 @@ function lightCanvas(canvas, ctx, normals, depth, lightPosition, lightColor){
 
       texturePixel.assign(textureData[ti],textureData[ti+1], textureData[ti+2]);
 
-      var litPixel = lightPixel(texturePixel, lightDirection, normal, lightColor, 5, true);
+      var litPixel = lightPixel(texturePixel, lightDirection, normal, lightColor, 400, 5, true);
 
       textureData[ti] = litPixel.x;
       textureData[ti+1] = litPixel.y;
