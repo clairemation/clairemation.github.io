@@ -1,11 +1,38 @@
+function LightingEngine(args){
+  if (args){
+    this.lights = args.lights || [];
+    this.entities = args.entities || [];
+  }
+}
+
+LightingEngine.prototype.registerComponent = function(component){
+  this.entities.push(component);
+}
+
 function PointLight(args){
-  this.position = {
-    x: args.x,
-    y: args.y,
-    z: args.z
-  };
-  this.color = args.color;
-  this.falloff = args.falloff;
+  this.position = args.position; //Vec3D
+  this.color = args.color; //Vec3D
+  this.falloff = args.falloff; //in pixels
+  // TODO: instead of this variable, make falloff calculation be a whole callback function, so a light can have a non-linear falloff if we want
+}
+
+function LightingComponent(args){
+  this.owner = args.owner;
+  this.engine = args.engine;
+  this.engine.registerComponent(this);
+  var lightingMap = args.lightingMap;
+  var geometry = this.engine.getGeometryFromImg(lightingMap);
+  this.normals = geometry[0];
+  this.depth = geometry[1];
+}
+
+LightingComponent.prototype.update = function(){
+  for (var i = 0; i < this.engine.lights; i++){
+
+    // DO NEXT: convert light's position from global space to 'sprite space' aka tangent space
+
+    LightingEngine.lightCanvas(this.owner.sprite, this.owner.sprite.getContext('2d'), this.normals, this.depth, this.engine.lights[i].position, this.engine.lights[i].color);
+  }
 }
 
 function getImageData(img){
@@ -34,18 +61,22 @@ function getGeometryFromImg(img){
 }
 
 // applies lighting to a pixel and returns the new color
-function lightPixel(baseColor, lightDirection, normal, lightColor, falloff, choke, cel){
+LightingEngine.lightPixel = function(baseColor, lightDirection, normal, lightColor, falloff, choke, cel){
   var fade = lightDirection.length() / falloff;
-  var dot = Vec3D.dot(lightDirection.unit(), normal);
-  var intensity = Math.pow(dot, (choke || 1));
-  if (cel){
-    intensity = threshold(intensity, .6, 0, clamp((.85/fade || 0), 0, .85));
+  if (fade != 0){
+    var dot = Vec3D.dot(lightDirection.unit(), normal);
+    var intensity = Math.pow(dot, (choke || 1));
+    if (cel){
+      intensity = threshold(intensity, .6, 0, .85);
+    }
+    intensity = clamp(intensity/fade, 0, .85);
+    var color = Vec3D.interpolate(baseColor, lightColor, intensity);
+    return color;
   }
-  var color = Vec3D.interpolate(baseColor, lightColor, intensity);
-  return color;
+  return baseColor;
 }
 
-function lightCanvas(canvas, ctx, normals, depth, lightPosition, lightColor){
+LightingEngine.lightCanvas = function(canvas, ctx, normals, depth, lightPosition, lightColor){
 
   var texture = ctx.getImageData(0, 0, canvas.width, canvas.height);
   var textureData = texture.data;
@@ -67,7 +98,7 @@ function lightCanvas(canvas, ctx, normals, depth, lightPosition, lightColor){
 
       texturePixel.assign(textureData[ti],textureData[ti+1], textureData[ti+2]);
 
-      var litPixel = lightPixel(texturePixel, lightDirection, normal, lightColor, 400, 5, true);
+      var litPixel = this.lightPixel(texturePixel, lightDirection, normal, lightColor, 400, 5, true);
 
       textureData[ti] = litPixel.x;
       textureData[ti+1] = litPixel.y;

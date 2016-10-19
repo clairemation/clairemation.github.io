@@ -17,6 +17,12 @@
 
     <script>
 
+      var lightColor = new Vec3D({
+          x: 255,
+          y: 240,
+          z: 200
+        });
+
       var controller = document.getElementById('controller');
 
       var canvas = document.getElementById('base');
@@ -38,12 +44,6 @@
         var normals = geometry[0];
         var depth = geometry[1];
 
-        var lightColor = new Vec3D({
-          x: 255,
-          y: 240,
-          z: 200
-        })
-
         window.addEventListener('mousemove', function(e){
           ctx.drawImage(baseImage,0,0);
           var lightPosition = new Vec3D({
@@ -51,7 +51,7 @@
             y: e.clientY,
             z: 300
           });
-          lightCanvas(canvas, ctx, normals, depth, lightPosition, lightColor);
+          LightingEngine.lightCanvas(canvas, ctx, normals, depth, lightPosition, lightColor);
         });
       };
 
