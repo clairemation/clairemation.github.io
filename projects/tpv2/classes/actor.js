@@ -164,6 +164,12 @@ function Actor(className){ // < GameEntity
     "NE": [280,345]
   };
 
+  this.lightingHandler = new LightingComponent({
+    owner: this,
+    engine: lightingEngine,
+    lightingMap: images.heronormalmap
+  });
+
 };
 
 //* METHODS =================

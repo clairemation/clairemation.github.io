@@ -28,6 +28,39 @@ CollisionEngine.prototype.deregisterComponent = function(component){
   }
 };
 
+CollisionEngine.isThereACollision = function(subject, subjectHitbox, other, otherHitbox){
+
+  // we are not standing at the same depth
+  var zDiff = Math.abs((other.zIndex) - (subject.zIndex));
+  var maxDepth = Math.max(other.depth, subject.depth) * SCALE;
+  if (zDiff > maxDepth){
+    return false;
+  }
+
+// it clears me on my left side
+  if ((subject.x + subjectHitbox[0]) > (other.x  + otherHitbox[2])){
+    return false;
+  }
+
+// it clears me on my right
+  if ((subject.x + subjectHitbox[2]) < (other.x  + otherHitbox[0])){
+    return false;
+  }
+
+// it clears me above
+  if ((subject.y + subjectHitbox[1]) > (other.y  + otherHitbox[3])){
+    return false;
+  }
+
+  // it clears me below
+  if ((subject.y + subjectHitbox[3]) < (other.y +  otherHitbox[1])){
+      return false;
+  }
+
+  return true;
+
+}
+
 CollisionEngine.prototype.checkForCollisionsWithClass = function(myComponent, className){
 
   var subject = myComponent.subject;
@@ -41,40 +74,9 @@ CollisionEngine.prototype.checkForCollisionsWithClass = function(myComponent, cl
     var otherObject = otherComponent.subject;
     if (otherObject != subject) {
 
-      // collision negative, continue to next entity, IF:
-
-      // we are not standing at the same depth
-        var zDiff = Math.abs((otherObject.zIndex) - (subject.zIndex));
-        var maxDepth = Math.max(otherObject.depth, subject.depth) * SCALE;
-        if (zDiff > maxDepth){
-          continue;
-        }
-
-      // it clears me on my left side
-        if ((subject.x + myComponent.hitbox[0]) > (otherObject.x  + otherComponent.hitbox[2])){
-          continue;
-        }
-
-      // it clears me on my right
-        if ((subject.x + myComponent.hitbox[2]) < (otherObject.x  + otherComponent.hitbox[0])){
-          continue;
-        }
-
-      // it clears me above
-        if ((subject.y + myComponent.hitbox[1]) > (otherObject.y  + otherComponent.hitbox[3])){
-          continue;
-        }
-
-      // it clears me below
-      if ((subject.y + myComponent.hitbox[3]) < (otherObject.y +  otherComponent.hitbox[1])){
-        continue;
+      if (CollisionEngine.isThereACollision(subject, myComponent.hitbox, otherObject, otherComponent.hitbox)){
+        myComponent.reactToCollisionWith(otherComponent);
       }
-
-      // Still here? That means there was a collision!
-
-      myComponent.reactToCollisionWith(otherComponent);
-
     }
   }
-
 };

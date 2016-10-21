@@ -58,6 +58,12 @@ Vec3D.prototype.minusInPlace = function(s) {
   this.z = this.z - s;
 }
 
+Vec3D.prototype.subtractVector = function(v){
+  this.x -= v.x;
+  this.y -= v.y;
+  this.z -= v.z;
+}
+
 Vec3D.prototype.multiply = function(s) {
   return new Vec3D({x: this.x * s, y: this.y * s, z: this.z * s});
 }

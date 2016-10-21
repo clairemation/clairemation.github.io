@@ -27,6 +27,15 @@ function LightingComponent(args){
 
 LightingComponent.prototype.update = function(){
   for (var i = 0; i < this.engine.lights; i++){
+    var offset = new Vec3D({
+      x: this.owner.x,
+      y: this.owner.y,
+      z: this.owner.zIndex
+    });
+
+    var offsetLight = Vec3D.subtract(this.engine.lights[i].position, offset);
+
+    if (offsetLight.length() >= this.engine.lights[i].falloff) return;
 
     PointLight.lightCanvas({
       canvas: this.owner.sprite,

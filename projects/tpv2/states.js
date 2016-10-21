@@ -20,6 +20,7 @@ NormalState.prototype.update = function(timestamp){
   this.subject.collisionHandler.update(); // you react to obstacles
   moveComponent(this.subject); // finally apply all movement calculations to position
   this.subject.spriteHandler.update(timestamp); // update sprite
+  this.subject.lightingHandler.update();
 };
 
 
