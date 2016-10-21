@@ -31,7 +31,7 @@ CollisionEngine.prototype.deregisterComponent = function(component){
 CollisionEngine.isThereACollision = function(subject, subjectHitbox, other, otherHitbox){
 
   // we are not standing at the same depth
-  var zDiff = Math.abs((other.zIndex) - (subject.zIndex));
+  var zDiff = Math.abs((other.z) - (subject.z));
   var maxDepth = Math.max(other.depth, subject.depth) * SCALE;
   if (zDiff > maxDepth){
     return false;

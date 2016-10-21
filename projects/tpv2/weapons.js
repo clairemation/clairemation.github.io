@@ -1,5 +1,5 @@
-function Weapon(args){ // < GameEntity
-  GameEntity.call(this, args.className || "Weapon");
+function Weapon(args){ // < PhysicalEntity
+  PhysicalEntity.call(this, args.className || "Weapon");
   this.owner = args.owner;
   this.onGround = false;
   this.depth = args.depth;
@@ -16,12 +16,12 @@ function Weapon(args){ // < GameEntity
   });
 }
 
-Weapon.prototype = Object.create(GameEntity.prototype);
+Weapon.prototype = Object.create(PhysicalEntity.prototype);
 Weapon.prototype.constructor = Weapon;
 
 
 
-function Knife(args){ // < Weapon < GameEntity
+function Knife(args){ // < Weapon < PhysicalEntity
   Weapon.call(this, {
     className: "Knife",
     owner: args.owner,
@@ -42,7 +42,7 @@ Knife.prototype.constructor = Knife;
 
 
 Knife.prototype.update = function(){
-  this.zIndex = this.owner.zIndex;
+  this.z = this.owner.z;
   this.collisionHandler.hitbox = [
     this.hitboxes[this.owner.facing][0] + this.owner.x,
     this.hitboxes[this.owner.facing][1] + this.owner.y,

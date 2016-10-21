@@ -30,7 +30,7 @@ LightingComponent.prototype.update = function(){
     var offset = new Vec3D({
       x: this.owner.x,
       y: this.owner.y,
-      z: this.owner.zIndex
+      z: this.owner.z
     });
 
     var offsetLight = Vec3D.subtract(this.engine.lights[i].position, offset);

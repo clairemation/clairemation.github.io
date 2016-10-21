@@ -17,7 +17,7 @@ SpriteEngine.prototype.deregisterComponent = function(component){
 
 SpriteEngine.prototype.update = function(){
   this.entitiesByDepthOrder.sort(function(a, b){
-    return ((a.subject.zIndex) - (b.subject.zIndex));
+    return ((a.subject.z) - (b.subject.z));
   });
   this.ctx.save();
   this.ctx.setTransform(1, 0, 0, 1, 0, 0);

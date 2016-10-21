@@ -5,9 +5,9 @@
 function NormalState(subject){
   this.subject = subject;
   if (this.subject.impulse.x == 0 && this.subject.impulse.y == 0){
-    this.subject.state = "standing"
+    this.subject.appearance = "standing"
   } else {
-    this.subject.state = "running";
+    this.subject.appearance = "running";
   }
 }
 

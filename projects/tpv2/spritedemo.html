@@ -69,7 +69,7 @@
     <script src = "systems/viewport/viewport.js"></script>
     <script src = "systems/viewport/viewport.js"></script>
 
-    <script src = "classes/game-entity.js"></script>
+    <script src = "classes/physical-entity.js"></script>
     <script src = "classes/actor.js"></script>
     <script src = "classes/player.js"></script>
     <script src = "classes/fireball.js"></script>
@@ -160,7 +160,7 @@
       fireball2.originalY = 0
       fireball2.acceleration = [-30,2];
       fireball2.originalAcceleration = [-30,2];
-      fireball2.zIndex = 1350;
+      fireball2.z = 1350;
 
       //* BEGIN GAME LOOP ====================
       function beginGameLoop(){

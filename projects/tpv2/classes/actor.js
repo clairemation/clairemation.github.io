@@ -1,9 +1,9 @@
-function Actor(className){ // < GameEntity
-  GameEntity.call(this, (className || 'Actor'));
+function Actor(className){ // < PhysicalEntity
+  PhysicalEntity.call(this, (className || 'Actor'));
 
   //* STATE ==================
   this.name = "hero";
-  this.state = "standing";
+  this.appearance = "standing";
   this.impulse = {x: 0, y:0};
   this.behavior = new NormalState(this);
   this.width = 400;
@@ -11,6 +11,8 @@ function Actor(className){ // < GameEntity
   this.depth = 50;
   this.x = 0;
   this.y = 0;
+  this.z = 0;
+  this.onGround = true;
   this.acceleration = [0,0];
   this.facing = "E";
   this.pushability = 1.7;
@@ -175,7 +177,7 @@ function Actor(className){ // < GameEntity
 //* METHODS =================
 
 //* INHERIT METHODS FROM BASE GAME ENTITY ===========
-Actor.prototype = Object.create(GameEntity.prototype);
+Actor.prototype = Object.create(PhysicalEntity.prototype);
 Actor.prototype.constructor = Actor;
 
 //* OWN METHODS ===============

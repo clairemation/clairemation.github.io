@@ -1,32 +1,30 @@
-function GameEntity(className){
-  this.className = (className || 'GameEntity');
-  this.onGround = true;
+function PhysicalEntity(className){
+  this.className = (className || 'PhysicalEntity');
   this.width = 0;
   this.height = 0;
   this.depth = 0;
   this.x = 0;
   this.y = 0;
-  this.zIndex = 0;
-  this.acceleration = [0,0];
+  this.z = 0;
 };
 
-GameEntity.prototype.changeState = function(targetState){
-  if (this.state != targetState){
-    this.state = targetState;
+PhysicalEntity.prototype.changeAppearance = function(target){
+  if (this.appearance != target){
+    this.appearance = target;
   }
 }
 
 // TO DO: pass message in parameters
 // Move hitMessage into collision component
-GameEntity.prototype.message = function(recipient, message){
+PhysicalEntity.prototype.message = function(recipient, message){
   recipient.receiver(message, this);
 };
 
-GameEntity.prototype.receiver = function(message, sender){};
+PhysicalEntity.prototype.receiver = function(message, sender){};
 
-GameEntity.prototype.update = function(){};
+PhysicalEntity.prototype.update = function(){};
 
-GameEntity.prototype.updateFacing = function(){
+PhysicalEntity.prototype.updateFacing = function(){
   if (this.impulse.x == 0 && this.impulse.y == 0){
     return;
   }
@@ -36,10 +34,10 @@ GameEntity.prototype.updateFacing = function(){
     ["W", "", "E"][this.impulse.x + 1];
 }
 
-GameEntity.prototype.directionTo = function(other){
-  if (this.zIndex > other.zIndex){
+PhysicalEntity.prototype.directionTo = function(other){
+  if (this.z > other.z){
     var y = -1;
-  } else if (this.zIndex == other.zIndex) {
+  } else if (this.z == other.z) {
     var y = 0;
   } else {
     var y = 1;
@@ -58,7 +56,7 @@ GameEntity.prototype.directionTo = function(other){
   );
 }
 
-GameEntity.prototype.directionToImpulse = function(direction){
+PhysicalEntity.prototype.directionToImpulse = function(direction){
   return {
     "N": [0,-1],
     "NW": [-1,-1],
@@ -71,7 +69,7 @@ GameEntity.prototype.directionToImpulse = function(direction){
   }[direction];
 }
 
-GameEntity.prototype.bounceBack = function(direction){
+PhysicalEntity.prototype.bounceBack = function(direction){
   if (Math.sign(this.acceleration[0]) == direction[0]){
     this.acceleration[0] *= -.85;
   }

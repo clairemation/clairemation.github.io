@@ -8,34 +8,34 @@ Player.prototype.command = function(input){
   switch (input){
     case (RUN_UP):
       this.impulse.y = -1;
-      this.changeState("running");
+      this.changeAppearance("running");
     break;
     case (RUN_LEFT):
       this.impulse.x = -1;
-      this.changeState("running");
+      this.changeAppearance("running");
     break;
     case(RUN_DOWN):
       this.impulse.y = 1;
-      this.changeState("running");
+      this.changeAppearance("running");
     break;
     case(RUN_RIGHT):
       this.impulse.x = 1;
-      this.changeState("running");
+      this.changeAppearance("running");
     break;
     case (STOP_X):
       this.impulse.x = 0;
       if (this.impulse.y == 0){
-        this.changeState("standing");
+        this.changeAppearance("standing");
       }
     break;
     case (STOP_Y):
       this.impulse.y = 0;
       if (this.impulse.x == 0){
-        this.changeState("standing");
+        this.changeAppearance("standing");
       }
     break;
     case (SLASH):
-      this.changeState("slashing");
+      this.changeAppearance("slashing");
       this.behavior = this.weapon.useState;
   }
   this.updateFacing();

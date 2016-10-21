@@ -39,13 +39,13 @@ AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
     this.currentAnimationFrameNumber = this.currentAnimationFrameNumber + frameAdvance;
     this.lastTime = timestamp;
   }
-  if (this.currentAnimationFrameNumber >= this.frameSequence[this.subject.state][this.subject.facing].frames.length) {
-    this.currentAnimationFrameNumber = this.frameSequence[this.subject.state][this.subject.facing].frames[0];
+  if (this.currentAnimationFrameNumber >= this.frameSequence[this.subject.appearance][this.subject.facing].frames.length) {
+    this.currentAnimationFrameNumber = this.frameSequence[this.subject.appearance][this.subject.facing].frames[0];
   }
   this.sprite.width = this.sprite.width; // clear canvas, faster than vvv
   // this.drawingContext.clearRect(0,0,this.subject.width, this.subject.height);
   this.drawingContext.drawImage(
-    this.frameSequence[this.subject.state][this.subject.facing].spritesheet, //source image
+    this.frameSequence[this.subject.appearance][this.subject.facing].spritesheet, //source image
     (this.currentAnimationFrameNumber * this.subject.width), //origin x
     0, //origin y
     this.subject.width,

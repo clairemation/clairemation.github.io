@@ -1,5 +1,5 @@
-function Fireball(className){ // < GameEntity
-  GameEntity.call(this, (className || 'Fireball'));
+function Fireball(className){ // < PhysicalEntity
+  PhysicalEntity.call(this, (className || 'Fireball'));
   this.name = "fireball";
   this.facing = null;
   this.onGround = false;
@@ -10,7 +10,7 @@ function Fireball(className){ // < GameEntity
   this.y = -400;
   this.originalX = 2200;
   this.originalY = -50;
-  this.zIndex = 1150;
+  this.z = 1150;
   this.acceleration = [-14, 2];
   this.originalAcceleration = [-14, 2];
 
@@ -39,7 +39,7 @@ function Fireball(className){ // < GameEntity
   });
 }
 
-Fireball.prototype = Object.create(GameEntity.prototype);
+Fireball.prototype = Object.create(PhysicalEntity.prototype);
 Fireball.prototype.constructor = Fireball;
 
 Fireball.prototype.receiver = function(message, sender){
@@ -55,7 +55,7 @@ Fireball.prototype.update = function(){
   this.collisionHandler.update();
   moveComponent(this);
 
-  if (this.y >= (this.zIndex - (this.height)*SCALE)){
+  if (this.y >= (this.z - (this.height)*SCALE)){
     //restart
     this.x = this.originalX;
     this.y = this.originalY;
