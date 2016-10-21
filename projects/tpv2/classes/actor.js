@@ -184,10 +184,6 @@ Actor.prototype.receiver = function(message, sender){
 
   if (message == "damage"){
 
-    // recoil
-    // var direction = this.directionToImpulse(this.directionTo(sender));
-
-
     // YES THIS IS MESSY
     // Testing vector math, will eventually integrate vectors programwide so we don't have to create them here.
 
