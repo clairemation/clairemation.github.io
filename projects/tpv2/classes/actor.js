@@ -5,7 +5,7 @@ function Actor(className){ // < PhysicalEntity
   this.name = "hero";
   this.appearance = "standing";
   this.impulse = {x: 0, y:0};
-  this.behavior = new NormalState(this);
+  this.state = new NormalState(this);
   this.width = 400;
   this.height = 400;
   this.depth = 50;
@@ -204,7 +204,7 @@ Actor.prototype.receiver = function(message, sender){
     this.acceleration[1] = direction.y * -10;
 
     // hurt effects
-    this.behavior = new HurtState(this);
+    this.state = new HurtState(this);
 
   }
 
@@ -216,5 +216,5 @@ Actor.prototype.receiver = function(message, sender){
 }
 
 Actor.prototype.update = function(timestamp){
-  this.behavior.update(timestamp);
+  this.state.update(timestamp);
 }

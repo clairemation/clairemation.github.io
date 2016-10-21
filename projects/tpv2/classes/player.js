@@ -36,7 +36,7 @@ Player.prototype.command = function(input){
     break;
     case (SLASH):
       this.changeAppearance("slashing");
-      this.behavior = this.weapon.useState;
+      this.state = this.weapon.useState;
   }
   this.updateFacing();
 }

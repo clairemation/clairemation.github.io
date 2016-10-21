@@ -1,4 +1,4 @@
-//* BEHAVIOR STATES ======================
+//* state STATES ======================
 
 // TODO: Store an instance of NormalState in the subject, so as not to allocate & destroy it every time we return from e.g. SlashingState
 
@@ -42,7 +42,7 @@ HurtState.prototype.update = function(timestamp){
 
   this.countdown --;
   if (this.countdown <= 0){
-    this.subject.behavior = new NormalState(this.subject);
+    this.subject.state = new NormalState(this.subject);
   }
 }
 

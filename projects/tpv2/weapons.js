@@ -53,7 +53,7 @@ Knife.prototype.update = function(){
 }
 
 
-// SlashingState: Behavior state for knife owner to use.
+// SlashingState: state state for knife owner to use.
 // We keep a single instance stored in the knife object, and keep resetting that one and reassigning it. This is because it may be swapped to very frequently, so we won't be allocating for a new object every time.
 
 function SlashingState(subject){
@@ -72,6 +72,6 @@ SlashingState.prototype.update = function(timestamp){
   this.countdown --;
   if (this.countdown <= 0){
     this.countdown = 5;
-    this.subject.behavior = new NormalState(this.subject);
+    this.subject.state = new NormalState(this.subject);
   }
 };
