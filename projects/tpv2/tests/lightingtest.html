@@ -13,6 +13,7 @@
 
     <script src = "../helpers/limit.js"></script>
     <script src = "../libraries/vector3d.js"></script>
+    <script src = "../systems/geometry/geometry.js"></script>
     <script src = "../systems/graphics/dynamic-lighting/normalmap-engine.js"></script>
 
     <script>
@@ -40,7 +41,7 @@
       var normalmapImg = new Image(400,400);
 
       normalmapImg.onload = function(){
-        var geometry = getGeometryFromImg(normalmapImg);
+        var geometry = Geometry.getGeometryFromImg(normalmapImg);
         var normals = geometry[0];
         var depth = geometry[1];
 
@@ -51,7 +52,14 @@
             y: e.clientY,
             z: 300
           });
-          LightingEngine.lightCanvas(canvas, ctx, normals, depth, lightPosition, lightColor);
+          PointLight.lightCanvas({
+            canvas: canvas,
+            ctx: ctx,
+            normals: normals,
+            depth: depth,
+            lightPosition: lightPosition,
+            lightColor: lightColor
+          });
         });
       };
 

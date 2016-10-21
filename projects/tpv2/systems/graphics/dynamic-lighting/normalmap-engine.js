@@ -13,15 +13,14 @@ function PointLight(args){
   this.position = args.position; //Vec3D
   this.color = args.color; //Vec3D
   this.falloff = args.falloff; //in pixels
-  // TODO: instead of this variable, make falloff calculation be a whole callback function, so a light can have a non-linear falloff if we want
+  // TODO: instead of a variable, make falloff calculation be a whole callback function, so a light can have a non-linear falloff if we want
 }
 
 function LightingComponent(args){
   this.owner = args.owner;
   this.engine = args.engine;
   this.engine.registerComponent(this);
-  var lightingMap = args.lightingMap;
-  var geometry = this.engine.getGeometryFromImg(lightingMap);
+  var geometry = Geometry.getGeometryFromImg(args.lightingMap);
   this.normals = geometry[0];
   this.depth = geometry[1];
 }
@@ -29,9 +28,14 @@ function LightingComponent(args){
 LightingComponent.prototype.update = function(){
   for (var i = 0; i < this.engine.lights; i++){
 
-    // DO NEXT: convert light's position from global space to 'sprite space' aka tangent space
-
-    LightingEngine.lightCanvas(this.owner.sprite, this.owner.sprite.getContext('2d'), this.normals, this.depth, this.engine.lights[i].position, this.engine.lights[i].color);
+    PointLight.lightCanvas({
+      canvas: this.owner.sprite,
+      ctx: this.owner.sprite.getContext('2d'),
+      normals: this.normals,
+      depth: this.depth,
+      lightPosition: this.engine.lights[i].position,
+      lightColor: this.engine.lights[i].color
+    });
   }
 }
 
@@ -44,39 +48,38 @@ function getImageData(img){
   return tempCtx.getImageData(0, 0, img.width, img.height).data;
 }
 
-function getGeometryFromImg(img){
-  var normalsData = getImageData(img);
-  var normals = [];
-  var depthData = [];
-  for (var i = 0; i < normalsData.length; i += 4){
-    var normal = new Vec3D({
-      x: normalsData[i],
-      y: normalsData[i+1],
-      z: normalsData[i+2]
-    });
-    normals.push(normal.unit());
-    depthData.push(normalsData[i+4] / 4);
-  }
-  return [normals, depthData];
-}
 
 // applies lighting to a pixel and returns the new color
-LightingEngine.lightPixel = function(baseColor, lightDirection, normal, lightColor, falloff, choke, cel){
+PointLight.lightPixel = function(args){
+  var baseColor = args.baseColor;
+  var lightDirection = args.lightDirection;
+  var normal = args.normal;
+  var lightColor = args.lightColor;
+  var falloff = args.falloff;
+  var choke = args.choke || 1
+  var cel = args. cel
+
   var fade = lightDirection.length() / falloff;
-  if (fade != 0){
-    var dot = Vec3D.dot(lightDirection.unit(), normal);
-    var intensity = Math.pow(dot, (choke || 1));
-    if (cel){
-      intensity = threshold(intensity, .6, 0, .85);
-    }
-    intensity = clamp(intensity/fade, 0, .85);
-    var color = Vec3D.interpolate(baseColor, lightColor, intensity);
-    return color;
+  if (fade == 0){
+    return baseColor;
   }
-  return baseColor;
+  var dot = Vec3D.dot(lightDirection.unit(), normal);
+  var intensity = Math.pow(dot, (choke || 1));
+  if (cel){
+    intensity = threshold(intensity, .6, 0, .85);
+  }
+  intensity = clamp(intensity/fade, 0, .85);
+  var color = Vec3D.interpolate(baseColor, lightColor, intensity);
+  return color;
 }
 
-LightingEngine.lightCanvas = function(canvas, ctx, normals, depth, lightPosition, lightColor){
+PointLight.lightCanvas = function(args){
+  var canvas = args.canvas;
+  var ctx = args.ctx;
+  var normals = args. normals;
+  var depth = args.depth;
+  var lightPosition = args.lightPosition;
+  var lightColor = args.lightColor;
 
   var texture = ctx.getImageData(0, 0, canvas.width, canvas.height);
   var textureData = texture.data;
@@ -98,7 +101,15 @@ LightingEngine.lightCanvas = function(canvas, ctx, normals, depth, lightPosition
 
       texturePixel.assign(textureData[ti],textureData[ti+1], textureData[ti+2]);
 
-      var litPixel = this.lightPixel(texturePixel, lightDirection, normal, lightColor, 400, 5, true);
+      var litPixel = this.lightPixel({
+        baseColor: texturePixel,
+        cel: true,
+        choke: 5,
+        falloff: 300,
+        lightColor: lightColor,
+        lightDirection: lightDirection,
+        normal: normal,
+      });
 
       textureData[ti] = litPixel.x;
       textureData[ti+1] = litPixel.y;
