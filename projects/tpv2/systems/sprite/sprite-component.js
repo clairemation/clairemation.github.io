@@ -23,10 +23,19 @@ function AnimatedSpriteComponent(subject, engine, args){ // < SpriteComponent
   this.frameSequence = args.frameSequence;
   this.currentAnimationFrameNumber = args.currentAnimationFrameNumber || 0;
   this.lastTime = undefined;
+  this.plugins = args.plugins || [];
 }
+
+AnimatedSpriteComponent.prototype = Object.create(SpriteComponent.prototype);
+AnimatedSpriteComponent.constructor = AnimatedSpriteComponent;
 
 AnimatedSpriteComponent.prototype.update = function(timestamp){
   this.advanceFrame(timestamp);
+  if (this.plugins){
+    for (var i = 0; i < this.plugins.length; i++){
+      this.plugins[i].update();
+    }
+  }
 }
 
 AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
@@ -42,7 +51,7 @@ AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
   if (this.currentAnimationFrameNumber >= this.frameSequence[this.subject.appearance][this.subject.facing].frames.length) {
     this.currentAnimationFrameNumber = this.frameSequence[this.subject.appearance][this.subject.facing].frames[0];
   }
-  this.sprite.width = this.sprite.width; // clear canvas, faster than vvv
+  this.sprite.width = this.sprite.width; // clear canvas, currently faster in most browsers than vvv
   // this.drawingContext.clearRect(0,0,this.subject.width, this.subject.height);
   this.drawingContext.drawImage(
     this.frameSequence[this.subject.appearance][this.subject.facing].spritesheet, //source image
@@ -55,20 +64,15 @@ AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
   );
 }
 
-AnimatedSpriteComponent.prototype.hurtEffect = function(){
+SpriteComponent.prototype.hurtEffect = function(){
   // color whole sprite solid white
-  this.drawingContext.globalCompositeOperation = "source-in";
-  this.drawingContext.fillStyle = "white";
-  this.drawingContext.fillRect(0,0,this.subject.width,this.subject.height);
-  this.drawingContext.globalCompositeOperation = "source-over";
+  this.colorOver('white');
 }
 
-AnimatedSpriteComponent.prototype.paintIn =
-function(image){
-  this.drawingContext.globalCompositeOperation = 'source-atop';
-  this.drawingContext.drawImage(
-    image,
-    0, 0, image.width, image.height,
-    0, 0, this.subject.width, this.subject.height);
+SpriteComponent.prototype.colorOver =
+function(colorString){
+  this.drawingContext.globalCompositeOperation = "source-in";
+  this.drawingContext.fillStyle = colorString;
+  this.drawingContext.fillRect(0,0,this.subject.width,this.subject.height);
   this.drawingContext.globalCompositeOperation = "source-over";
 }

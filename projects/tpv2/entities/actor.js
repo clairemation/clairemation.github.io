@@ -1,22 +1,27 @@
 function Actor(className){ // < PhysicalEntity
-  PhysicalEntity.call(this, (className || 'Actor'));
+  PhysicalEntity.call(this, (className || 'Actor'), {
+    width: 400,
+    height: 400,
+    depth: 50
+  });
 
   //* STATE ==================
   this.name = "hero";
-  this.appearance = "standing";
   this.impulse = {x: 0, y:0};
-  this.state = new NormalState(this);
-  this.width = 400;
-  this.height = 400;
-  this.depth = 50;
-  this.x = 0;
-  this.y = 0;
-  this.z = 0;
-  this.onGround = true;
-  this.acceleration = [0,0];
   this.facing = "E";
+  this.appearance = "standing";
+
+  this.onGround = true;
+
+  this.speed = 0;
+  this.velocity = new Vec3D({
+    x: 0, y: 0, z: 0
+  });
+  this.acceleration = [0,0];
   this.pushability = 1.7;
   this.maxSpeed = 12;
+
+  this.state = new NormalState(this);
 
   this.spriteHandler = new AnimatedSpriteComponent(this, spriteEngine, {
     frameSequence: {
@@ -125,6 +130,8 @@ function Actor(className){ // < PhysicalEntity
     }
   });
 
+
+
   this.impulseHandler = new ImpulseComponent(this);
 
   this.inertiaHandler = new InertiaComponent(this);
@@ -165,12 +172,6 @@ function Actor(className){ // < PhysicalEntity
     "E": [280,390],
     "NE": [280,345]
   };
-
-  this.lightingHandler = new LightingComponent({
-    owner: this,
-    engine: lightingEngine,
-    lightingMap: images.heronormalmap
-  });
 
 };
 

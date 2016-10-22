@@ -1,11 +1,20 @@
-function PhysicalEntity(className){
+function PhysicalEntity(className, args){
   this.className = (className || 'PhysicalEntity');
-  this.width = 0;
-  this.height = 0;
-  this.depth = 0;
-  this.x = 0;
-  this.y = 0;
-  this.z = 0;
+  this.width = args==undefined ? 0 : args.width || 0;
+  this.height = args==undefined ? 0 : args. height || 0;
+  this.centerPoint = new Vec2D({
+    x: this.width / 2,
+    y: this.height / 2
+  });
+  this.depth = args==undefined ? 0 : args.depth || 0;
+  this.x = args==undefined ? 0 : args.x || 0;
+  this.y = args==undefined ? 0 : args.y || 0;
+  this.z = args==undefined ? 0 : args.z || 0;
+  this.position = new Vec3D({
+    x: this.x,
+    y: this.z,
+    z: this.z
+  });
 };
 
 PhysicalEntity.prototype.changeAppearance = function(target){

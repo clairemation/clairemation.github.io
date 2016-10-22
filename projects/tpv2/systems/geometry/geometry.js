@@ -1,6 +1,16 @@
 function Geometry(){}
 
 Geometry.getGeometryFromImg = function(img){
+
+  function getImageData(img){
+    var tempCanvas = document.createElement('canvas');
+    tempCanvas.width = img.width;
+    tempCanvas.height = img.height;
+    var tempCtx = tempCanvas.getContext('2d');
+    tempCtx.drawImage(img, 0, 0, img.width, img.height);
+    return tempCtx.getImageData(0, 0, img.width, img.height).data;
+  }
+
   var normalsData = getImageData(img);
   var normals = [];
   var depthData = [];

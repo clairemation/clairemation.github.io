@@ -69,10 +69,10 @@
     <script src = "systems/viewport/viewport.js"></script>
     <script src = "systems/viewport/viewport.js"></script>
 
-    <script src = "classes/physical-entity.js"></script>
-    <script src = "classes/actor.js"></script>
-    <script src = "classes/player.js"></script>
-    <script src = "classes/fireball.js"></script>
+    <script src = "entities/physical-entity.js"></script>
+    <script src = "entities/actor.js"></script>
+    <script src = "entities/player.js"></script>
+    <script src = "entities/fireball.js"></script>
     <script src = "weapons.js"></script>
     <script src = "states.js"></script>
 
@@ -121,14 +121,14 @@
 
       var leftLight = new PointLight({
         position: new Vec3D({
-          x: 500,
-          y: 500,
-          z: 300
+          x: 100,
+          y: 100,
+          z: 200
         }),
         color: new Vec3D({
           x: 255,
           y: 255,
-          z: 255
+          z: 200
         }),
         falloff: 400
       });
@@ -145,25 +145,30 @@
       scene.follow(hero);
 
 
-      var entities = [hero,twin,fireball, fireball2, scene,spriteEngine];
+      var entities = [hero,scene,spriteEngine];
 
       hero.x = 360;
       hero.y = 600;
 
-      twin.name = "twin";
-      twin.x = 1200;
-      twin.y = 530;
+      // twin.name = "twin";
+      // twin.x = 1200;
+      // twin.y = 530;
 
-      fireball2.x = -200;
-      fireball2.y = 0;
-      fireball2.originalX = 2200;
-      fireball2.originalY = 0
-      fireball2.acceleration = [-30,2];
-      fireball2.originalAcceleration = [-30,2];
-      fireball2.z = 1350;
+      // fireball2.x = -200;
+      // fireball2.y = 0;
+      // fireball2.originalX = 2200;
+      // fireball2.originalY = 0
+      // fireball2.acceleration = [-30,2];
+      // fireball2.originalAcceleration = [-30,2];
+      // fireball2.z = 1350;
 
       //* BEGIN GAME LOOP ====================
       function beginGameLoop(){
+        hero.spriteHandler.plugins.push(new LightingComponent({
+          canvas: hero.spriteHandler.sprite,
+          engine: lightingEngine,
+          lightingMap: images.heronormalmap
+        }));
         var gameLoop = window.requestAnimationFrame(tick);
       }
 
