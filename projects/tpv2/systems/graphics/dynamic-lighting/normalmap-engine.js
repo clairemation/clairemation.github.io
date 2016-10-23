@@ -51,26 +51,25 @@ LightingComponent.prototype.update = function(){
 
 // applies lighting to a pixel and returns the new color
 PointLight.lightPixel = function(args){
-  // var baseColor = args.baseColor;
-  // var lightDirection = args.lightDirection;
-  // var normal = args.normal;
-  // var lightColor = args.lightColor;
-  // var falloff = args.falloff;
-  // var choke = args.choke || 1
-  // var cel = args. cel
+  var baseColor = args.baseColor;
+  var lightDirection = args.lightDirection;
+  var normal = args.normal;
+  var lightColor = args.lightColor;
+  var falloff = args.falloff;
+  var choke = args.choke || 1
+  var cel = args.cel
 
-  // var fade = lightDirection.length() / falloff;
-  // if (fade == 0){
-  //   return baseColor;
-  // }
-  var dot = Vec3D.dot(args.lightDirection.unit(), args.normal);
-  // var intensity = dot;
-  // var intensity = Math.pow(dot, (choke || 1));
-  // if (cel){
-  //   intensity = threshold(intensity, .6, 0, .85);
-  // }
-  // intensity = clamp(intensity/fade, 0, .85);
-  var color = Vec3D.interpolate(args.baseColor, args.lightColor, dot);
+  var fade = lightDirection.length() / falloff;
+  if (fade == 0){
+    return baseColor;
+  }
+  var dot = Vec3D.dot(lightDirection.unit(), args.normal);
+  var intensity = Math.pow(dot, choke);
+  if (cel){
+    intensity = threshold(intensity, .6, 0, .85);
+  }
+  intensity = clamp(intensity/fade, 0, .85);
+  var color = Vec3D.interpolate(baseColor, lightColor, intensity);
   return color;
 }
 
