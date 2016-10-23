@@ -31,11 +31,7 @@ AnimatedSpriteComponent.constructor = AnimatedSpriteComponent;
 
 AnimatedSpriteComponent.prototype.update = function(timestamp){
   this.advanceFrame(timestamp);
-  if (this.plugins){
-    for (var i = 0; i < this.plugins.length; i++){
-      this.plugins[i].update();
-    }
-  }
+
 }
 
 AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
@@ -62,6 +58,12 @@ AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
     0,0,
     this.subject.width, this.subject.height
   );
+
+  if (this.plugins){
+    for (var i = 0; i < this.plugins.length; i++){
+      this.plugins[i].update();
+    }
+  }
 }
 
 SpriteComponent.prototype.hurtEffect = function(){
