@@ -64,6 +64,12 @@ Vec3D.prototype.subtractVector = function(v){
   this.z -= v.z;
 }
 
+Vec3D.prototype.assignDifference = function(a, b){
+  this.x = a.x - b.x;
+  this.y = a.y - b.y;
+  this.z = a.z - b.z;
+}
+
 Vec3D.prototype.multiply = function(s) {
   return new Vec3D({x: this.x * s, y: this.y * s, z: this.z * s});
 }

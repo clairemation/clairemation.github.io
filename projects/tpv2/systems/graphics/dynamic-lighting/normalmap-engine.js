@@ -18,12 +18,19 @@ function PointLight(args){
 
 function LightingComponent(args){
   this.canvas = args.canvas;
+  this.canvasWidth = this.canvas.width;
+  this.canvasHeight = this.canvas.height;
   this.ctx = this.canvas.getContext('2d');
   this.engine = args.engine;
   this.engine.registerComponent(this);
   var geometry = Geometry.getGeometryFromImg(args.lightingMap);
   this.normals = geometry[0];
   this.depth = geometry[1];
+  this.lightingBufferCanvas = document.createElement('canvas');
+  this.lightingBufferCanvas.width = this.canvasWidth;
+  this.lightingBufferCanvas.height = this.canvasHeight;
+  this.lightingBuffer = this.lightingBufferCanvas.getContext('2d');
+  this.lightingTexture = this.lightingBuffer.createImageData(this.canvasWidth, this.canvasHeight);
 }
 
 LightingComponent.prototype.update = function(){
@@ -40,6 +47,8 @@ LightingComponent.prototype.update = function(){
 
     PointLight.lightCanvas({
       canvas: this.canvas,
+      canvasHeight: this.canvasHeight,
+      canvasWidth: this.canvasWidth,
       ctx: this.ctx,
       normals: this.normals,
       depth: this.depth,
@@ -70,44 +79,46 @@ PointLight.lightPixel = function(args){
   }
   intensity = clamp(intensity/fade, 0, .85);
   var color = Vec3D.interpolate(baseColor, lightColor, intensity);
-  return color;
+
+  args.targetPixel.assign(color.x, color.y, color.z);
 }
 
 PointLight.lightCanvas = function(args){
 
-  var texture = args.ctx.getImageData(0, 0, args.canvas.width, args.canvas.height);
+  var texture = args.ctx.getImageData(0, 0, args.canvasHeight, args.canvasWidth);
   var textureData = texture.data;
 
   var texturePixel = new Vec3D()
   var pixelPosition = new Vec3D();
+  var lightDirection = new Vec3D();
+  var targetPixel = new Vec3D();
 
   var ni = 0;
   var ti = 0;
 
-  for (var x = 0; x < args.canvas.height; x++){
-    for (var y = 0; y < args.canvas.width; y++){
+  for (var x = 0; x < args.canvasHeight; x++){
+    for (var y = 0; y < args.canvasWidth; y++){
 
       pixelPosition.assign(x, y, args.depth[ni]);
 
-      var lightDirection = Vec3D.subtract(args.lightPosition, pixelPosition);
-
-      var normal = args.normals[ni];
+      lightDirection.assignDifference(args.lightPosition, pixelPosition);
 
       texturePixel.assign(textureData[ti],textureData[ti+1], textureData[ti+2]);
 
-      var litPixel = this.lightPixel({
+      this.lightPixel({
         baseColor: texturePixel,
         cel: true,
         choke: 5,
         falloff: 300,
         lightColor: args.lightColor,
         lightDirection: lightDirection,
-        normal: normal,
+        normal: args.normals[ni],
+        targetPixel: targetPixel
       });
 
-      textureData[ti] = litPixel.x;
-      textureData[ti+1] = litPixel.y;
-      textureData[ti+2] = litPixel.z;
+      textureData[ti] = targetPixel.x;
+      textureData[ti+1] = targetPixel.y;
+      textureData[ti+2] = targetPixel.z;
 
       ni ++;
       ti += 4;
