@@ -42,26 +42,29 @@ AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
   var frameAdvance = Math.floor(delta / FRAMERATE);
   if (frameAdvance >= 1){
     this.currentAnimationFrameNumber = this.currentAnimationFrameNumber + frameAdvance;
+    var advance = true;
     this.lastTime = timestamp;
   }
   if (this.currentAnimationFrameNumber >= this.frameSequence[this.subject.appearance][this.subject.facing].frames.length) {
     this.currentAnimationFrameNumber = this.frameSequence[this.subject.appearance][this.subject.facing].frames[0];
   }
-  this.sprite.width = this.sprite.width; // clear canvas, currently faster in most browsers than vvv
-  // this.drawingContext.clearRect(0,0,this.subject.width, this.subject.height);
-  this.drawingContext.drawImage(
-    this.frameSequence[this.subject.appearance][this.subject.facing].spritesheet, //source image
-    (this.currentAnimationFrameNumber * this.subject.width), //origin x
-    0, //origin y
-    this.subject.width,
-    this.subject.height,
-    0,0,
-    this.subject.width, this.subject.height
-  );
+  if (advance){
+    this.sprite.width = this.sprite.width; // clear canvas, currently faster in most browsers than vvv
+    // this.drawingContext.clearRect(0,0,this.subject.width, this.subject.height);
+    this.drawingContext.drawImage(
+      this.frameSequence[this.subject.appearance][this.subject.facing].spritesheet, //source image
+      (this.currentAnimationFrameNumber * this.subject.width), //origin x
+      0, //origin y
+      this.subject.width,
+      this.subject.height,
+      0,0,
+      this.subject.width, this.subject.height
+    );
 
-  if (this.plugins){
-    for (var i = 0; i < this.plugins.length; i++){
-      this.plugins[i].update();
+    if (this.plugins){
+      for (var i = 0; i < this.plugins.length; i++){
+        this.plugins[i].update();
+      }
     }
   }
 }
