@@ -121,16 +121,16 @@
 
       var leftLight = new PointLight({
         position: new Vec3D({
-          x: 500,
-          y: 400,
-          z: 300
+          x: 350,
+          y: 800,
+          z: 900
         }),
         color: new Vec3D({
           x: 255,
           y: 255,
           z: 200
         }),
-        falloff: 400
+        falloff: 600
       });
 
       var lightingEngine = new LightingEngine({
@@ -147,8 +147,8 @@
 
       var entities = [hero,scene,spriteEngine];
 
-      hero.x = 360;
-      hero.y = 600;
+      hero.x = 500;
+      hero.y = 500;
 
       // twin.name = "twin";
       // twin.x = 1200;
@@ -167,7 +167,8 @@
         hero.spriteHandler.plugins.push(new LightingComponent({
           canvas: hero.spriteHandler.sprite,
           engine: lightingEngine,
-          lightingMap: images.heronormalmap
+          lightingMap: images.heronormalmap,
+          owner: hero
         }));
         var gameLoop = window.requestAnimationFrame(tick);
       }

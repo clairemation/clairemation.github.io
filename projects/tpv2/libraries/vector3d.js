@@ -74,6 +74,12 @@ Vec3D.prototype.multiply = function(s) {
   return new Vec3D({x: this.x * s, y: this.y * s, z: this.z * s});
 }
 
+Vec3D.prototype.multiplyInPlace = function(s){
+  this.x = (this.x * s);
+  this.y = (this.y * s);
+  this.z = (this.z * s);
+}
+
 Vec3D.prototype.divide = function(s) {
   return new Vec3D({x: (this.x / s), y: (this.y / s), z: (this.z / s)});
 }

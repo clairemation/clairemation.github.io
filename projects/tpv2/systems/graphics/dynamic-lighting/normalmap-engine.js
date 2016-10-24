@@ -17,6 +17,7 @@ function PointLight(args){
 }
 
 function LightingComponent(args){
+  this.owner = args.owner;
   this.canvas = args.canvas;
   this.canvasWidth = this.canvas.width;
   this.canvasHeight = this.canvas.height;
@@ -35,15 +36,13 @@ function LightingComponent(args){
 
 LightingComponent.prototype.update = function(){
   // for (var i = 0; i < this.engine.lights.length; i++){
-    // var offset = new Vec3D({
-    //   x: this.owner.x,
-    //   y: this.owner.y,
-    //   z: this.owner.z
-    // });
+    var ownerPosition = new Vec3D();
+    ownerPosition.assign(this.owner.x, this.owner.y, this.owner.z);
+    var lightInLocalSpaceCoords = new Vec3D();
+    lightInLocalSpaceCoords.assignDifference(this.engine.lights[0].position, ownerPosition);
+    // lightInLocalSpaceCoords.divideInPlace(SCALE);
 
-    // var offsetLight = Vec3D.subtract(this.engine.lights[i].position, offset);
-
-    // if (offsetLight.length() >= this.engine.lights[i].falloff) return;
+    // if (offset.length() >= this.engine.lights[0].falloff) return;
 
     PointLight.lightCanvas({
       canvas: this.canvas,
@@ -52,7 +51,7 @@ LightingComponent.prototype.update = function(){
       ctx: this.ctx,
       normals: this.normals,
       depth: this.depth,
-      lightPosition: this.engine.lights[0].position,
+      lightPosition: lightInLocalSpaceCoords,
       lightColor: this.engine.lights[0].color
     });
   // }
@@ -73,7 +72,7 @@ PointLight.lightPixel = function(args){
     return baseColor;
   }
   var dot = Vec3D.dot(lightDirection.unit(), args.normal);
-  var intensity = Math.pow(dot, choke);
+  var intensity = Math.pow(dot, choke) + .5;
   if (cel){
     intensity = threshold(intensity, .6, 0, .85);
   }
@@ -109,7 +108,7 @@ PointLight.lightCanvas = function(args){
         baseColor: texturePixel,
         cel: true,
         choke: 5,
-        falloff: 300,
+        falloff: 600,
         lightColor: args.lightColor,
         lightDirection: lightDirection,
         normal: args.normals[ni],
