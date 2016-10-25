@@ -23,7 +23,10 @@ var imagesToLoad = [
   ["heroSlashRight", "assets/hero_slash_right.png", 400, 400],
   ["bgmask", "assets/lavabg7.svg", 2048, 1700],
   ["walkmask", walkmaskSrc, 2048, 1700], // walkmaskSrc is in ./globals.js
-  ["heronormalmap", "assets/smoothedmap.jpg", 400, 400]
+  ["heroStdLMap", "assets/hero_standing_left_map.png", 400, 400]
+  ["heroStdRMap", "assets/hero_standing_left_map.png", 400, 400]
+  ["heroStdLMap", "assets/hero_standing_left_map.png", 400, 400]
+
 ];
 
 // Create the Image objects from the specs in imagesToLoad
