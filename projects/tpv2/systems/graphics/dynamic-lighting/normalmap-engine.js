@@ -217,19 +217,17 @@ PointLight.lightPixel = function(args){
   var choke = args.choke || 1
   var cel = args.cel
 
-  var fade = lightDirection.length() / falloff;
+  var fade = ArrayVec3D.length(lightDirection) / falloff;
   if (fade == 0){
     return baseColor;
   }
-  var dot = Vec3D.dot(lightDirection.unit(), args.normal);
+  var dot = ArrayVec3D.dot(ArrayVec3D.unitVector(lightDirection), args.normal);
   var intensity = Math.pow(dot, choke) + .5;
   if (cel){
     intensity = threshold(intensity, .6, 0, .85);
   }
   intensity = clamp(intensity/fade, 0, .85);
-  var color = Vec3D.interpolate(baseColor, lightColor, intensity);
-
-  args.targetPixel.assign(color.x, color.y, color.z);
+  return ArrayVec3D.interpolate(baseColor, lightColor, intensity);
 }
 
 PointLight.lightCanvas = function(args){
@@ -237,10 +235,10 @@ PointLight.lightCanvas = function(args){
   var texture = args.ctx.getImageData(0, 0, args.canvasHeight, args.canvasWidth);
   var textureData = texture.data;
 
-  var texturePixel = new Vec3D()
-  var pixelPosition = new Vec3D();
-  var lightDirection = new Vec3D();
-  var targetPixel = new Vec3D();
+  var texturePixel = [0,0,0];
+  var pixelPosition = [0,0,0];
+  var lightDirection = [0,0,0];
+  var targetPixel = [0,0,0];
 
   var ni = 0;
   var ti = 0;
@@ -248,13 +246,17 @@ PointLight.lightCanvas = function(args){
   for (var x = 0; x < args.canvasHeight; x++){
     for (var y = 0; y < args.canvasWidth; y++){
 
-      pixelPosition.assign(x, y, args.depth[ni]);
+      pixelPosition[0] = x;
+      pixelPosition[1] = y;
+      pixelPosition[2] = args.depth[ni];
 
-      lightDirection.assignDifference(args.lightPosition, pixelPosition);
+      lightDirection = ArrayVec3D.subtractVectors(args.lightPosition, pixelPosition);
 
-      texturePixel.assign(textureData[ti],textureData[ti+1], textureData[ti+2]);
+      texturePixel[0] = textureData[ti],
+      texturePixel[1] = textureData[ti+1],
+      texturePixel[2] = textureData[ti+2];
 
-      this.lightPixel({
+      targetPixel = this.lightPixel({
         baseColor: texturePixel,
         cel: true,
         choke: 5,
@@ -262,12 +264,11 @@ PointLight.lightCanvas = function(args){
         lightColor: args.lightColor,
         lightDirection: lightDirection,
         normal: args.normals[ni],
-        targetPixel: targetPixel
       });
 
-      textureData[ti] = targetPixel.x;
-      textureData[ti+1] = targetPixel.y;
-      textureData[ti+2] = targetPixel.z;
+      textureData[ti] = targetPixel[0];
+      textureData[ti+1] = targetPixel[1];
+      textureData[ti+2] = targetPixel[2];
 
       ni ++;
       ti += 4;

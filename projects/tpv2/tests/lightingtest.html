@@ -12,17 +12,13 @@
     <div style="position: absolute; left:0; top: 0;"><canvas width=400 height=400 id="base" style="position: absolute; left:0; top: 0; z-index: -1"></div>
 
     <script src = "../helpers/limit.js"></script>
-    <script src = "../libraries/vector3d.js"></script>
+    <script src = "../libraries/arrayVec3D.js"></script>
     <script src = "../systems/geometry/geometry.js"></script>
     <script src = "../systems/graphics/dynamic-lighting/normalmap-engine.js"></script>
 
     <script>
 
-      var lightColor = new Vec3D({
-          x: 255,
-          y: 240,
-          z: 200
-        });
+      var lightColor = [255,240,200];
 
       var controller = document.getElementById('controller');
 
@@ -47,13 +43,13 @@
 
         window.addEventListener('mousemove', function(e){
           ctx.drawImage(baseImage,0,0);
-          var lightPosition = new Vec3D({
-            x: e.clientX,
-            y: e.clientY,
-            z: 300
-          });
+          var lightPosition = [e.clientX, e.clientY, 300];
           PointLight.lightCanvas({
             canvas: canvas,
+            canvasHeight: canvas.height,
+            canvasWidth: canvas.width,
+            cel: true,
+            choke: 10,
             ctx: ctx,
             normals: normals,
             depth: depth,
@@ -63,7 +59,7 @@
         });
       };
 
-      normalmapImg.src = '../assets/normaldepthmap.png';
+      normalmapImg.src = '../assets/hero_standing_left_map.png';
     </script>
 
 

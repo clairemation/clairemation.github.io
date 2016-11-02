@@ -121,16 +121,8 @@
       var collisionEngine = new CollisionEngine();
 
       var leftLight = new PointLight({
-        position: new Vec3D({
-          x: 350,
-          y: 800,
-          z: 900
-        }),
-        color: new Vec3D({
-          x: 255,
-          y: 255,
-          z: 200
-        }),
+        position: [350, 800, 900],
+        color: [255, 255, 200],
         falloff: 600
       });
 
@@ -165,12 +157,12 @@
 
       //* BEGIN GAME LOOP ====================
       function beginGameLoop(){
-        // hero.spriteHandler.plugins.push(new LightingComponent({
-        //   canvas: hero.spriteHandler.sprite,
-        //   engine: lightingEngine,
-        //   lightingMap: images.heronormalmap,
-        //   owner: hero
-        // }));
+        hero.spriteHandler.plugins.push(new LightingComponent({
+          canvas: hero.spriteHandler.sprite,
+          engine: lightingEngine,
+          lightingMap: images.heronormalmap,
+          owner: hero
+        }));
         var gameLoop = window.requestAnimationFrame(tick);
       }
 
