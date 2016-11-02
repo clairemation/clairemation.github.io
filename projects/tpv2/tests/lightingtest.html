@@ -37,9 +37,7 @@
       var normalmapImg = new Image(400,400);
 
       normalmapImg.onload = function(){
-        var geometry = Geometry.getGeometryFromImg(normalmapImg);
-        var normals = geometry[0];
-        var depth = geometry[1];
+        var normals = Geometry.getGeometryFromImg(normalmapImg);
 
         window.addEventListener('mousemove', function(e){
           ctx.drawImage(baseImage,0,0);
@@ -52,9 +50,9 @@
             choke: 10,
             ctx: ctx,
             normals: normals,
-            depth: depth,
             lightPosition: lightPosition,
-            lightColor: lightColor
+            lightColor: lightColor,
+            offset: [0,0,0]
           });
         });
       };

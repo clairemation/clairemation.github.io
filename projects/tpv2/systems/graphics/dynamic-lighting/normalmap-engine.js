@@ -21,103 +21,103 @@ function LightingComponent(args){
   this.mapFrames = {
     standing: {
       N: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroStdLMap
       },
       NW: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroStdLMap
       },
       W: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroStdLMap
       },
       SW: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroStdLMap
       },
       S: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroStdRMap
       },
       SE: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroStdRMap
       },
       E: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroStdRMap
       },
       NE: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroStdRMap
       },
     },
     running: {
       N: {
-        frames: [0,1,2,3],
+        frameNumbers: [0,1,2,3],
         spritesheet: images.heroRunLMap
       },
       NW: {
-        frames: [0,1,2,3],
+        frameNumbers: [0,1,2,3],
         spritesheet: images.heroRunLMap
       },
       W: {
-        frames: [0,1,2,3],
+        frameNumbers: [0,1,2,3],
         spritesheet: images.heroRunLMap
       },
       SW: {
-        frames: [0,1,2,3],
+        frameNumbers: [0,1,2,3],
         spritesheet: images.heroRunLMap
       },
       S: {
-        frames: [0,1,2,3],
+        frameNumbers: [0,1,2,3],
         spritesheet: images.heroRunRMap
       },
       SE: {
-        frames: [0,1,2,3],
+        frameNumbers: [0,1,2,3],
         spritesheet: images.heroRunRMap
       },
       E: {
-        frames: [0,1,2,3],
+        frameNumbers: [0,1,2,3],
         spritesheet: images.heroRunRMap
       },
       NE: {
-        frames: [0,1,2,3],
+        frameNumbers: [0,1,2,3],
         spritesheet: images.heroRunRMap
       }
     },
     slashing: {
       N: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroSlashLeft
       },
       NW: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroSlashLeft
       },
       W: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroSlashLeft
       },
       SW: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroSlashLeft
       },
       S: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroSlashRight
       },
       SE: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroSlashRight
       },
       E: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroSlashRight
       },
       NE: {
-        frames: [0],
+        frameNumbers: [0],
         spritesheet: images.heroSlashRight
       }
     }
@@ -130,25 +130,16 @@ function LightingComponent(args){
   for (var sequence in this.mapFrames){
     for (var facing in this.mapFrames[sequence]){
       var sprite = this.mapFrames[sequence][facing];
+      sprite.normals = [];
       var frameNum = 0;
-        for (var i = 0; i < sprite.frames.length; i++){
-          (function(){
-            frameNumber = sprite.frames[i];
-            var startX = frameNumber * this.owner.width;
-            var geometry = Geometry.getGeometryFromImg(sprite.spritesheet, startX, 0, this.owner.width, this.owner.height);
-            // var normals = geometry[0];
-            // var depth = geometry[1];
-            sprite.frames[i] = {
-              normals: (function(){
-                return geometry[0]
-              })(),
-              depth: (function(){
-                return geometry[1]
-              })()
-            };
-            // console.log(sprite.frames);
-          }).call(this);
-        }
+      for (var i = 0; i < sprite.frameNumbers.length; i++){
+        // (function(){
+          frameNumber = sprite.frameNumbers[i];
+          var startX = frameNumber * this.owner.width;
+          sprite.normals[i] = Geometry.getGeometryFromImg(sprite.spritesheet, startX, 0, this.owner.width, this.owner.height);
+          // sprite.frames[i] = geometry[0];
+        // }).call(this);
+      }
     }
   }
 
@@ -184,11 +175,7 @@ LightingComponent.prototype.update = function(){
 
   var frameNum = this.owner.spriteHandler.currentAnimationFrameNumber;
 
-  var normals = this.mapFrames[this.owner.appearance][this.owner.facing].frames[frameNum].normals;
-
-  console.log(this.mapFrames[this.owner.appearance][this.owner.facing].frames);
-
-  var depth = this.mapFrames[this.owner.appearance][this.owner.facing].frames[frameNum].depth;
+  var normals = this.mapFrames[this.owner.appearance][this.owner.facing].normals[frameNum];
 
   // for (var i = 0; i < this.engine.lights.length; i++){
     var ownerPosition = [this.owner.x, this.owner.y, this.owner.z];
@@ -200,9 +187,9 @@ LightingComponent.prototype.update = function(){
       canvasWidth: this.canvasWidth,
       ctx: this.ctx,
       normals: normals,
-      depth: depth,
       lightPosition: lightInLocalSpaceCoords,
-      lightColor: this.engine.lights[0].color
+      lightColor: this.engine.lights[0].color,
+      offset: [this.owner.x, this.owner.y, this.owner.z]
     });
   // }
 }
@@ -222,9 +209,9 @@ PointLight.lightPixel = function(args){
     return baseColor;
   }
   var dot = ArrayVec3D.dot(ArrayVec3D.unitVector(lightDirection), args.normal);
-  var intensity = Math.pow(dot, choke) + .5;
+  var intensity = Math.pow(dot, choke);
   if (cel){
-    intensity = threshold(intensity, .6, 0, .85);
+    intensity = threshold(intensity, .8, 0, .85);
   }
   intensity = clamp(intensity/fade, 0, .85);
   return ArrayVec3D.interpolate(baseColor, lightColor, intensity);
@@ -240,15 +227,15 @@ PointLight.lightCanvas = function(args){
   var lightDirection = [0,0,0];
   var targetPixel = [0,0,0];
 
-  var ni = 0;
+  // var ni = 0;
   var ti = 0;
 
   for (var x = 0; x < args.canvasHeight; x++){
     for (var y = 0; y < args.canvasWidth; y++){
 
-      pixelPosition[0] = x;
-      pixelPosition[1] = y;
-      pixelPosition[2] = args.depth[ni];
+      pixelPosition[0] = args.offset[0] + x;
+      pixelPosition[1] = args.offset[1] + y;
+      pixelPosition[2] = args.offset[2] + args.normals[ti+3];
 
       lightDirection = ArrayVec3D.subtractVectors(args.lightPosition, pixelPosition);
 
@@ -259,18 +246,18 @@ PointLight.lightCanvas = function(args){
       targetPixel = this.lightPixel({
         baseColor: texturePixel,
         cel: true,
-        choke: 5,
-        falloff: 600,
+        choke: 1,
+        falloff: 100,
         lightColor: args.lightColor,
         lightDirection: lightDirection,
-        normal: args.normals[ni],
+        normal: [args.normals[0], args.normals[1], args.normals[2]]
       });
 
       textureData[ti] = targetPixel[0];
       textureData[ti+1] = targetPixel[1];
       textureData[ti+2] = targetPixel[2];
 
-      ni ++;
+      // ni ++;
       ti += 4;
     }
   }

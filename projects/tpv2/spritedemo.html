@@ -121,7 +121,7 @@
       var collisionEngine = new CollisionEngine();
 
       var leftLight = new PointLight({
-        position: [350, 800, 900],
+        position: [350, 800, 300],
         color: [255, 255, 200],
         falloff: 600
       });
@@ -160,7 +160,7 @@
         hero.spriteHandler.plugins.push(new LightingComponent({
           canvas: hero.spriteHandler.sprite,
           engine: lightingEngine,
-          lightingMap: images.heronormalmap,
+          // lightingMap: images.heronormalmap,
           owner: hero
         }));
         var gameLoop = window.requestAnimationFrame(tick);
