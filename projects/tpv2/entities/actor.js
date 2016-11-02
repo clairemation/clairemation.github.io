@@ -44,53 +44,53 @@ function Actor(className){ // < PhysicalEntity
         },
         "S": {
           frames: [0],
-          spritesheet: images.heroStandingLeft
+          spritesheet: images.heroStandingRight
         },
         "SE": {
           frames: [0],
-          spritesheet: images.heroStandingLeft
+          spritesheet: images.heroStandingRight
         },
         "E": {
           frames: [0],
-          spritesheet: images.heroStandingLeft
+          spritesheet: images.heroStandingRight
         },
         "NE": {
           frames: [0],
-          spritesheet: images.heroStandingLeft
+          spritesheet: images.heroStandingRight
         },
       },
       "running": {
         "N": {
-          frames: [0],
-          spritesheet: images.heroStandingLeft
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunLeft
         },
         "NW": {
-          frames: [0],
-          spritesheet: images.heroStandingLeft
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunLeft
         },
         "W": {
-          frames: [0],
-          spritesheet: images.heroStandingLeft
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunLeft
         },
         "SW": {
-          frames: [0],
-          spritesheet: images.heroStandingLeft
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunLeft
         },
         "S": {
-          frames: [0],
-          spritesheet: images.heroStandingLeft
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunRight
         },
         "SE": {
-          frames: [0],
-          spritesheet: images.heroStandingLeft
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunRight
         },
         "E": {
-          frames: [0],
-          spritesheet: images.heroStandingLeft
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunRight
         },
         "NE": {
-          frames: [0],
-          spritesheet: images.heroStandingLeft
+          frames: [0,1,2,3],
+          spritesheet: images.heroRunRight
         }
       },
       "slashing": {

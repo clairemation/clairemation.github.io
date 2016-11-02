@@ -52,6 +52,7 @@
     <script src = "../helpers/limit.js"></script>
     <script src = "libraries/vector.js"></script>
     <script src = "libraries/vector3d.js"></script>
+    <script src = "libraries/arrayVec3D.js"></script>
     <script src = "../systems/geometry/geometry.js"></script>
     <script src = "../systems/graphics/dynamic-lighting/normalmap-engine.js"></script>
 
@@ -164,12 +165,12 @@
 
       //* BEGIN GAME LOOP ====================
       function beginGameLoop(){
-        hero.spriteHandler.plugins.push(new LightingComponent({
-          canvas: hero.spriteHandler.sprite,
-          engine: lightingEngine,
-          lightingMap: images.heronormalmap,
-          owner: hero
-        }));
+        // hero.spriteHandler.plugins.push(new LightingComponent({
+        //   canvas: hero.spriteHandler.sprite,
+        //   engine: lightingEngine,
+        //   lightingMap: images.heronormalmap,
+        //   owner: hero
+        // }));
         var gameLoop = window.requestAnimationFrame(tick);
       }
 

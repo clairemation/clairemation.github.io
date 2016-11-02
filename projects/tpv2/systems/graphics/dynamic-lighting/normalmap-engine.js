@@ -10,23 +10,169 @@ LightingEngine.prototype.registerComponent = function(component){
 }
 
 function PointLight(args){
-  this.position = args.position; //Vec3D
-  this.color = args.color; //Vec3D
+  this.position = args.position; //array3
+  this.color = args.color; //array3
   this.falloff = args.falloff; //in pixels
   // TODO: instead of a variable, make falloff calculation be a whole callback function, so a light can have a non-linear falloff if we want
 }
 
 function LightingComponent(args){
   this.owner = args.owner;
+  this.mapFrames = {
+    standing: {
+      N: {
+        frames: [0],
+        spritesheet: images.heroStdLMap
+      },
+      NW: {
+        frames: [0],
+        spritesheet: images.heroStdLMap
+      },
+      W: {
+        frames: [0],
+        spritesheet: images.heroStdLMap
+      },
+      SW: {
+        frames: [0],
+        spritesheet: images.heroStdLMap
+      },
+      S: {
+        frames: [0],
+        spritesheet: images.heroStdRMap
+      },
+      SE: {
+        frames: [0],
+        spritesheet: images.heroStdRMap
+      },
+      E: {
+        frames: [0],
+        spritesheet: images.heroStdRMap
+      },
+      NE: {
+        frames: [0],
+        spritesheet: images.heroStdRMap
+      },
+    },
+    running: {
+      N: {
+        frames: [0,1,2,3],
+        spritesheet: images.heroRunLMap
+      },
+      NW: {
+        frames: [0,1,2,3],
+        spritesheet: images.heroRunLMap
+      },
+      W: {
+        frames: [0,1,2,3],
+        spritesheet: images.heroRunLMap
+      },
+      SW: {
+        frames: [0,1,2,3],
+        spritesheet: images.heroRunLMap
+      },
+      S: {
+        frames: [0,1,2,3],
+        spritesheet: images.heroRunRMap
+      },
+      SE: {
+        frames: [0,1,2,3],
+        spritesheet: images.heroRunRMap
+      },
+      E: {
+        frames: [0,1,2,3],
+        spritesheet: images.heroRunRMap
+      },
+      NE: {
+        frames: [0,1,2,3],
+        spritesheet: images.heroRunRMap
+      }
+    },
+    slashing: {
+      N: {
+        frames: [0],
+        spritesheet: images.heroSlashLeft
+      },
+      NW: {
+        frames: [0],
+        spritesheet: images.heroSlashLeft
+      },
+      W: {
+        frames: [0],
+        spritesheet: images.heroSlashLeft
+      },
+      SW: {
+        frames: [0],
+        spritesheet: images.heroSlashLeft
+      },
+      S: {
+        frames: [0],
+        spritesheet: images.heroSlashRight
+      },
+      SE: {
+        frames: [0],
+        spritesheet: images.heroSlashRight
+      },
+      E: {
+        frames: [0],
+        spritesheet: images.heroSlashRight
+      },
+      NE: {
+        frames: [0],
+        spritesheet: images.heroSlashRight
+      }
+    }
+  };
+
+  // var canvas = document.createElement('canvas');
+  // canvas.width = this.canvasWidth;
+  // canvas.height = this.canvasHeight;
+
+  for (var sequence in this.mapFrames){
+    for (var facing in this.mapFrames[sequence]){
+      var sprite = this.mapFrames[sequence][facing];
+      var frameNum = 0;
+        for (var i = 0; i < sprite.frames.length; i++){
+          (function(){
+            frameNumber = sprite.frames[i];
+            var startX = frameNumber * this.owner.width;
+            var geometry = Geometry.getGeometryFromImg(sprite.spritesheet, startX, 0, this.owner.width, this.owner.height);
+            // var normals = geometry[0];
+            // var depth = geometry[1];
+            sprite.frames[i] = {
+              normals: (function(){
+                return geometry[0]
+              })(),
+              depth: (function(){
+                return geometry[1]
+              })()
+            };
+            // console.log(sprite.frames);
+          }).call(this);
+        }
+    }
+  }
+
+  // for (var sequence in this.mapFrames){
+  //   for (var facing in this.mapFrames[sequence]){
+  //     var sprite = this.mapFrames[sequence][facing];
+  //     var src = sprite.spritesheet;
+  //     sprite.normalData = [];
+  //     sprite.depthData = [];
+  //     for (var i = sprite.frames[0]; i < sprite.frames.length; i++){
+  //       var frameStartX = sprite.frames[i] * this.owner.width;
+  //       var geometry = Geometry.getGeometryFromImg(src, frameStartX, 0, this.owner.width, this.owner.height);
+  //       sprite.normalData[i] = geometry[0];
+  //       sprite.depthData[i] = geometry[1];
+  //     }
+  //   }
+  // }
+
   this.canvas = args.canvas;
   this.canvasWidth = this.canvas.width;
   this.canvasHeight = this.canvas.height;
   this.ctx = this.canvas.getContext('2d');
   this.engine = args.engine;
   this.engine.registerComponent(this);
-  var geometry = Geometry.getGeometryFromImg(args.lightingMap);
-  this.normals = geometry[0];
-  this.depth = geometry[1];
   this.lightingBufferCanvas = document.createElement('canvas');
   this.lightingBufferCanvas.width = this.canvasWidth;
   this.lightingBufferCanvas.height = this.canvasHeight;
@@ -35,22 +181,26 @@ function LightingComponent(args){
 }
 
 LightingComponent.prototype.update = function(){
-  // for (var i = 0; i < this.engine.lights.length; i++){
-    var ownerPosition = new Vec3D();
-    ownerPosition.assign(this.owner.x, this.owner.y, this.owner.z);
-    var lightInLocalSpaceCoords = new Vec3D();
-    lightInLocalSpaceCoords.assignDifference(this.engine.lights[0].position, ownerPosition);
-    // lightInLocalSpaceCoords.divideInPlace(SCALE);
 
-    // if (offset.length() >= this.engine.lights[0].falloff) return;
+  var frameNum = this.owner.spriteHandler.currentAnimationFrameNumber;
+
+  var normals = this.mapFrames[this.owner.appearance][this.owner.facing].frames[frameNum].normals;
+
+  console.log(this.mapFrames[this.owner.appearance][this.owner.facing].frames);
+
+  var depth = this.mapFrames[this.owner.appearance][this.owner.facing].frames[frameNum].depth;
+
+  // for (var i = 0; i < this.engine.lights.length; i++){
+    var ownerPosition = [this.owner.x, this.owner.y, this.owner.z];
+    var lightInLocalSpaceCoords = ArrayVec3D.subtractVectors(this.engine.lights[0].position, ownerPosition);
 
     PointLight.lightCanvas({
       canvas: this.canvas,
       canvasHeight: this.canvasHeight,
       canvasWidth: this.canvasWidth,
       ctx: this.ctx,
-      normals: this.normals,
-      depth: this.depth,
+      normals: normals,
+      depth: depth,
       lightPosition: lightInLocalSpaceCoords,
       lightColor: this.engine.lights[0].color
     });
