@@ -133,30 +133,12 @@ function LightingComponent(args){
       sprite.normals = [];
       var frameNum = 0;
       for (var i = 0; i < sprite.frameNumbers.length; i++){
-        // (function(){
-          frameNumber = sprite.frameNumbers[i];
-          var startX = frameNumber * this.owner.width;
-          sprite.normals[i] = Geometry.getGeometryFromImg(sprite.spritesheet, startX, 0, this.owner.width, this.owner.height);
-          // sprite.frames[i] = geometry[0];
-        // }).call(this);
+        frameNumber = sprite.frameNumbers[i];
+        var startX = frameNumber * this.owner.width;
+        sprite.normals[i] = Geometry.getGeometryFromImg(sprite.spritesheet, startX, 0, this.owner.width, this.owner.height);
       }
     }
   }
-
-  // for (var sequence in this.mapFrames){
-  //   for (var facing in this.mapFrames[sequence]){
-  //     var sprite = this.mapFrames[sequence][facing];
-  //     var src = sprite.spritesheet;
-  //     sprite.normalData = [];
-  //     sprite.depthData = [];
-  //     for (var i = sprite.frames[0]; i < sprite.frames.length; i++){
-  //       var frameStartX = sprite.frames[i] * this.owner.width;
-  //       var geometry = Geometry.getGeometryFromImg(src, frameStartX, 0, this.owner.width, this.owner.height);
-  //       sprite.normalData[i] = geometry[0];
-  //       sprite.depthData[i] = geometry[1];
-  //     }
-  //   }
-  // }
 
   this.canvas = args.canvas;
   this.canvasWidth = this.canvas.width;
@@ -164,11 +146,7 @@ function LightingComponent(args){
   this.ctx = this.canvas.getContext('2d');
   this.engine = args.engine;
   this.engine.registerComponent(this);
-  this.lightingBufferCanvas = document.createElement('canvas');
-  this.lightingBufferCanvas.width = this.canvasWidth;
-  this.lightingBufferCanvas.height = this.canvasHeight;
-  this.lightingBuffer = this.lightingBufferCanvas.getContext('2d');
-  this.lightingTexture = this.lightingBuffer.createImageData(this.canvasWidth, this.canvasHeight);
+  var lightingBufferCanvas = document.createElement('canvas');
 }
 
 LightingComponent.prototype.update = function(){
@@ -176,6 +154,7 @@ LightingComponent.prototype.update = function(){
   var frameNum = this.owner.spriteHandler.currentAnimationFrameNumber;
 
   var normals = this.mapFrames[this.owner.appearance][this.owner.facing].normals[frameNum];
+
 
   // for (var i = 0; i < this.engine.lights.length; i++){
     var ownerPosition = [this.owner.x, this.owner.y, this.owner.z];
