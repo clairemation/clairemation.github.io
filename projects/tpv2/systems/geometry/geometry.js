@@ -22,9 +22,9 @@ Geometry.getGeometryFromImg = function(img, startx, starty, sourceWidth, sourceH
 
   // for (var i = 0; i < normals.length; i+=4){
   //   length = ArrayVec3D.length([normals[i], normals[i+1], normals[i+2]]);
-  //   normals[i] /= length;
-  //   normals[i+1] /= length;
-  //   normals[i+2] /= length;
+  //   normals[i] = normals[i] * 2 -1;
+  //   normals[i+1] = normals[i+1] * 2 -1;
+  //   normals[i+2] = normals[i+2] * 2 -1;
   // }
 
   return normals;

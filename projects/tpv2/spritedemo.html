@@ -121,8 +121,8 @@
       var collisionEngine = new CollisionEngine();
 
       var leftLight = new PointLight({
-        position: [350, 800, 100],
-        color: [255, 255, -10],
+        position: [350, 800, -10],
+        color: [255, 240, 200],
         falloff: 1000
       });
 
@@ -154,6 +154,13 @@
       // fireball2.acceleration = [-30,2];
       // fireball2.originalAcceleration = [-30,2];
       // fireball2.z = 1350;
+
+      var mousePos = [0,0];
+      window.addEventListener('mousemove', function(e){
+        mousePos[0] = e.clientX;
+        mousePos[1] = e.clientY;
+      });
+
 
       //* BEGIN GAME LOOP ====================
       function beginGameLoop(){

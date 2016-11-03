@@ -171,7 +171,7 @@ LightingComponent.prototype.update = function(){
 
 // applies lighting to a pixel and returns the new color
 PointLight.lightPixel = function(args){
-  // var baseColor = args.baseColor;
+  var baseColor = args.baseColor;
   // var lightDirection = args.lightDirection;
   // var normal = args.normal;
   var choke = args.choke ? args.choke : 1;
@@ -182,12 +182,6 @@ PointLight.lightPixel = function(args){
   }
   var dot = ArrayVec3D.dot(args.lightDirection, args.normal);
   var intensity = Math.pow(dot, choke);
-  // if (args.redShift) {
-    // lightColor = ArrayVec3D.interpolate(lightColor, [255,0,0], (1-dot));
-  // }
-  if (args.cel == true){
-    // intensity = threshold(intensity/fade, .6, 0, .85);
-  }
   intensity = clamp(intensity, 0, .85);
   return ArrayVec3D.interpolate(args.baseColor, args.lightColor, intensity);
 }
@@ -196,6 +190,8 @@ PointLight.lightCanvas = function(args){
 
   var texture = args.ctx.getImageData(0, 0, args.canvasHeight, args.canvasWidth);
   var textureData = texture.data;
+
+  var lightPosition = [mousePos[0], mousePos[1], 20];
 
   var texturePixel = [0,0,0];
   var pixelPosition = [0,0,0];
@@ -208,11 +204,25 @@ PointLight.lightCanvas = function(args){
   for (var x = 0; x < args.canvasHeight; x++){
     for (var y = 0; y < args.canvasWidth; y++){
 
-      pixelPosition[0] = x;
-      pixelPosition[1] = y;
-      pixelPosition[2] = args.normals[ti+3];
 
-      lightDirection = ArrayVec3D.subtractVectors(args.lightPosition, pixelPosition);
+      pixelPosition[0] = args.offset[0] + x*SCALE + 300;
+      pixelPosition[1] = args.offset[1] + y*SCALE - 200;
+      pixelPosition[2] = 0;
+
+      lightDirection = ArrayVec3D.subtractVectors(lightPosition, pixelPosition);
+
+      if (x == 0 && y == 0){
+        console.log(lightPosition);
+      }
+
+      // if (pixelPosition[0] > 0){
+      //   if(pixelPosition[0] > lightPosition[0]){
+      //     lightDirection[0] = pixelPosition[0] - lightPosition[0];
+      //   }
+      //   else {
+      //     lightDirection[0] = -(pixelPosition[0] + lightPosition[0]);
+      //   }
+      // }
 
       // var redShift = (args.lightPosition[2] < 0);
 
@@ -223,13 +233,12 @@ PointLight.lightCanvas = function(args){
       litPixel = this.lightPixel({
         baseColor: texturePixel,
         cel: false,
-        choke: 1,
+        choke: 5,
         falloff: 200,
         lightColor: args.lightColor,
         lightDirection: lightDirection,
-        // lowerRightHack: lowerRightHack,
         normal: [args.normals[ti], args.normals[ti+1], args.normals[ti+2]],
-        // redShift: redShift
+        offset: args.offset
       });
 
       textureData[ti] = litPixel[0];
