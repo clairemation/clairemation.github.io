@@ -25,6 +25,8 @@
       var canvas = document.getElementById('base');
       canvas.width = 400;
       canvas.height = 400;
+      canvasWidth = 400;
+      canvasHeight = 400;
       var ctx = canvas.getContext('2d');
 
       var baseImage = new Image(400,400);
@@ -41,13 +43,13 @@
 
         window.addEventListener('mousemove', function(e){
           ctx.drawImage(baseImage,0,0);
-          var lightPosition = [e.clientX, e.clientY, -10];
+          var lightPosition = [e.clientX, e.clientY, 3];
           PointLight.lightCanvas({
             canvas: canvas,
-            canvasHeight: canvas.height,
-            canvasWidth: canvas.width,
-            cel: true,
-            choke: 10,
+            canvasHeight: canvasHeight,
+            canvasWidth: canvasWidth,
+            cel: false,
+            choke: 5,
             ctx: ctx,
             normals: normals,
             lightPosition: lightPosition,

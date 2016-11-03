@@ -171,28 +171,25 @@ LightingComponent.prototype.update = function(){
 
 // applies lighting to a pixel and returns the new color
 PointLight.lightPixel = function(args){
-  var baseColor = args.baseColor;
-  var lightDirection = args.lightDirection;
-  var normal = args.normal;
-  var lightColor = args.lightColor;
-  var falloff = args.falloff;
-  var choke = args.choke || 1
-  var cel = args.cel
+  // var baseColor = args.baseColor;
+  // var lightDirection = args.lightDirection;
+  // var normal = args.normal;
+  var choke = args.choke ? args.choke : 1;
 
-  var fade = ArrayVec3D.length(lightDirection) / falloff;
+  var fade = ArrayVec3D.length(args.lightDirection) / args.falloff;
   if (fade == 0){
     return baseColor;
   }
-  var dot = ArrayVec3D.dot(ArrayVec3D.unitVector(lightDirection), args.normal);
+  var dot = ArrayVec3D.dot(args.lightDirection, args.normal);
   var intensity = Math.pow(dot, choke);
-  if (args.redShift) {
-    lightColor = ArrayVec3D.interpolate(lightColor, [255,0,0], (1-dot));
-  }
-  if (cel){
-    // intensity = threshold(intensity, .8, 0, .85);
+  // if (args.redShift) {
+    // lightColor = ArrayVec3D.interpolate(lightColor, [255,0,0], (1-dot));
+  // }
+  if (args.cel == true){
+    // intensity = threshold(intensity/fade, .6, 0, .85);
   }
   intensity = clamp(intensity, 0, .85);
-  return ArrayVec3D.interpolate(baseColor, lightColor, intensity);
+  return ArrayVec3D.interpolate(args.baseColor, args.lightColor, intensity);
 }
 
 PointLight.lightCanvas = function(args){
@@ -203,7 +200,7 @@ PointLight.lightCanvas = function(args){
   var texturePixel = [0,0,0];
   var pixelPosition = [0,0,0];
   var lightDirection = [0,0,0];
-  var targetPixel = [0,0,0];
+  var litPixel = [0,0,0];
 
   // var ni = 0;
   var ti = 0;
@@ -211,33 +208,33 @@ PointLight.lightCanvas = function(args){
   for (var x = 0; x < args.canvasHeight; x++){
     for (var y = 0; y < args.canvasWidth; y++){
 
-      pixelPosition[0] = args.offset[0] + x;
-      pixelPosition[1] = args.offset[1] + y;
-      pixelPosition[2] = args.offset[2] + args.normals[ti+3];
+      pixelPosition[0] = x;
+      pixelPosition[1] = y;
+      pixelPosition[2] = args.normals[ti+3];
 
       lightDirection = ArrayVec3D.subtractVectors(args.lightPosition, pixelPosition);
 
-      var redShift = (args.lightPosition[2] < 0);
+      // var redShift = (args.lightPosition[2] < 0);
 
       texturePixel[0] = textureData[ti],
       texturePixel[1] = textureData[ti+1],
       texturePixel[2] = textureData[ti+2];
 
-      targetPixel = this.lightPixel({
+      litPixel = this.lightPixel({
         baseColor: texturePixel,
-        // cel: true,
+        cel: false,
         choke: 1,
         falloff: 200,
         lightColor: args.lightColor,
         lightDirection: lightDirection,
         // lowerRightHack: lowerRightHack,
         normal: [args.normals[ti], args.normals[ti+1], args.normals[ti+2]],
-        redShift: redShift
+        // redShift: redShift
       });
 
-      textureData[ti] = targetPixel[0];
-      textureData[ti+1] = targetPixel[1];
-      textureData[ti+2] = targetPixel[2];
+      textureData[ti] = litPixel[0];
+      textureData[ti+1] = litPixel[1];
+      textureData[ti+2] = litPixel[2];
 
       // ni ++;
       ti += 4;

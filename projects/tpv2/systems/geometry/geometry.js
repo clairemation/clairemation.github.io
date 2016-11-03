@@ -17,14 +17,15 @@ Geometry.getGeometryFromImg = function(img, startx, starty, sourceWidth, sourceH
 
   var normals = getImageData();
 
-  var unit = [0,0,0];
+  // var unit = [0,0,0];
+  // var length = 0;
 
-  for (var i = 0; i < normals.length; i+=4){
-    unit = ArrayVec3D.unitVector([normals[i], normals[i+1], normals[i+2]]);
-    normals[i] = unit[0];
-    normals[i+1] = unit[1];
-    normals[i+2] = unit[2];
-  }
+  // for (var i = 0; i < normals.length; i+=4){
+  //   length = ArrayVec3D.length([normals[i], normals[i+1], normals[i+2]]);
+  //   normals[i] /= length;
+  //   normals[i+1] /= length;
+  //   normals[i+2] /= length;
+  // }
 
   return normals;
 }
