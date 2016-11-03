@@ -170,16 +170,15 @@ LightingComponent.prototype.update = function(){
 
 // applies lighting to a pixel and returns the new color
 PointLight.lightPixel = function(args){
-  var baseColor = args.baseColor;
-  var choke = args.choke ? args.choke : 1;
+  // var choke = args.choke ? args.choke : 1;
 
-  var fade = ArrayVec3D.length(args.lightDirection) / args.falloff;
+  var fade = ArrayVec3D.length(args.lightDirection) * args.falloff;
   if (fade == 0){
-    return baseColor;
+    return args.baseColor;
   }
   var dot = ArrayVec3D.dot(args.lightDirection, args.normal);
-  var intensity = Math.pow(dot, choke);
-  intensity = clamp(intensity, 0, .65);
+  var intensity = Math.pow(dot, args.choke);
+  intensity = clamp(intensity/fade, -.4, .65);
   return ArrayVec3D.interpolate(args.baseColor, args.lightColor, intensity);
 }
 
@@ -208,9 +207,6 @@ PointLight.lightCanvas = function(args){
 
       lightDirection = ArrayVec3D.subtractVectors(args.lightPosition, pixelPosition);
 
-      if (x == 0 && y == 0){
-        console.log(args.lightPosition);
-      }
 
       // if (pixelPosition[0] > 0){
       //   if(pixelPosition[0] > lightPosition[0]){
