@@ -179,7 +179,7 @@ PointLight.lightPixel = function(args){
   }
   var dot = ArrayVec3D.dot(args.lightDirection, args.normal);
   var intensity = Math.pow(dot, choke);
-  intensity = clamp(intensity, 0, .85);
+  intensity = clamp(intensity, 0, .65);
   return ArrayVec3D.interpolate(args.baseColor, args.lightColor, intensity);
 }
 
