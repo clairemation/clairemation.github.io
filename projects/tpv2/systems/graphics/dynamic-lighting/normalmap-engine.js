@@ -10,8 +10,8 @@ LightingEngine.prototype.registerComponent = function(component){
 }
 
 function PointLight(args){
-  this.position = args.position; //array3
-  this.color = args.color; //array3
+  this.position = args.position; // [x,y,z]
+  this.color = args.color; // [r,g,b]
   this.falloff = args.falloff; //in pixels
   // TODO: instead of a variable, make falloff calculation be a whole callback function, so a light can have a non-linear falloff if we want
 }
@@ -123,10 +123,6 @@ function LightingComponent(args){
     }
   };
 
-  // var canvas = document.createElement('canvas');
-  // canvas.width = this.canvasWidth;
-  // canvas.height = this.canvasHeight;
-
   for (var sequence in this.mapFrames){
     for (var facing in this.mapFrames[sequence]){
       var sprite = this.mapFrames[sequence][facing];
@@ -135,6 +131,7 @@ function LightingComponent(args){
       for (var i = 0; i < sprite.frameNumbers.length; i++){
         frameNumber = sprite.frameNumbers[i];
         var startX = frameNumber * this.owner.width;
+        console.log(frameNumber);
         sprite.normals[i] = Geometry.getGeometryFromImg(sprite.spritesheet, startX, 0, this.owner.width, this.owner.height);
       }
     }
