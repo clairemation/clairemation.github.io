@@ -245,12 +245,12 @@ PointLight.lightCanvas = function(args){
 
       targetPixel = this.lightPixel({
         baseColor: texturePixel,
-        cel: true,
+        // cel: true,
         choke: 1,
-        falloff: 100,
+        falloff: 200,
         lightColor: args.lightColor,
         lightDirection: lightDirection,
-        normal: [args.normals[0], args.normals[1], args.normals[2]]
+        normal: [args.normals[ti], args.normals[ti+1], args.normals[ti+2]]
       });
 
       textureData[ti] = targetPixel[0];

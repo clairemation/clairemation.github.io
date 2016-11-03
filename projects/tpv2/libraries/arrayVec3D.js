@@ -69,7 +69,7 @@ var ArrayVec3D = (function() {
   }
 
   function interpolate(a,b,t){
-    if (!t) {
+    if (t == undefined) {
       t = 0.5;
     }
     return addVectors(multiplyByScalar(a, 1-t), multiplyByScalar(b, t));
