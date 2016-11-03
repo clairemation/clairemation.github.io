@@ -172,13 +172,14 @@ LightingComponent.prototype.update = function(){
 PointLight.lightPixel = function(args){
   // var choke = args.choke ? args.choke : 1;
 
-  var fade = ArrayVec3D.length(args.lightDirection) * args.falloff;
-  if (fade == 0){
-    return args.baseColor;
-  }
+  // var fade = ArrayVec3D.length(args.lightDirection) / args.falloff;
+  // // console.log(fade);
+  // if (fade == 0){
+  //   return args.baseColor;
+  // }
   var dot = ArrayVec3D.dot(args.lightDirection, args.normal);
-  var intensity = Math.pow(dot, args.choke);
-  intensity = clamp(intensity/fade, -.4, .65);
+  var intensity = dot;
+  intensity = clamp(intensity, -.4, .65);
   return ArrayVec3D.interpolate(args.baseColor, args.lightColor, intensity);
 }
 
