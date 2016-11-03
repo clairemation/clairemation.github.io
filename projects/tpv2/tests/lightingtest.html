@@ -41,7 +41,7 @@
 
         window.addEventListener('mousemove', function(e){
           ctx.drawImage(baseImage,0,0);
-          var lightPosition = [e.clientX, e.clientY, 50];
+          var lightPosition = [e.clientX, e.clientY, -10];
           PointLight.lightCanvas({
             canvas: canvas,
             canvasHeight: canvas.height,
