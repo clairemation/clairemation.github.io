@@ -152,9 +152,8 @@ LightingComponent.prototype.update = function(){
   var normals = this.mapFrames[this.owner.appearance][this.owner.facing].normals[frameNum];
 
 
-  // for (var i = 0; i < this.engine.lights.length; i++){
+  for (var i = 0; i < this.engine.lights.length; i++){
     var ownerPosition = [this.owner.x, this.owner.y, this.owner.z];
-    var lightInLocalSpaceCoords = ArrayVec3D.subtractVectors(this.engine.lights[0].position, ownerPosition);
 
     PointLight.lightCanvas({
       canvas: this.canvas,
@@ -162,18 +161,16 @@ LightingComponent.prototype.update = function(){
       canvasWidth: this.canvasWidth,
       ctx: this.ctx,
       normals: normals,
-      lightPosition: lightInLocalSpaceCoords,
-      lightColor: this.engine.lights[0].color,
+      lightPosition: this.engine.lights[i].position,
+      lightColor: this.engine.lights[i].color,
       offset: [this.owner.x, this.owner.y, this.owner.z]
     });
-  // }
+  }
 }
 
 // applies lighting to a pixel and returns the new color
 PointLight.lightPixel = function(args){
   var baseColor = args.baseColor;
-  // var lightDirection = args.lightDirection;
-  // var normal = args.normal;
   var choke = args.choke ? args.choke : 1;
 
   var fade = ArrayVec3D.length(args.lightDirection) / args.falloff;
@@ -191,7 +188,7 @@ PointLight.lightCanvas = function(args){
   var texture = args.ctx.getImageData(0, 0, args.canvasHeight, args.canvasWidth);
   var textureData = texture.data;
 
-  var lightPosition = [mousePos[0], mousePos[1], 20];
+  // var lightPosition = [mousePos[0], mousePos[1], 20];
 
   var texturePixel = [0,0,0];
   var pixelPosition = [0,0,0];
@@ -207,12 +204,12 @@ PointLight.lightCanvas = function(args){
 
       pixelPosition[0] = args.offset[0] + x*SCALE + 300;
       pixelPosition[1] = args.offset[1] + y*SCALE - 200;
-      pixelPosition[2] = 0;
+      pixelPosition[2] = args.offset[2] + args.normals[ti+3];
 
-      lightDirection = ArrayVec3D.subtractVectors(lightPosition, pixelPosition);
+      lightDirection = ArrayVec3D.subtractVectors(args.lightPosition, pixelPosition);
 
       if (x == 0 && y == 0){
-        console.log(lightPosition);
+        console.log(args.lightPosition);
       }
 
       // if (pixelPosition[0] > 0){
