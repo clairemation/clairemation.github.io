@@ -37,11 +37,11 @@
       var normalmapImg = new Image(400,400);
 
       normalmapImg.onload = function(){
-        var normals = Geometry.getGeometryFromImg(normalmapImg);
+        var normals = Geometry.getGeometryFromImg(normalmapImg,0,0,400,400);
 
         window.addEventListener('mousemove', function(e){
           ctx.drawImage(baseImage,0,0);
-          var lightPosition = [e.clientX, e.clientY, -20];
+          var lightPosition = [e.clientX, e.clientY, 50];
           PointLight.lightCanvas({
             canvas: canvas,
             canvasHeight: canvas.height,

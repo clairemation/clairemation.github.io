@@ -131,7 +131,6 @@ function LightingComponent(args){
       for (var i = 0; i < sprite.frameNumbers.length; i++){
         frameNumber = sprite.frameNumbers[i];
         var startX = frameNumber * this.owner.width;
-        console.log(frameNumber);
         sprite.normals[i] = Geometry.getGeometryFromImg(sprite.spritesheet, startX, 0, this.owner.width, this.owner.height);
       }
     }
@@ -187,7 +186,7 @@ PointLight.lightPixel = function(args){
   var dot = ArrayVec3D.dot(ArrayVec3D.unitVector(lightDirection), args.normal);
   var intensity = Math.pow(dot, choke);
   if (cel){
-    intensity = threshold(intensity, .8, 0, .85);
+    // intensity = threshold(intensity, .8, 0, .85);
   }
   intensity = clamp(intensity/fade, 0, .85);
   return ArrayVec3D.interpolate(baseColor, lightColor, intensity);
@@ -226,6 +225,7 @@ PointLight.lightCanvas = function(args){
         falloff: 200,
         lightColor: args.lightColor,
         lightDirection: lightDirection,
+        // lowerRightHack: lowerRightHack,
         normal: [args.normals[ti], args.normals[ti+1], args.normals[ti+2]]
       });
 
