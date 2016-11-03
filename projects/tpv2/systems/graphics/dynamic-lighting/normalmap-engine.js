@@ -186,12 +186,12 @@ PointLight.lightPixel = function(args){
   var dot = ArrayVec3D.dot(ArrayVec3D.unitVector(lightDirection), args.normal);
   var intensity = Math.pow(dot, choke);
   if (args.redShift) {
-    lightColor = ArrayVec3D.interpolate(lightColor, [255,0,0], dot*(1-dot));
+    lightColor = ArrayVec3D.interpolate(lightColor, [255,0,0], (1-dot));
   }
   if (cel){
     // intensity = threshold(intensity, .8, 0, .85);
   }
-  intensity = clamp(intensity/fade, 0, .85);
+  intensity = clamp(intensity, 0, .85);
   return ArrayVec3D.interpolate(baseColor, lightColor, intensity);
 }
 
