@@ -1,6 +1,8 @@
 # Sprite Engine Demo
 
-Very much a WIP. Not supported on Microsoft IE or iPhone. Works on the latest iPad Pro, not sure about older models.
+11/3/16 -- Whoah, that just got REAL slow with lighting and everything else running at the same time
+
+Very much a WIP. Not supported on Microsoft IE or iPhone. Works on iPad.
 
 ---
 
