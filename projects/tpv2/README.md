@@ -8,6 +8,8 @@ Very much a WIP. Not supported on Microsoft IE or iPhone. Works on iPad.
 
 [See it live here] (https://clairemation.github.io/projects/tpv2/spritedemo.html).
 
+Or check out the [lighting test] (http://clairemation.github.io/projects/tpv2/tests/lightingtest.html).
+
 <!-- If you want to run it yourself, it needs to be served over HTTP; COR issues in the canvas will not allow it to run via the file:// protocol.
 
 Use your favorite server, or in the Terminal, navigate to the root (tpv2) directory and type 'python -m SimpleHTTPServer'. Then in your browser go to localhost at the port # indicated (probably http://localhost:8000). Click spritedemo.html or the lighting test in the test folder. Go to Terminal and Control-C when done. -->
