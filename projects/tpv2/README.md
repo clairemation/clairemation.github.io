@@ -6,7 +6,7 @@ Very much a WIP. Not supported on Microsoft IE or iPhone. Works on iPad.
 
 ---
 
-[Live here] (https://clairemation.github.io/projects/tpv2/spritedemo.html).
+[See it live here] (https://clairemation.github.io/projects/tpv2/spritedemo.html).
 
 <!-- If you want to run it yourself, it needs to be served over HTTP; COR issues in the canvas will not allow it to run via the file:// protocol.
 
