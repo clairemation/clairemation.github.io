@@ -178,8 +178,8 @@ PointLight.lightPixel = function(args){
   //   return args.baseColor;
   // }
   var dot = ArrayVec3D.dot(args.lightDirection, args.normal);
-  var intensity = dot;
-  intensity = clamp(intensity, -.4, .65);
+  var intensity = Math.pow(dot, args.choke);
+  intensity = clamp(intensity, 0, .65);
   return ArrayVec3D.interpolate(args.baseColor, args.lightColor, intensity);
 }
 
@@ -206,7 +206,7 @@ PointLight.lightCanvas = function(args){
       pixelPosition[1] = args.offset[1] + y*SCALE - 200;
       pixelPosition[2] = args.offset[2] + args.normals[ti+3];
 
-      lightDirection = ArrayVec3D.subtractVectors(args.lightPosition, pixelPosition);
+      lightDirection = ArrayVec3D.unitVector(ArrayVec3D.subtractVectors(args.lightPosition, pixelPosition));
 
 
       // if (pixelPosition[0] > 0){

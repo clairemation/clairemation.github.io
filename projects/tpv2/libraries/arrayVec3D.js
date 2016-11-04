@@ -1,5 +1,11 @@
 var ArrayVec3D = (function() {
 
+  function assign(v1, v2){
+    v1[0] = v2[0];
+    v1[1] = v2[1];
+    v1[2] = v2[2];
+  }
+
   function addScalar(v, s){
     return [
       v[0] + s,
@@ -99,9 +105,19 @@ var ArrayVec3D = (function() {
     return dot(a,b);
   };
 
+  function convertCoords(v){
+    // v = unitVector(v);
+    // v[0] = v[0] * 2 - 1;
+    // v[1] = v[1] * 2 - 1;
+    // v[2] = v[2] * 2 - 1;
+    // return unitVector(v);
+    return v
+  }
+
   return {
     addScalar: addScalar,
     addVectors: addVectors,
+    assign: assign,
     subtractVectors: subtractVectors,
     subtractScalar: subtractScalar,
     multiplyVectors: multiplyVectors,
@@ -115,7 +131,8 @@ var ArrayVec3D = (function() {
     distance: distance,
     unitVector: unitVector,
     directionTo: directionTo,
-    projectedLength: projectedLength
+    projectedLength: projectedLength,
+    convertCoords: convertCoords
   };
 
 })();

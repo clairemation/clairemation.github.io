@@ -21,11 +21,10 @@ Geometry.getGeometryFromImg = function(img, startx, starty, sourceWidth, sourceH
   var length = 0;
 
   for (var i = 0; i < normals.length; i+=4){
-    // length = ArrayVec3D.length([normals[i], normals[i+1], normals[i+2]]);
-    // unit = ArrayVec3D.unitVector([normals[i], normals[i+1], normals[i+2]]);
-    // normals[i] /= length;
-    normals[i+1] = 255-normals[i+1];
-    // normals[i+2] /= length;
+    var processedNormal = ArrayVec3D.convertCoords([normals[i], normals[i+1], normals[1+2]]);
+    normals[i] = processedNormal[0];
+    normals[i+1] = processedNormal[1];
+    normals[i+2] = processedNormal[2];
   }
 
   return normals;
