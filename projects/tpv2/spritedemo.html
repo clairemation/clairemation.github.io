@@ -58,6 +58,7 @@
     <script src = "libraries/vector3d.js"></script>
     <script src = "libraries/arrayVec3D.js"></script>
     <script src = "systems/geometry/geometry.js"></script>
+    <script src = "systems/graphics/dynamic-lighting/lighting-engine-component.js"></script>
     <script src = "systems/graphics/dynamic-lighting/normalmap-engine.js"></script>
 
     <script src = "globals.js"></script>
@@ -125,7 +126,7 @@
       var collisionEngine = new CollisionEngine();
 
       var leftLight = new PointLight({
-        position: [450, 750, 900],
+        position: [200, 600, 800],
         color: [255, 240, 200],
         falloff: 1000
       });
