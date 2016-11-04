@@ -1,7 +1,10 @@
 // TODO
-// Change ALL this to simple vector math. Walkmask will be a path. On collision we simply nullify the normal vector.
+// Redo using a path for walkmask & simply direct character along the tangent upon collision
 
+// Slide along a wall if hitting it at a tangent, otherwise bounce off
 function groundIsWalkableComponent(obj){
+
+  // Convert direction from numbers to cardinal directions e.g. NE, S, SW
   var accelerationDirection =
   ["N", "", "S"][Math.sign(obj.acceleration[1]) + 1]
   +
@@ -15,8 +18,10 @@ function groundIsWalkableComponent(obj){
           1,1
         );
     return (sample.data[0] == 255);
-    // White means walkable. Black and white image so we only need to check one channel
+    // True (walkable) if white. Black and white image so we only need to check one channel
   }
+
+  // this is some shit
   var directionNeighbors = {
     "N": ["NW", "NE"],
     "NW": ["N", "W"],
@@ -28,15 +33,18 @@ function groundIsWalkableComponent(obj){
     "NE": ["N", "E"]
   };
 
+  //if not moving, no need to check
   if (accelerationDirection == ""){
-    //if stopped, never mind
     return;
   }
+  // if walkable, no intervention needed
   if (groundSpotCheck(obj, accelerationDirection)){
-    // if walkable, go ahead
     return;
   }
-  // Next test nearby diagonals
+
+  // Otherwise the space is not walkable.
+  // Next test the diagonals for walkability
+  // Note: this is terrible
   var secondaryDirection = directionNeighbors[accelerationDirection][0];
   var tertiaryDirection = directionNeighbors[accelerationDirection][1];
   // Original speed = whichever acceleration factor wasn't 0
@@ -45,7 +53,7 @@ function groundIsWalkableComponent(obj){
   } else {
     var oldSpeed = Math.abs(obj.acceleration[0]);
   }
-  // If new direction is ok, apply new direction while continuing to accelerate
+  // If new direction is ok, change to new direction and continue acceleration
   // TO DO: DRY this up
   // also check max speed first instead of clamping, to avoid inadvertantly neutralizing non-impulse-caused acceleration
   if (groundSpotCheck(obj, secondaryDirection) == true){

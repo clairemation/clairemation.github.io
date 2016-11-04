@@ -1,3 +1,5 @@
+// REDO
+
 function ImpulseComponent(subject, accelRate){
   this.subject = subject;
   this.rateOfAcceleration = accelRate || 2 // default

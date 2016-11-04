@@ -1,14 +1,23 @@
 # Sprite Engine Demo
 
-Very much a WIP, very messy, there is surely editing detritus all over the place. Not supported on Microsoft IE.
+Very much a WIP. Not supported on Microsoft IE or iPhone. Works on the latest iPad Pro, not sure about older models.
 
-Works out of the box, or see it [live here] (https://clairemation.github.io/projects/tpv2/spritedemo.html).
+---
 
-Graphics (temp) by me. Uses no third-party frameworks, engines, or libraries. I may eventually use some libs like bezier.js to help with the math, though, since this is a learning exercise for me, I want to do as much as I can by myself.
+To run, needs to be served over HTTP; COR issues in the canvas will not allow it to run via the file:// protocol.
+
+Use your favorite server, or in the Terminal, navigate to the root (tpv2) directory and type 'python -m SimpleHTTPServer'. Then in your browser go to localhost at the port # indicated (probably http://localhost:8000). Click spritedemo.html or the lighting test in the test folder. Go to Terminal and Control-C when done.
+
+Or just see it [live here] (https://clairemation.github.io/projects/tpv2/spritedemo.html).
+
+---
+
+Graphics (temp) by me. Uses no third-party frameworks, engines, or libraries.
 
 ## Features:
 
 - Sprite animation
+- Dynamic cel-shaded lighting
 - Parallax scrolling
 - Smooth, 8-directional movement
 - Natural physics including inertia and collision
@@ -18,19 +27,12 @@ Graphics (temp) by me. Uses no third-party frameworks, engines, or libraries. I 
 
 - Compositional architecture
 - Finite State Machines
-- (Some) vector-based position calculation
+- Phong shading using normal maps
+- Vector-based position calculation
 - AABB-based collision detection
 - Time-based animation
 - Spritesheets
 
-##TODO:
+## Immediate TODOs:
 
-- Convert all motion physics to a simpler & more versatile vector-based model
-- Use paths instead of bitmaps to describe terrain boundaries
-- Implement touch-based controls
-- Clean up file structure
-
-## Someday:
-
-- Dynamic lighting using normal maps
-- Other spiffy graphical polishes
+- Lighting needs to drop off over distance

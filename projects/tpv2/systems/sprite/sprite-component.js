@@ -22,7 +22,7 @@ function AnimatedSpriteComponent(subject, engine, args){ // < SpriteComponent
   SpriteComponent.apply(this,[subject,engine]);
   this.frameSequence = args.frameSequence;
   this.currentAnimationFrameNumber = args.currentAnimationFrameNumber || 0;
-  this.lastTime = undefined;
+  this.lastTime = undefined; // BAD
   this.plugins = args.plugins || [];
 }
 
@@ -31,7 +31,6 @@ AnimatedSpriteComponent.constructor = AnimatedSpriteComponent;
 
 AnimatedSpriteComponent.prototype.update = function(timestamp){
   this.advanceFrame(timestamp);
-
 }
 
 AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
@@ -45,11 +44,12 @@ AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
     var advance = true;
     this.lastTime = timestamp;
   }
+  // Reset completed frame sequences to 0
   if (this.currentAnimationFrameNumber >= this.frameSequence[this.subject.appearance][this.subject.facing].frames.length) {
     this.currentAnimationFrameNumber = this.frameSequence[this.subject.appearance][this.subject.facing].frames[0];
   }
   if (advance){
-    this.sprite.width = this.sprite.width; // clear canvas, currently faster in most browsers than vvv
+    this.sprite.width = this.sprite.width; // clears canvas, currently faster in most browsers than vvv
     // this.drawingContext.clearRect(0,0,this.subject.width, this.subject.height);
     this.drawingContext.drawImage(
       this.frameSequence[this.subject.appearance][this.subject.facing].spritesheet, //source image
@@ -61,6 +61,8 @@ AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
       this.subject.width, this.subject.height
     );
 
+    // Run all plugins
+    // (currently just lighting)
     if (this.plugins){
       for (var i = 0; i < this.plugins.length; i++){
         this.plugins[i].update();
@@ -70,14 +72,15 @@ AnimatedSpriteComponent.prototype.advanceFrame = function(timestamp){
 }
 
 SpriteComponent.prototype.hurtEffect = function(){
-  // color whole sprite solid white
-  this.colorOver('white');
+  this.colorIn('white');
 }
 
-SpriteComponent.prototype.colorOver =
+SpriteComponent.prototype.colorIn =
 function(colorString){
   this.drawingContext.globalCompositeOperation = "source-in";
   this.drawingContext.fillStyle = colorString;
   this.drawingContext.fillRect(0,0,this.subject.width,this.subject.height);
+
+  // Set back to default
   this.drawingContext.globalCompositeOperation = "source-over";
 }

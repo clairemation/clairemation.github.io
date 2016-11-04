@@ -7,6 +7,8 @@ InertiaComponent.prototype.update = function(){
 
   // Always nudge acceleration back towards 0, clamp to 0
 
+  // TODO: make a fucking clamp function
+
   if (this.subject.acceleration[0] > 0){
     this.subject.acceleration[0] -= this.rateOfDeceleration;
     if (this.subject.acceleration[0] < 0){

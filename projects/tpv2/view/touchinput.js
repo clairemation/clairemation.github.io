@@ -31,77 +31,77 @@ window.addEventListener('touchmove', function(e){
   if (degrees < 0){
     // top half of circle;
     if (degrees > -25) {
+      // right
       keyHandler.register(LEFT_RELEASE);
       keyHandler.register(RIGHT_PRESS);
       keyHandler.register(UP_RELEASE);
       keyHandler.register(DOWN_RELEASE);
-      console.log('press right release Y');
     }
     else if (degrees > -65) {
+      // right and up
       keyHandler.register(LEFT_RELEASE);
       keyHandler.register(RIGHT_PRESS);
       keyHandler.register(UP_PRESS);
       keyHandler.register(DOWN_RELEASE);
-      console.log('press right and up');
     }
     else if (degrees > -115) {
+      // up
       keyHandler.register(LEFT_RELEASE);
       keyHandler.register(RIGHT_RELEASE);
       keyHandler.register(UP_PRESS);
       keyHandler.register(DOWN_RELEASE);
-      console.log('press up release X');
     }
     else if (degrees > -155) {
+      // left and up
       keyHandler.register(LEFT_PRESS);
       keyHandler.register(RIGHT_RELEASE);
       keyHandler.register(UP_PRESS);
       keyHandler.register(DOWN_RELEASE);
-      console.log('press left and up');
     }
     else {
+      // left
       keyHandler.register(LEFT_PRESS);
       keyHandler.register(RIGHT_RELEASE);
       keyHandler.register(UP_RELEASE);
       keyHandler.register(DOWN_RELEASE);
-      console.log('press left');
     }
   }
   else {
     // bottom half of circle
     if (degrees < 25) {
+      // right
       keyHandler.register(LEFT_RELEASE);
       keyHandler.register(RIGHT_PRESS);
       keyHandler.register(UP_RELEASE);
       keyHandler.register(DOWN_RELEASE);
-      console.log('press right release Y');
     }
     else if (degrees < 65) {
+      // right and down
       keyHandler.register(LEFT_RELEASE);
       keyHandler.register(RIGHT_PRESS);
       keyHandler.register(UP_RELEASE);
       keyHandler.register(DOWN_PRESS);
-      console.log('press right and down');
     }
     else if (degrees < 115) {
+      // down
       keyHandler.register(LEFT_RELEASE);
       keyHandler.register(RIGHT_RELEASE);
       keyHandler.register(UP_RELEASE);
       keyHandler.register(DOWN_PRESS);
-      console.log('press down release X');
     }
     else if (degrees < 155) {
+      // left and down
       keyHandler.register(LEFT_PRESS);
       keyHandler.register(RIGHT_RELEASE);
       keyHandler.register(UP_RELEASE);
       keyHandler.register(DOWN_PRESS);
-      console.log('press left and down');
     }
     else {
+      // left
       keyHandler.register(LEFT_PRESS);
       keyHandler.register(RIGHT_RELEASE);
       keyHandler.register(UP_RELEASE);
       keyHandler.register(DOWN_RELEASE);
-      console.log('press left');
     }
   }
 

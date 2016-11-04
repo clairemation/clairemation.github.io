@@ -16,13 +16,18 @@ SpriteEngine.prototype.deregisterComponent = function(component){
 }
 
 SpriteEngine.prototype.update = function(){
+  // Sort entities by z position (depth)
   this.entitiesByDepthOrder.sort(function(a, b){
     return ((a.subject.z) - (b.subject.z));
   });
+
+  // TODO: Optimize - keep track of this manually and spare the save & restore ops
   this.ctx.save();
   this.ctx.setTransform(1, 0, 0, 1, 0, 0);
   this.ctx.clearRect(0, 0, 1024, 768);
   this.ctx.restore();
+
+  // Draw all entities from back to front
   for (var i = 0; i < this.entitiesByDepthOrder.length; i++){
           this.drawEntity(this.entitiesByDepthOrder[i]);
   }

@@ -1,6 +1,6 @@
-// TODO
+// UGH
 // Redo using vectors, force, acceleration, etc.
-// Optimize with quadtree or prune & sweep
+// If necessary, optimize with quadtree
 
 function CollisionEngine(){
   this.entitiesByClass = {};
@@ -30,6 +30,8 @@ CollisionEngine.prototype.deregisterComponent = function(component){
 
 CollisionEngine.isThereACollision = function(subject, subjectHitbox, other, otherHitbox){
 
+  // Collision is false if:
+
   // we are not standing at the same depth
   var zDiff = Math.abs((other.z) - (subject.z));
   var maxDepth = Math.max(other.depth, subject.depth) * SCALE;
@@ -57,6 +59,7 @@ CollisionEngine.isThereACollision = function(subject, subjectHitbox, other, othe
       return false;
   }
 
+  // otherwise, collision is true
   return true;
 
 }

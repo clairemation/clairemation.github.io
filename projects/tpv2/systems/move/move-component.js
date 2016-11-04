@@ -1,3 +1,5 @@
+// REDO
+
 function moveComponent(obj){
   if (obj.acceleration == [0,0]){
     return;

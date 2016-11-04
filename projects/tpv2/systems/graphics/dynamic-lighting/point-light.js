@@ -7,11 +7,10 @@ function PointLight(args){
 }
 
 
-// apply lighting to a pixel and return the new color as [r,g,b]
-PointLight.lightPixel = function(args){
-  // args: {normal, lightDirection, lightColor, baseColor, choke}
+// apply lighting to a single pixel and return the new color as [r,g,b]
+PointLight.lightPixel = function(args){ // args: {normal, lightDirection, lightColor, baseColor, choke}
 
-  // calculate light intensity
+  // intensity = vertex perpendicular-ness to light
   var dot = ArrayVec3D.dot(args.lightDirection, args.normal);
   var intensity = Math.pow(dot, args.choke);
   intensity = clamp(intensity, 0, .65);
@@ -20,8 +19,7 @@ PointLight.lightPixel = function(args){
   return ArrayVec3D.interpolate(args.baseColor, args.lightColor, intensity);
 }
 
-PointLight.lightCanvas = function(args){
-  // args: {canvas, ctx, offset, lightPosition, normals}
+PointLight.lightCanvas = function(args){ // args: {canvas, ctx, offset, lightPosition, normals}
 
   var texture = args.ctx.getImageData(0, 0, args.canvasHeight, args.canvasWidth);
   var textureData = texture.data;
@@ -33,15 +31,17 @@ PointLight.lightCanvas = function(args){
 
   var i = 0;
 
+  // Call lightPixel on each pixel
   for (var x = 0; x < args.canvasHeight; x++){
     for (var y = 0; y < args.canvasWidth; y++){
 
+      // Calc pixel position in world space
       pixelPosition[0] = args.offset[0] + x*SCALE;
-      pixelPosition[1] = args.offset[2] - args.offset[1] + y*SCALE;
-      pixelPosition[2] = args.offset[2] + args.normals[i+3];
+      pixelPosition[1] = args.offset[2] - args.offset[1] + y*SCALE; // z - screen y gives true y
+      pixelPosition[2] = args.offset[2] + args.normals[i+3]*SCALE; // z value is stored in normalmap alpha channel
 
       // calculate direction from light to pixel
-      lightDirection = ArrayVec3D.unitVector(ArrayVec3D.subtractVectors(args.lightPosition, pixelPosition));
+      lightDirection = ArrayVec3D.convertCoords(ArrayVec3D.subtractVectors(ArrayVec3D.convertCoords(args.lightPosition), ArrayVec3D.convertCoords(pixelPosition)));
 
       // get pixel color
       ArrayVec3D.assign(texturePixel, [textureData[i], textureData[i+1], textureData[i+2]]);

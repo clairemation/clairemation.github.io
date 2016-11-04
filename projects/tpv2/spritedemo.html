@@ -59,7 +59,7 @@
     <script src = "libraries/arrayVec3D.js"></script>
     <script src = "systems/geometry/geometry.js"></script>
     <script src = "systems/graphics/dynamic-lighting/lighting-engine-component.js"></script>
-    <script src = "systems/graphics/dynamic-lighting/normalmap-engine.js"></script>
+    <script src = "systems/graphics/dynamic-lighting/point-light.js"></script>
 
     <script src = "globals.js"></script>
     <script src = "systems/collision/collision-component.js"></script>
@@ -71,7 +71,6 @@
     <script src = "systems/sprite/sprite-component.js"></script>
     <script src = "systems/sprite/sprite-engine.js"></script>
     <script src = "systems/travel-map/travel-map-component.js"></script>
-    <script src = "systems/terrain/terrain.js"></script>
     <script src = "systems/viewport/viewport.js"></script>
     <script src = "systems/viewport/viewport.js"></script>
 
@@ -105,18 +104,8 @@
         content: images.backgroundfront
       });
 
-      // var testpath = new ImageLayer({
-      //   scene: scene,
-      //   content: images.bgmask
-      // });
-
       var spriteLayer = new SpriteLayer({
         scene: scene
-      });
-
-      var initialTerrain = new Terrain({
-        map: walkmask,
-        values: {}
       });
 
       var spriteEngine = new SpriteEngine({
@@ -137,7 +126,7 @@
       });
 
       var hero = new Player(),
-          twin = new Actor(),
+          // twin = new Actor(),
           fireball = new Fireball(),
           fireball2 = new Fireball();
 
@@ -161,12 +150,6 @@
       // fireball2.originalAcceleration = [-30,2];
       // fireball2.z = 1350;
 
-      var mousePos = [0,0];
-      window.addEventListener('mousemove', function(e){
-        mousePos[0] = e.clientX;
-        mousePos[1] = e.clientY;
-      });
-
 
       //* BEGIN GAME LOOP ====================
       function beginGameLoop(){
@@ -176,6 +159,7 @@
           // lightingMap: images.heronormalmap,
           owner: hero
         }));
+
         var gameLoop = window.requestAnimationFrame(tick);
       }
 

@@ -3,10 +3,6 @@ function Geometry(){}
 Geometry.getGeometryFromImg = function(img, startx, starty, sourceWidth, sourceHeight){
 
   function getImageData(){
-    // startx = startx || 0;
-    // starty = starty || 0;
-    // sourceWidth = sourceWidth || img.width;
-    // sourceHeight = sourceHeight || img.height
     var tempCanvas = document.createElement('canvas');
     tempCanvas.width = sourceWidth;
     tempCanvas.height = sourceHeight;
@@ -21,7 +17,10 @@ Geometry.getGeometryFromImg = function(img, startx, starty, sourceWidth, sourceH
   var length = 0;
 
   for (var i = 0; i < normals.length; i+=4){
+    // Normalize and convert to -1 - 1 space
     var processedNormal = ArrayVec3D.convertCoords([normals[i], normals[i+1], normals[1+2]]);
+
+    // Write back into normals data
     normals[i] = processedNormal[0];
     normals[i+1] = processedNormal[1];
     normals[i+2] = processedNormal[2];

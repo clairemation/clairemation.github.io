@@ -57,7 +57,7 @@ function Scene(args){
   if (!args){
     var args = {};
   }
-  this.layers = args.layers || []; // layer order: bottom to top
+  this.layers = args.layers || [];
   this.htmlElement = args.htmlElement || document.getElementById("display");
   if (args.width){
     this.width = args.width
@@ -92,11 +92,6 @@ Scene.prototype.scrollBy = function(x, y){
   }
 }
 
-// Scene.prototype.scrollTo = function(x, y){
-//   this.scrollX = 0;
-//   this.scrollY = 0;
-// }
-
 Scene.prototype.follow = function(target){
   this.cameraMode = new FollowMode({
     scene: this,
@@ -117,7 +112,7 @@ function Layer(args){
   this.scene = args.scene;
   this.left = args.left || 0;
   this.top = args.top || 0;
-  this.parallaxScale = args.parallaxScale || 1;
+  this.parallaxScale = args.parallaxScale || 1; // modifier to scroll faster or slower
   this.html = document.createElement("div");
   this.html.width = args.width || 0;
   this.html.height = args.height || 0;
@@ -145,7 +140,7 @@ Layer.prototype.moveTo = function(x, y){
 }
 
 
-function ImageLayer(args){ // < DisplayLayer
+function ImageLayer(args){ // < Layer
   Layer.call(this, args);
   this.content = args.content;
   this.html.width = this.content.width;
@@ -161,7 +156,7 @@ ImageLayer.prototype.scrollBy = function(x, y){
 }
 
 
-function SpriteLayer(args){ // < DisplayLayer
+function SpriteLayer(args){ // < Layer
   Layer.call(this, args);
   this.content = args.content || document.createElement("canvas");
   this.content.width = args.width || this.scene.width;

@@ -1,3 +1,6 @@
+// Singleton! Modular!
+
+// IIFE!
 var ArrayVec3D = (function() {
 
   function assign(v1, v2){

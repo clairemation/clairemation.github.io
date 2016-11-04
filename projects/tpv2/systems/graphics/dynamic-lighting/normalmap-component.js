@@ -1,4 +1,0 @@
-function normalMapComponent(args){
-  this.
-
-}

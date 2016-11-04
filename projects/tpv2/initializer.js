@@ -42,7 +42,7 @@ for (var i = 0; i < imagesToLoad.length; i++){
 loadCheckLoop = setInterval(function(){
 
   if (imagesToLoad.length <= 0){
-    // Once all images are loaded, stop loop, do stuff that had to wait for this, then start game loop
+    // If all images are loaded, stop loop, do stuff that had to wait for this, then start game loop
 
     clearInterval(loadCheckLoop);
 
