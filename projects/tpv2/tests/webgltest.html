@@ -6,9 +6,10 @@
     <meta charset="UTF-8">
   </head>
 
-  <body scroll="no">
+  <body scroll="no" style="background: #000; text-align: center; vertical-align: center;">
 
-    <canvas id="canvas" width=640 height=480></canvas>
+    <h1 style="color: #fff;">Spin the cube!</h1>
+    <canvas id="canvas" width=640 height=480 style="width: 70%;"></canvas>
 
     <script type="text/javascript" src="../libraries/arrayVec3D.js"></script>
     <script type="text/javascript" src="../libraries/matrix.js"></script>
@@ -41,14 +42,10 @@
       <!-- END SHADERS -->
 
 
-
       <script>
+        // DECLARE GLOBALS
         var canvas = document.getElementById("canvas"),
           gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl"),
-          bufVertexCoords = gl.createBuffer(),
-          bufVertexColors = gl.createBuffer(),
-          bufIndices = gl.createBuffer(),
-          aVertexCoords = null,
           lastMouseX,
           lastMouseY,
           mvMatrix = $M4([
@@ -57,8 +54,10 @@
             0.0, 0.0, 1.0, 0.0,
             0.0, 0.0, 0.0, 1.0
             ]),
-          projectionMatrix = (function(fovRads, aspect, near, far){
-              var f = 1.0 / Math.tan(fovRads / 2);
+          projectionMatrix = (function(fov, aspect, near, far){
+              // Convert field of view to radians
+              fov *= Math.PI / 180;
+              var f = 1.0 / Math.tan(fov / 2);
               var rangeInverse = 1.0 / (near-far);
               return new Float32Array([
                 f / aspect, 0, 0, 0,
@@ -66,7 +65,8 @@
                 0, 0, (near+far) * rangeInverse, -1,
                 0, 0, near*far * rangeInverse * 2, 0
               ]);
-            })(45 * Math.PI / 180, 640/480, 0.1, 100);
+            })(45, 640/480, 0.1, 100);
+            // (field of view in degrees, canvas width/height, near clipping plane, far clipping plane)
 
 
 
@@ -96,19 +96,24 @@
 
           // -- SET UP THE ATTRIBUTES --
 
-          // -- Fetch and save the location of the shader's vertices attribute for future use --
-          aVertexCoords = gl.getAttribLocation(shader, "aVertexCoords");
-          aVertexColor = gl.getAttribLocation(shader, "aVertexColor");
+          // -- Get references to the shader's attributes (vertices and face colors) --
+          var aVertexCoords = gl.getAttribLocation(shader, "aVertexCoords");
+          var aVertexColor = gl.getAttribLocation(shader, "aVertexColor");
 
-          uProjMatrix = gl.getUniformLocation(shader, "uProjMatrix");
-          uMVMatrix = gl.getUniformLocation(shader, "uMVMatrix");
-
-          // -- Enable the shader's vertices attribute --
+          // -- Enable the attributes --
           gl.enableVertexAttribArray(aVertexCoords);
           gl.enableVertexAttribArray(aVertexColor);
 
-          // -- Convert array of vertex values into a GL array buffer --
+          // -- Get references to the shader uniforms
+          uProjMatrix = gl.getUniformLocation(shader, "uProjMatrix");
+          uMVMatrix = gl.getUniformLocation(shader, "uMVMatrix");
+
+          // -- Convert array of vertices into a GL array buffer and bind to the vertices attribute --
+          // First create a GL buffer object
+          var bufVertexCoords = gl.createBuffer();
+          // Bind that buffer to GL's "current array buffer" reference to operate on
           gl.bindBuffer(gl.ARRAY_BUFFER, bufVertexCoords);
+          // Enter data into the current array buffer
           gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
             // Front face
             -1.0, -1.0,  1.0,
@@ -146,11 +151,12 @@
             -1.0,  1.0,  1.0,
             -1.0,  1.0, -1.0
           ]), gl.STATIC_DRAW);
-          // -- Point the array buffer at the shader's vertices attribute --
-          // -- and tell it that it will be grabbing values 3 at a time --
-          gl.bindBuffer(gl.ARRAY_BUFFER, bufVertexCoords);
+          // -- Point the current array buffer at the shader's vertices attribute, --
+          // -- and tell it that it will be grabbing floating-point values 3 at a time --
           gl.vertexAttribPointer(aVertexCoords, 3, gl.FLOAT, false, 0, 0);
 
+          // -- Same process for colors attribute --
+          var bufVertexColors = gl.createBuffer();
           gl.bindBuffer(gl.ARRAY_BUFFER, bufVertexColors);
           gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
             1.0,  1.0,  1.0,  1.0,    // Front face: white
@@ -185,6 +191,11 @@
           ]), gl.STATIC_DRAW);
           gl.vertexAttribPointer(aVertexColor, 4, gl.FLOAT, false, 0, 0);
 
+          // Now bind a new buffer to GL's current element array buffer.
+          // This specifies which vertices make up each face.
+          // It does not get bound to any shader attribute.
+          // The drawElements call just automatically uses whatever is the current element array buffer.
+          var bufIndices = gl.createBuffer();
           gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufIndices);
           gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([
             0,  1,  2,      0,  2,  3,    // front
@@ -203,12 +214,14 @@
           translateY = 0.0,
           translateZ = -6.0;
 
+        // Set inital position for the model
+        mvMatrix = mvMatrix.timesMat4(Mat4.Rotation(1, 1, 1)).timesMat4(Mat4.Translation(0,0,-3));
+
         // -- END BOILERPLATE --
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        mvMatrix = mvMatrix.timesMat4(Mat4.Rotation(1, 1, 1)).timesMat4(Mat4.Translation(0,0,-3));
-
+        // Pass the projection and modelview matrices into the shader uniforms
         gl.uniformMatrix4fv(uProjMatrix, false, projectionMatrix);
         gl.uniformMatrix4fv(uMVMatrix, false, mvMatrix.toArray());
 
@@ -218,42 +231,39 @@
           // Convert "mouse-space" rotation to modelspace rotation
           var rotMat = mvMatrix.timesMat4(Mat4.Rotation(-rotationX, rotationY, rotationZ));
 
-          // Neutralize translation in the rotation matrix
+          // Neutralize translation that may have ended up in the rotation matrix
           rotMat.elements[12] = 0.0;
           rotMat.elements[13] = 0.0;
           rotMat.elements[14] = 0.0;
 
-          // Reset model matrix
-          mvMatrix.makeIdentity();
-
-          // Apply transformations to model matrix
-          mvMatrix = mvMatrix.timesMat4(rotMat);
-          mvMatrix = mvMatrix.timesMat4(Mat4.Translation(translateX, translateY, translateZ));
+          // -- Rebuild model matrix from current transformations --
+          mvMatrix = rotMat.timesMat4(Mat4.Translation(translateX, translateY, translateZ));
+          // Pass model matrix to shader uniform
           gl.uniformMatrix4fv(uMVMatrix, false, mvMatrix.toArray());
 
-          // Draw
-          gl.clear(gl.COLOR_BUFFER_BIT);
+          // -- Draw --
+          // 36 vertices -> every 3 vertices become a triangle -> 12 triangles -> 6 squares/sides
           gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
 
-          // Lower rotation value due to inertia
+          // Rotation drops off due to inertia
           rotationX /= 1.01;
           rotationY /= 1.01;
           rotationZ /= 1.01;
-
-          function clampToZero(x){
+          function snapToZero(x){
             if (x < 0.001 && x > -0.001) {
               return 0;
             }
             return x;
           }
-
-          rotationX = clampToZero(rotationX);
-          rotationY = clampToZero(rotationY);
-          rotationZ = clampToZero(rotationZ);
+          rotationX = snapToZero(rotationX);
+          rotationY = snapToZero(rotationY);
+          rotationZ = snapToZero(rotationZ);
 
           // Loop
           requestAnimationFrame(draw);
         }
+
+        // -- Add canvas event listeners for mouse drag or touch slide --
 
         canvas.onmousemove = function(e){
           if (e.buttons == 0){return;}
@@ -268,6 +278,7 @@
         }
 
         canvas.addEventListener("touchmove", function(e){
+          e.preventDefault();
           if (lastMouseX){
             rotationY += -(e.touches[0].clientX - lastMouseX) / 3000;
           }
@@ -278,7 +289,16 @@
           lastMouseY = e.touches[0].clientY;
         }, false);
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufIndices);
+        function resetMouse(e){
+          lastMouseX = false;
+          lastMouseY = false;
+        }
+
+        canvas.onmouseout = resetMouse;
+        canvas.onmouseup = resetMouse;
+        canvas.addEventListener("touchend", resetMouse);
+
+        // -- Start the draw loop! --
         requestAnimationFrame(draw);
       </script>
 
