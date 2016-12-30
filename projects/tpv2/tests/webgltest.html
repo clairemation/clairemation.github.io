@@ -4,6 +4,7 @@
 
   <head>
     <meta charset="UTF-8">
+    <title>Fun with WebGL</title>
   </head>
 
   <body scroll="no" style="background: #000; background-repeat: no-repeat; text-align: center; vertical-align: center;">
@@ -17,7 +18,9 @@
         <option>4</option>
       </select>
     </h2>
-    
+
+    <p style="text-align: center; width: 100%; color: #fff; position: absolute; bottom: 10px">Background photos are from the Internet and I don't have the rights to any of them</p>
+
     <canvas id="canvas" width=640 height=480 style="width: 70%;"></canvas>
 
     <script type="text/javascript" src="../libraries/arrayVec3D.js"></script>
@@ -453,16 +456,16 @@
               ],
           ["canyon.jpg",
               0.3, 0.1, 0.0, //ambient
-              0.2, 0.3, 0.45, //light
+              0.27, 0.4, 0.7, //light
               0.0, 1.0, -0.25 //direction
               ],
           ["purpleclouds.jpg",
-              0.5, 0.35, 0.4, //ambient
-              0.9, 0.7, 0.6, //light
+              0.575, 0.4, 0.4, //ambient
+              1.0, 0.7, 0.6, //light
               -1.0, 0.0, -5.0 //direction
               ],
           ["shore.jpg",
-              0.15, 0.35, 0.4, //ambient
+              0.2, 0.3, 0.4, //ambient
               1.2, 0.5, 0.3, //light
               1.0, 0.1, -1.0 //direction
               ],
