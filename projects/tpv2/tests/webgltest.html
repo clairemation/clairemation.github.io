@@ -6,7 +6,17 @@
     <meta charset="UTF-8">
   </head>
 
-  <body scroll="no" style="background: #000; text-align: center; vertical-align: center;">
+  <body scroll="no" style="background: #000; background-repeat: no-repeat; text-align: center; vertical-align: center;">
+
+    <h2 style="color: #fff;">
+      Environment:
+      <select id="enviroPicker" onchange="setEnvironment(this);">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+      </select>
+    </h2>
 
     <h1 style="color: #fff;">Spin the cube!</h1>
     <canvas id="canvas" width=640 height=480 style="width: 70%;"></canvas>
@@ -19,23 +29,41 @@
       <script id="vertexShader" type="x-shader/x-vertex">
         attribute vec3 aVertexCoords;
         attribute vec4 aVertexColor;
+        attribute vec3 aNormal;
+        attribute vec2 aTextureCoords;
 
         uniform mat4 uMVMatrix;
+        uniform mat4 uNormalMatrix;
         uniform mat4 uProjMatrix;
+        uniform vec3 uAmbient;
+        uniform vec3 uLightColor;
+        uniform vec3 uLightDirection;
 
         varying lowp vec4 vColor;
+        varying highp vec3 vLightMatrix;
+        varying highp vec2 vTextureCoords;
 
         void main(void){
-          gl_Position = uProjMatrix * uMVMatrix * vec4(aVertexCoords, 1.0);
           vColor = aVertexColor;
+          vTextureCoords = aTextureCoords;
+          vColor = vec4(1.0, 1.0, 1.0, 1.0);
+          gl_Position = uProjMatrix * uMVMatrix * vec4(aVertexCoords, 1.0);
+          vec4 normal = uNormalMatrix * vec4(aNormal, 1.0);
+          float light = (dot(uLightDirection, normal.xyz) + 1.0) * 0.5;
+          vLightMatrix = (uLightColor * light + uAmbient * (1.0 - light));
         }
       </script>
 
       <script id="fragmentShader" type="x-shader/x-fragment">
         varying lowp vec4 vColor;
+        varying highp vec3 vLightMatrix;
+        varying highp vec2 vTextureCoords;
+
+        uniform sampler2D uSampler;
 
         void main(void){
-          gl_FragColor = vColor;
+          // vTextureCoords;
+          gl_FragColor = vec4(vec3(texture2D(uSampler, vec2(vTextureCoords.s, vTextureCoords.t))) * vLightMatrix, 1.0);
         }
       </script>
 
@@ -65,7 +93,8 @@
                 0, 0, (near+far) * rangeInverse, -1,
                 0, 0, near*far * rangeInverse * 2, 0
               ]);
-            })(45, 640/480, 0.1, 100);
+            })(45, 640/480, 0.1, 100),
+          normalMatrix;
             // (field of view in degrees, canvas width/height, near clipping plane, far clipping plane)
 
 
@@ -99,16 +128,27 @@
           // -- Get references to the shader's attributes (vertices and face colors) --
           var aVertexCoords = gl.getAttribLocation(shader, "aVertexCoords");
           var aVertexColor = gl.getAttribLocation(shader, "aVertexColor");
+          var aNormal = gl.getAttribLocation(shader, "aNormal");
+          var aTextureCoords = gl.getAttribLocation(shader, "aTextureCoords");
 
           // -- Enable the attributes --
           gl.enableVertexAttribArray(aVertexCoords);
           gl.enableVertexAttribArray(aVertexColor);
+          gl.enableVertexAttribArray(aNormal);
+          gl.enableVertexAttribArray(aTextureCoords);
 
           // -- Get references to the shader uniforms
-          uProjMatrix = gl.getUniformLocation(shader, "uProjMatrix");
-          uMVMatrix = gl.getUniformLocation(shader, "uMVMatrix");
+          var uProjMatrix = gl.getUniformLocation(shader, "uProjMatrix");
+          var uMVMatrix = gl.getUniformLocation(shader, "uMVMatrix");
+          var uNormalMatrix = gl.getUniformLocation(shader, "uNormalMatrix");
+          var uAmbient = gl.getUniformLocation(shader, "uAmbient");
+          var uLightColor = gl.getUniformLocation(shader, "uLightColor");
+          var uLightDirection = gl.getUniformLocation(shader, "uLightDirection");
+          var uSampler = gl.getUniformLocation(shader, "uSampler");
 
-          // -- Convert array of vertices into a GL array buffer and bind to the vertices attribute --
+          // -- Convert array of vertices into a GL array buffer and bind to the corresponding vertices attribute --
+
+          // Vertex coords buffer
           // First create a GL buffer object
           var bufVertexCoords = gl.createBuffer();
           // Bind that buffer to GL's "current array buffer" reference to operate on
@@ -191,6 +231,87 @@
           ]), gl.STATIC_DRAW);
           gl.vertexAttribPointer(aVertexColor, 4, gl.FLOAT, false, 0, 0);
 
+          // and for normals attribute
+
+          var bufNormals = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, bufNormals);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            // Front
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+
+            // Back
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+
+            // Top
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+
+            // Bottom
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+
+            // Right
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+
+            // Left
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0
+          ]), gl.STATIC_DRAW);
+          gl.vertexAttribPointer(aNormal, 3, gl.FLOAT, false, 0, 0);
+
+          // Texture coordinates
+
+          var bufTexCoords = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, bufTexCoords);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            // Front
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Back
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Top
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Bottom
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Right
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Left
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0
+          ]), gl.STATIC_DRAW);
+          gl.vertexAttribPointer(aTextureCoords, 2, gl.FLOAT, false, 0, 0);
+
           // Now bind a new buffer to GL's current element array buffer.
           // This specifies which vertices make up each face.
           // It does not get bound to any shader attribute.
@@ -217,6 +338,24 @@
         // Set inital position for the model
         mvMatrix = mvMatrix.timesMat4(Mat4.Rotation(1, 1, 1)).timesMat4(Mat4.Translation(0,0,-3));
 
+        var texture = gl.createTexture();
+        var texImage = new Image(256, 256);
+        texImage.onload = function(){
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texImage);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+          gl.generateMipmap(gl.TEXTURE_2D);
+
+          gl.uniform1i(uSampler, 0);
+
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+
+          requestAnimationFrame(draw);
+        }
+        texImage.src = "spinme.png";
+
         // -- END BOILERPLATE --
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -224,6 +363,11 @@
         // Pass the projection and modelview matrices into the shader uniforms
         gl.uniformMatrix4fv(uProjMatrix, false, projectionMatrix);
         gl.uniformMatrix4fv(uMVMatrix, false, mvMatrix.toArray());
+        gl.uniform3f(uAmbient, 0.2, 0.2, 0.2);
+        gl.uniform3f(uLightColor, 0.8, 0.8, 0.8);
+        gl.uniform3f(uLightDirection, 0.8, 0.8, 0.8);
+
+
 
 
         function draw(){
@@ -236,10 +380,13 @@
           rotMat.elements[13] = 0.0;
           rotMat.elements[14] = 0.0;
 
-          // -- Rebuild model matrix from current transformations --
+          // -- Rebuild model matrix and normal matrix from current transformations --
           mvMatrix = rotMat.timesMat4(Mat4.Translation(translateX, translateY, translateZ));
-          // Pass model matrix to shader uniform
+          normalMatrix = mvMatrix.inverse().transpose();
+
+          // Pass matrices to shader uniform
           gl.uniformMatrix4fv(uMVMatrix, false, mvMatrix.toArray());
+          gl.uniformMatrix4fv(uNormalMatrix, false, normalMatrix.toArray());
 
           // -- Draw --
           // 36 vertices -> every 3 vertices become a triangle -> 12 triangles -> 6 squares/sides
@@ -298,8 +445,41 @@
         canvas.onmouseup = resetMouse;
         canvas.addEventListener("touchend", resetMouse);
 
+        function setEnvironment(picker){
+          var environments = [
+          ["",
+              0.2, 0.2, 0.2, //ambient
+              0.8, 0.8, 0.8, //light
+              0.8, 0.8, 0.8 //direction
+              ],
+          ["canyon.jpg",
+              0.3, 0.1, 0.0, //ambient
+              0.2, 0.3, 0.45, //light
+              0.0, 1.0, -0.25 //direction
+              ],
+          ["purpleclouds.jpg",
+              0.5, 0.35, 0.4, //ambient
+              0.9, 0.7, 0.6, //light
+              -1.0, 0.0, -5.0 //direction
+              ],
+          ["shore.jpg",
+              0.15, 0.35, 0.4, //ambient
+              1.2, 0.5, 0.3, //light
+              1.0, 0.1, -1.0 //direction
+              ],
+
+          ];
+          var env = environments[picker.selectedIndex];
+          document.getElementsByTagName('body')[0].style.background = "url('" + env[0] + "') black no-repeat center center fixed";
+          document.getElementsByTagName('body')[0].style.backgroundSize = "cover";
+          gl.uniform3f(uAmbient, env[1], env[2], env[3]);
+          gl.uniform3f(uLightColor, env[4], env[5], env[6]);
+          gl.uniform3f(uLightDirection, env[7], env[8], env[9]);
+
+        }
+
         // -- Start the draw loop! --
-        requestAnimationFrame(draw);
+        // requestAnimationFrame(draw);
       </script>
 
   </body>
