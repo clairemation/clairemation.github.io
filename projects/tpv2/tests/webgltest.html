@@ -5,19 +5,71 @@
   <head>
     <meta charset="UTF-8">
     <title>Fun with WebGL</title>
+    <style type="text/css">
+      h2 {
+        margin-bottom: 0;
+      }
+      form {
+        display: flex;
+        justify-content: center;
+      }
+      form div {
+        border-collapse: collapse;
+        display: flex;
+        flex: 1;
+        padding: 10px;
+      }
+      input[type=radio] {
+        height: 0;
+        visibility: hidden;
+        width: 0;
+      }
+      label {
+        background: hsla(0, 0%, 80%, .5);
+        cursor: pointer;
+        font-family: 'Avenir Next', Avenir, Helvetica, sans-serif;
+        font-size: 18px;
+        line-height: 16px;
+        padding: 10px;
+        width: 100%;
+        -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+      }
+      input[type=radio]:checked + label {
+        background: hsla(0, 0%, 30%, .5);
+        color: #ccc;
+      }
+
+    </style>
   </head>
 
   <body scroll="no" style="background: #000; background-repeat: no-repeat; text-align: center; vertical-align: center;">
 
     <h2 style="color: #fff;">
       Environment:
-      <select id="enviroPicker" onchange="setEnvironment(this);">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select>
     </h2>
+    <form id="enviroPicker" onchange="setEnvironment(this);">
+      <div>
+        <input id="enviro1" type="radio" name="enviroPicker" onclick="setEnvironment(0);" checked>
+        <label for="enviro1">None</label>
+      </div>
+      <div>
+        <input id="enviro2" type="radio" name="enviroPicker" onclick="setEnvironment(1);">
+        <label for="enviro2">Canyon shade</label>
+      </div>
+      <div>
+        <input id="enviro3" type="radio" name="enviroPicker" onclick="setEnvironment(2);">
+        <label for="enviro3">Purple clouds</label>
+      </div>
+      <div>
+        <input id="enviro4" type="radio" name="enviroPicker" onclick="setEnvironment(3);">
+        <label for="enviro4">Sunset shore</label>
+      </div>
+    </form>
 
     <p style="text-align: center; width: 100%; color: #fff; position: absolute; bottom: 10px">Background photos are from the Internet and I don't have the rights to any of them</p>
 
@@ -30,42 +82,61 @@
 
       <script id="vertexShader" type="x-shader/x-vertex">
         attribute vec3 aVertexCoords;
-        attribute vec4 aVertexColor;
         attribute vec3 aNormal;
         attribute vec2 aTextureCoords;
 
         uniform mat4 uMVMatrix;
         uniform mat4 uNormalMatrix;
         uniform mat4 uProjMatrix;
-        uniform vec3 uAmbient;
+        uniform lowp vec3 uAmbient;
         uniform vec3 uLightColor;
-        uniform vec3 uLightDirection;
+        uniform vec3 uLightPosition;
 
-        varying lowp vec4 vColor;
         varying highp vec3 vLightMatrix;
         varying highp vec2 vTextureCoords;
 
+        varying highp vec4 vPosition;
+        varying highp vec4 vNormal;
+        varying mediump vec3 vLightColor;
+        varying highp vec3 vLightPosition;
+        varying lowp vec3 vAmbient;
+
         void main(void){
-          vColor = aVertexColor;
           vTextureCoords = aTextureCoords;
-          vColor = vec4(1.0, 1.0, 1.0, 1.0);
-          gl_Position = uProjMatrix * uMVMatrix * vec4(aVertexCoords, 1.0);
-          vec4 normal = uNormalMatrix * vec4(aNormal, 1.0);
-          float light = (dot(uLightDirection, normal.xyz) + 1.0) * 0.5;
+          vPosition =  uMVMatrix * vec4(aVertexCoords, 1.0);
+          gl_Position = uProjMatrix * vPosition;
+          vNormal = uNormalMatrix * vec4(aNormal, 1.0);
+          float light = (dot(uLightPosition, vNormal.xyz) + 1.0) * 0.5;
           vLightMatrix = (uLightColor * light + uAmbient * (1.0 - light));
+
+          vLightColor = uLightColor;
+          vLightPosition = uLightPosition;
+          vAmbient = uAmbient;
         }
       </script>
 
       <script id="fragmentShader" type="x-shader/x-fragment">
-        varying lowp vec4 vColor;
         varying highp vec3 vLightMatrix;
         varying highp vec2 vTextureCoords;
+        varying lowp vec3 vAmbient;
+
+        varying highp vec4 vPosition;
+        varying highp vec4 vNormal;
+        varying mediump vec3 vLightColor;
+        varying highp vec3 vLightPosition;
 
         uniform sampler2D uSampler;
+        uniform int uPointLight;
 
         void main(void){
-          // vTextureCoords;
-          gl_FragColor = vec4(vec3(texture2D(uSampler, vec2(vTextureCoords.s, vTextureCoords.t))) * vLightMatrix, 1.0);
+          uPointLight;
+          highp vec3 lightDirection = vLightPosition - vPosition.xyz;
+          highp float light = max(dot(normalize(lightDirection), normalize(vNormal.xyz)), 0.0);
+          lowp vec4 texColor = vec4(vec3(texture2D(uSampler, vec2(vTextureCoords.s, vTextureCoords.t))), 1.0);
+          lowp vec3 texLightColor = (vLightColor*light + vAmbient*(1.0 - light));
+          gl_FragColor = texColor * vec4(texLightColor, 1.0);
+
+          // gl_FragColor = vec4(vec3(texture2D(uSampler, vec2(vTextureCoords.s, vTextureCoords.t))) * vLightMatrix, 1.0);
         }
       </script>
 
@@ -129,13 +200,11 @@
 
           // -- Get references to the shader's attributes (vertices and face colors) --
           var aVertexCoords = gl.getAttribLocation(shader, "aVertexCoords");
-          var aVertexColor = gl.getAttribLocation(shader, "aVertexColor");
           var aNormal = gl.getAttribLocation(shader, "aNormal");
           var aTextureCoords = gl.getAttribLocation(shader, "aTextureCoords");
 
           // -- Enable the attributes --
           gl.enableVertexAttribArray(aVertexCoords);
-          gl.enableVertexAttribArray(aVertexColor);
           gl.enableVertexAttribArray(aNormal);
           gl.enableVertexAttribArray(aTextureCoords);
 
@@ -145,7 +214,8 @@
           var uNormalMatrix = gl.getUniformLocation(shader, "uNormalMatrix");
           var uAmbient = gl.getUniformLocation(shader, "uAmbient");
           var uLightColor = gl.getUniformLocation(shader, "uLightColor");
-          var uLightDirection = gl.getUniformLocation(shader, "uLightDirection");
+          var uLightPosition = gl.getUniformLocation(shader, "uLightPosition");
+          var uPointLight = gl.getUniformLocation(shader, "uPointLight");
           var uSampler = gl.getUniformLocation(shader, "uSampler");
 
           // -- Convert array of vertices into a GL array buffer and bind to the corresponding vertices attribute --
@@ -197,44 +267,7 @@
           // -- and tell it that it will be grabbing floating-point values 3 at a time --
           gl.vertexAttribPointer(aVertexCoords, 3, gl.FLOAT, false, 0, 0);
 
-          // -- Same process for colors attribute --
-          var bufVertexColors = gl.createBuffer();
-          gl.bindBuffer(gl.ARRAY_BUFFER, bufVertexColors);
-          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            1.0,  1.0,  1.0,  1.0,    // Front face: white
-            1.0,  1.0,  1.0,  1.0,
-            1.0,  1.0,  1.0,  1.0,
-            1.0,  1.0,  1.0,  1.0,
-
-            1.0,  0.0,  0.0,  1.0,    // Back face: red
-            1.0,  0.0,  0.0,  1.0,
-            1.0,  0.0,  0.0,  1.0,
-            1.0,  0.0,  0.0,  1.0,
-
-            0.0,  1.0,  0.0,  1.0,    // Top face: green
-            0.0,  1.0,  0.0,  1.0,
-            0.0,  1.0,  0.0,  1.0,
-            0.0,  1.0,  0.0,  1.0,
-
-            0.0,  0.0,  1.0,  1.0,    // Bottom face: blue
-            0.0,  0.0,  1.0,  1.0,
-            0.0,  0.0,  1.0,  1.0,
-            0.0,  0.0,  1.0,  1.0,
-
-            1.0,  1.0,  0.0,  1.0,    // Right face: yellow
-            1.0,  1.0,  0.0,  1.0,
-            1.0,  1.0,  0.0,  1.0,
-            1.0,  1.0,  0.0,  1.0,
-
-            1.0,  0.0,  1.0,  1.0,     // Left face: purple)
-            1.0,  0.0,  1.0,  1.0,
-            1.0,  0.0,  1.0,  1.0,
-            1.0,  0.0,  1.0,  1.0
-          ]), gl.STATIC_DRAW);
-          gl.vertexAttribPointer(aVertexColor, 4, gl.FLOAT, false, 0, 0);
-
-          // and for normals attribute
-
+          // Same process for normals buffer
           var bufNormals = gl.createBuffer();
           gl.bindBuffer(gl.ARRAY_BUFFER, bufNormals);
           gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -277,7 +310,6 @@
           gl.vertexAttribPointer(aNormal, 3, gl.FLOAT, false, 0, 0);
 
           // Texture coordinates
-
           var bufTexCoords = gl.createBuffer();
           gl.bindBuffer(gl.ARRAY_BUFFER, bufTexCoords);
           gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -356,7 +388,7 @@
 
           requestAnimationFrame(draw);
         }
-        texImage.src = "spinme.png";
+        texImage.src = "rock3.jpg";
 
         // -- END BOILERPLATE --
 
@@ -367,7 +399,8 @@
         gl.uniformMatrix4fv(uMVMatrix, false, mvMatrix.toArray());
         gl.uniform3f(uAmbient, 0.2, 0.2, 0.2);
         gl.uniform3f(uLightColor, 0.8, 0.8, 0.8);
-        gl.uniform3f(uLightDirection, 0.8, 0.8, 0.8);
+        gl.uniform3f(uLightPosition, 0.0, 0.0, 0.0);
+        gl.uniform1i(uPointLight, 1.0);
 
 
 
@@ -447,37 +480,36 @@
         canvas.onmouseup = resetMouse;
         canvas.addEventListener("touchend", resetMouse);
 
-        function setEnvironment(picker){
+        function setEnvironment(index){
           var environments = [
           ["",
               0.2, 0.2, 0.2, //ambient
               0.8, 0.8, 0.8, //light
-              0.8, 0.8, 0.8 //direction
+              0.8, 0.8, 0.8, //position
               ],
           ["canyon.jpg",
               0.3, 0.1, 0.0, //ambient
               0.27, 0.4, 0.7, //light
-              0.0, 1.0, -0.25 //direction
+              0.0, 10.0, -0.5 //position
               ],
           ["purpleclouds.jpg",
-              0.575, 0.4, 0.4, //ambient
+              0.37, 0.22, 0.29, //ambient
               1.0, 0.7, 0.6, //light
-              -1.0, 0.0, -5.0 //direction
+              -1.0, -0.5, -5.5 //position
               ],
           ["shore.jpg",
               0.2, 0.3, 0.4, //ambient
               1.2, 0.5, 0.3, //light
-              1.0, 0.1, -1.0 //direction
+              5.0, 0.5, -4.0 //position
               ],
 
           ];
-          var env = environments[picker.selectedIndex];
+          var env = environments[index];
           document.getElementsByTagName('body')[0].style.background = "url('" + env[0] + "') black no-repeat center center fixed";
           document.getElementsByTagName('body')[0].style.backgroundSize = "cover";
           gl.uniform3f(uAmbient, env[1], env[2], env[3]);
           gl.uniform3f(uLightColor, env[4], env[5], env[6]);
-          gl.uniform3f(uLightDirection, env[7], env[8], env[9]);
-
+          gl.uniform3f(uLightPosition, env[7], env[8], env[9]);
         }
 
         // -- Start the draw loop! --
