@@ -69,6 +69,13 @@
           }
         });
         
+        window.addEventListener('touchmove', function(e){
+          e.preventDefault();
+          if (e.touches.length == 1) {
+            lightImage(e.touches.item(0).clientX, e.touches.item(0).clientY);
+          }
+        });
+        
       };
 
       normalmapImg.src = '../assets/hero_standing_left_map.png';
