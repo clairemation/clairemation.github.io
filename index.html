@@ -50,17 +50,17 @@
               <span><a href="#projects">Cool stuff</a></span>
             </li>
             <li class="button">
-              <input type="checkbox" id="contact-toggle"/>
               <label for="contact-toggle">
                 Contact
               </label>
-              <ul class="contact-badges">
-                <li><a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a></li>
-                <li><a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a></li>
-                <li><a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a></li>
-              </ul>
             </li>
           </ul>
+          <input type="checkbox" id="contact-toggle"/>
+          <div class="contact-badges">
+            <a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a>
+            <a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a>
+            <a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a>
+          </div>
         </nav>
       </header>
 
@@ -85,43 +85,43 @@
          <a name = "projects"></a>
 
           <ul class="projects-ul">
-            <li class="project-block mobile-small desktop-med">
+            <li class="project-block mobile-big tablet-big desktop-med project-webgl">
               <a href="http://clairemation.github.io/projects/tpv2/tests/webgltest.html">
                 <h4>3D</h4>
-                <img src="imgs/code-944504_640.jpg"/>
+                <img src="imgs/ss-cube.jpg"/>
                 <h3>Fun with WebGL</h3>
                 <p>
-                  Spinnable textured, lighted cube in various environments.
+                  Testing different lighting conditions on a spinnable textured cube. Pure WebGL and math, no pre-existing libraries.
                 </p>
               </a>
             </li>
 
-            <li class="project-block mobile-small">
+            <li class="project-block mobile-small project-lightingtest">
               <a href="http://clairemation.github.io/projects/tpv2/tests/lightingtest.html">
                 <h4>Canvas</h4>
-                <img src="imgs/code-944504_640.jpg"/>
+                <img src="imgs/ss-lightingtest.jpg"/>
                 <h3>Dynamic sprite lighting</h3>
                 <p>
-                  Normal-mapping for real-time lighting on 2D sprites. Move the mouse to move the light.
+                  Scratch-written normal-mapping engine for real-time cel shading on a 2D sprite. Move the mouse to move the light.
                 </p>
               </a>
             </li>
 
-            <li class="project-block mobile-big desktop-med">
+            <li class="project-block mobile-big desktop-med project-spritedemo">
               <a href="projects/tpv2/spritedemo.html">
                 <h4>Canvas</h4>
-                <img src="imgs/code-944504_640.jpg"/>
+                <img src="imgs/ss-sprite-engine2.jpg"/>
                 <h3>Sprite Engine Demo</h3>
                 <p>
-                  Scratch-written HTML5 2D game engine. Very much a WIP, currently does not work on mobile or in IE. Graphics by me.
+                  Scratch-written HTML5 2D game engine, no third-party libraries. Very much a WIP, currently does not work on IE or older mobile browsers. Graphics by me.
                 </p>
               </a>
             </li>
 
-            <li class="project-block mobile-small mobile-no-pic">
+            <li class="project-block mobile-small mobile-no-pic project-walkabout">
               <a href="http://github.com/clairemation/Walkabout">
                 <h4>React Native</h4>
-                <img src="imgs/code-944504_640.jpg"/>
+                <img src="imgs/ss-walkabout-cropped.png"/>
                 <h3>Walkabout</h3>
                 <p>
                   Tour-guide app for iPhone, automatically narrating interesting points about your surroundings as you walk around. Group project; I wrote the control logic.
@@ -129,10 +129,10 @@
               </a>
             </li>
 
-            <li class="project-block mobile-small mobile-no-pic desktop-small">
+            <li class="project-block mobile-small mobile-no-pic desktop-small project-sudoku">
               <a href="http://shrouded-harbor-54304.herokuapp.com/">
                 <h4>Rails</h4>
-                <img src="imgs/code-944504_640.jpg"/>
+                <!-- <img src="imgs/code-944504_640.jpg"/> -->
                 <h3>Sudoku Solver</h3>
                 <p>
                   Single-page Rails-based web app that solves any valid sudoku puzzle. Group project; I wrote the recursive brute-force algorithm in Ruby, and all the JS and CSS on the front end.
@@ -140,10 +140,10 @@
               </a>
             </li>
 
-            <li class="project-block mobile-small desktop-small">
+            <li class="project-block mobile-small project-gamelevel">
               <a href="projects/timesprisoner/timesprisoner.html">
                 <h4>Game</h4>
-                <img src="imgs/code-944504_640.jpg"/>
+                <img src="imgs/tpscreenshot.jpg"/>
                 <h3>Game Level Prototype</h3>
                 <p>
                   Early prototype level for a graphical adventure game. Currently for desktop only. (Turn on your sound.)

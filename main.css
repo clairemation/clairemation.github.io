@@ -31,7 +31,7 @@ p, h3 {
 }
 
 .blur {
-  filter: blur(10px);
+  filter: blur(3px);
 }
 
 /*-- NAV MENU CHANGES AT 700 PX --*/
@@ -105,9 +105,10 @@ p, h3 {
   header #mobilemenu ul {
     align-items: center;
     background: #fff;
-    border: 1px solid lightcoral;
+    border: 1px solid #ccc;
     border-left: 0;
     flex-direction: column;
+    font-size: .7em;
     left: 0;
     padding-bottom: 1em;
     padding-top: 1em;
@@ -239,7 +240,25 @@ p, h3 {
   }
 }
 
+@media screen and (min-width: 601px) and (max-width: 999px) {
+  #projects ul {
+    height: 40em;
+  }
+  .project-block.tablet-big img {
+    width: 100%;
+  }
+  .project-block.project-webgl{order:1;}
+  .project-block.project-lightingtest{order:2;}
+  .project-block.project-spritedemo{order:3;}
+  .project-block.project-walkabout{order:4;}
+  .project-block.project-sudoku{order:5;}
+  .project-block.project-gamelevel{order:6;}
+}
+
 @media screen and (min-width: 1000px){
+  section#projects ul {
+    height: 35em;
+  }
   section#projects li.project-block {
     width: 28%;
   }
@@ -248,6 +267,12 @@ p, h3 {
     margin-left: 0;
     width: 100%;
   }
+  .project-block.project-webgl{order:1;}
+  .project-block.project-lightingtest{order:4;}
+  .project-block.project-spritedemo{order:3;}
+  .project-block.project-walkabout{order:5;}
+  .project-block.project-sudoku{order:2;}
+  .project-block.project-gamelevel{order:6;}
 }
 
 h1 {
@@ -406,29 +431,32 @@ li {
   text-transform: lowercase;
 }
 
-#header-buttons {
-  display: none;
-}
-
-#header-buttons .contact-badges {
-  display: block;
-  position: relative;
-  text-align: center;
-}
-
-#header-buttons .contact-badges li {
-  display: block;
+.contact-badges {
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  left: 50%;
   margin: auto;
-  position: absolute;
+  position: fixed;
+  text-align: center;
+  top: 50%;
+  transform: translate(-50%,  -50%);
+  visibility: hidden;
 }
 
-#header-buttons .contact-badges li img {
-  height: 10px;
-  width: 10px;
+#header-buttons .contact-badges img {
+  background: #fff;
+  border-radius: 50%;
+  height: 100%;
+  margin-top: 0;
+  width: 100%;
 }
 
-#contact-toggle:checked ~ .contact-badges li img {
-  height: 50px;
+#contact-toggle:checked ~ .contact-badges {
+  display: flex;
+  height: 175px;
+  visibility: visible;
   width: 50px;
 }
 
@@ -460,6 +488,10 @@ li {
   transform: skewY(-2.5deg);
 }
 
+#header-buttons {
+  display: none;
+}
+
 #header-buttons ul {
   flex-direction: row;
   font-weight: 500;
@@ -476,7 +508,7 @@ main {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  height: 37em;
+  height: 40em;
   justify-content: flex-start;
   width: 100%;
 }
