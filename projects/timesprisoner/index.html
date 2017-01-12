@@ -15,36 +15,72 @@
       text-align: center;
     }
 
-    main {
-      text-align: center;
+    #maintitle {
+      padding: 0;
     }
 
-    #main-pane {
-      margin: 1em;
-      border-radius: 1em;
+    #maintitle h1 {
+      font-family: 'Avenir Next', Avenir, sans-serif;
+      /*font-weight: initial;*/
+      font-size: 1.5em;
+      margin: 10px;
+      padding: 0;
+      text-shadow: none;
     }
 
     h3 {
       text-align: left;
     }
-    p, li {
-      width: 25em;
+
+    main {
+      margin: auto;
+      text-align: center;
+    }
+
+    #tp-options {
+      display: flex;
+      flex-direction: row-reverse;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin: auto;
+      max-width: 70%;
+    }
+
+    p.info {
+      margin: 1em auto;
+      width: 70%;
+    }
+
+    p.note {
+      background: #fcf8e3;
+      border: 1px solid #faebcc;
+      border-radius: 5px;
+      color: #8a6d3b;
+      margin: 10px 0;
+      padding: 5px;
       text-align: left;
-      margin: .5em auto .5em auto;
+    }
+
+    p.note::before {
+      content: '\26a0';
+      padding-right: .5em;
     }
 
     main img {
-      max-width: 200px;
-      margin: .2em;
-      box-shadow: 2px 0 15px -5px black;
+      width: 100%;
     }
 
-    #original, #spritebased {
-      display: inline-block;
-      width: 40%;
-      margin: 2%;
-      padding: 0;
-      text-align: center;
+    #tp-options > div {
+      flex: 1;
+      margin: 1em;
+      max-width: 500px;
+      min-width: 300px;
+    }
+
+    h2 {
+      font-size: .75em;
+      text-align: left;
+      text-transform: uppercase;
     }
 
     ul {
@@ -59,12 +95,15 @@
     }
 
     li {
-      position: relative;
-      text-align: center;
-      /*left: 1em;*/
-      width: 100%;
-      list-style-type: disc;
-      list-style-position: inside;
+      background: #fdfdfd;
+      max-width: 100%;
+      list-style-type: none;
+      padding: .2em 0;
+      text-align: left;
+    }
+
+    li:nth-child(even) {
+      background: #f0f0f0;
     }
 
     footer {
@@ -87,42 +126,49 @@
     <section id="main-pane">
 
     <header>
-      <h3><a href="../../index.html">< Claire's Dev Site</a></h3>
+      <h3><a href="../../index.html">&laquo; Claire's Dev Site</a></h3>
       <div id="maintitle">
-        <h1>Time's Prisoner</h1>
+        <h1>&ldquo;Time's Prisoner&rdquo; Project</h1>
       </div>
     </header>
 
     <main>
 
-      <p>Time's Prisoner is a graphical adventure game, about a physicist who discovers time travel but becomes trapped in Earth's prehistory.</p>
+      <p class="info"><strong>Time's Prisoner</strong> is a graphical adventure game project I'm working on, about a scientist thrown three billion years into the past in a time-traveling accident.</p>
 
-      <div id="original">
-        <a href="timesprisoner.html">
-        <h2>Original level prototype</h2>
-        <img src="../../imgs/tpscreenshot.jpg">
-        </a>
-        <ul>
-          <li>tense, play-tested level design</li>
-          <li>awesome CC-licensed soundtrack courtesy of Kevin MacLeod</li>
-        <p>Note: Requires a desktop browser</p>
-        <p><a href="http://github.com/clairemation/clairemation.github.io/tree/master/projects/timesprisoner">See the source on github</a></p>
-        </ul>
-      </div>
+      <div id="tp-options">
 
-      <div id="spritebased">
-        <a href="../tpv2/spritedemo.html">
-        <h2>New WIP sprite engine</h2>
-        <img src="../../imgs/spritescreenshot.jpg">
-        </a>
-        <ul>
-          <li>smooth, non-tile-based movement in 8 directions</li>
-          <li>parallax scrolling</li>
-          <li>subtle natural physics including inertia, collision, and wall "sliding"</li>
-          <li>atmospheric hand-drawn graphics (by me)</li>
-          <p>Note: Currently requires desktop version of Safari, Firefox, Chrome, or Opera browsers</p>
-          <p><a href="http://github.com/clairemation/clairemation.github.io/tree/master/projects/tpv2">See the source on github</a></p>
-        </ul>
+        <div id="spritebased">
+          <a href="../tpv2/spritedemo.html">
+          <h2>New WIP sprite engine</h2>
+          <img src="../../imgs/spritescreenshot.jpg">
+          </a>
+          <ul>
+            <li>real-time lighting and shading</li>
+            <li>touch and keyboard controls</li>
+            <li>smooth, non-tile-based movement in 8 directions</li>
+            <li>subtle natural physics including inertia, collision, and wall "sliding"</li>
+            <li>parallax scrolling</li>
+            <li>atmospheric hand-drawn graphics (by me)</li>
+            <p class="note">Does not run on IE or older mobile browsers.</p>
+            <p><a href="http://github.com/clairemation/clairemation.github.io/tree/master/projects/tpv2">See the source on github</a></p>
+          </ul>
+
+        </div>
+
+
+        <div id="original">
+          <a href="timesprisoner.html">
+          <h2>Original level prototype</h2>
+          <img src="../../imgs/tpscreenshot.jpg">
+          </a>
+          <ul>
+            <li>tense, play-tested level design</li>
+            <li>awesome CC-licensed soundtrack courtesy of Kevin MacLeod</li>
+          <p class="note">Keyboard controls require a desktop browser</p>
+          <p><a href="http://github.com/clairemation/clairemation.github.io/tree/master/projects/timesprisoner">See the source on github</a></p>
+          </ul>
+        </div>
 
       </div>
 
