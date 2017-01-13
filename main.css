@@ -12,7 +12,6 @@ body {
   font-family: 'Avenir Next', Avenir, sans-serif;
   text-align: center;
   background: #fff;
-  /*background: linear-gradient(hsl(175,80%,20%) -300%,white 70%, hsl(20,100%,70%) 300%);*/
   background-size: 100%;
   background-attachment: fixed;
 }
@@ -305,56 +304,13 @@ header {
   position: relative;
 }
 
-/*#maintitle {
-  position: relative;
-  left: -10px;
-  overflow: hidden;
-  padding-bottom: 10px;
-}
-
-#maintitle h1 {
-  font-size: 1.5em;
-  padding-left: 10px;
-  background: orange;
-  background: linear-gradient(90deg, hsl(25,90%,20%) 0%,  hsl(27,90%,40%) 1.5%, hsl(30,90%,60%) 5%, orange 10%, hsl(39,100%,70%) 50%, orange 100%);
-  box-shadow: 0 5px 0 0 hsla(0,0%,100%,.5) inset,
-    0 -5px 0 0 hsla(0,0%,100%,.5) inset,
-    7px 2px 2px 2px hsla(0,0%,0%,.4);
-}
-
-#main-pane::before {
+header::before {
   content: "";
-  width: 60px;
-  height: 60px;
-  transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  background-color: hsl(25,100%,30%);
-  box-shadow: 0 0 0 5px hsla(0,0%,100%,.5) inset;
-  position: absolute;
-  left: -7px;
-  top: 38px;
-  z-index: -1;
+  display: block;
+  width: 200%;
+  height: 200%;
+  background: blue;
 }
-
-#maintitle h1::after {
-  content: "";
-  vertical-align: middle;
-  transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  position: absolute;
-  top: -13px !important;
-    right: -60px !important;
-  width: 60px;
-  height: 60px;
-  background: white;
-  box-shadow: 0 2px 0px 2px hsla(0,0%,0%,.4) inset;
-}*/
 
 header input, header label[for="mobilemenu-toggle"] {
   display: none;
@@ -382,6 +338,21 @@ h1 {
 header nav {
   margin: 10px;
   font-weight: 700;
+}
+
+/*#header-buttons button {
+  background-color: dodgerblue;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.2em;
+  font-weight: 600;
+  padding: 1em 1.5em;
+}
+*/
+#header-buttons button a {
+  color: #fff;
 }
 
 nav ul {
@@ -471,7 +442,6 @@ li {
   color: #fff !important;
   padding: 20px;
   text-align: center;
-  /*width: 100px;*/
 }
 
 .button a {
@@ -479,23 +449,17 @@ li {
   font-weight: bolder;
 }
 
-.skewed {
-  transform: skewY(2.5deg);
-}
-
-.skewed > * {
-  display: block;
-  transform: skewY(-2.5deg);
-}
-
-#header-buttons {
-  display: none;
-}
-
-#header-buttons ul {
+#header-buttons button {
+  background: dodgerblue;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
   flex-direction: row;
+  font-size: 1.2em;
   font-weight: 500;
   justify-content: center;
+  padding: 20px;
   text-transform: uppercase;
 }
 
@@ -542,8 +506,6 @@ main {
 }
 
 #about {
-  /*background: orange;*/
-  /*font-size: 1.25em;*/
   padding: 40px 0;
 }
 
@@ -572,5 +534,8 @@ main {
   text-align: center;
   font-size: 1.5em;
   padding-bottom: 2em;
+}
 
+.breakout a {
+  text-decoration: underline;
 }
