@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+
+  </head>
+
+  <body scroll="no">
+
+    <div style="position: absolute; left:0; top: 0;"><canvas width=512 height=512 id="canvas" style="position: absolute; left:0; top: 0; z-index: -1"></div>
+
+
+    <!-- GLSL -->
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+      attribute vec3 aVertexCoords;
+      attribute vec2 aTextureCoords;
+
+      uniform mat4 uMVMatrix;
+      uniform mat4 uProjMatrix;
+
+      varying highp vec2 vTextureCoords;
+
+      void main(void){
+        uProjMatrix;
+        uMVMatrix;
+        gl_Position = vec4(aVertexCoords.xy, 0.0, 1.0);
+        vTextureCoords = aTextureCoords;
+      }
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      precision mediump float;
+      uniform sampler2D uSampler;
+      uniform vec3 uLightPosition;
+      varying highp vec2 vTextureCoords;
+
+      void main(void){
+        lowp vec4 texColor = vec4(texture2D(uSampler, vec2(vTextureCoords.s, vTextureCoords.t)));
+        highp vec4 reading = texture2D(uSampler, vTextureCoords);
+        highp vec3 position = vec3(vTextureCoords.s, vTextureCoords.t, 1.0);
+        highp vec4 normal = normalize(vec4(texture2D(uSampler, vec2(vTextureCoords.s + 0.5, vTextureCoords.t)).rgb, 1.0));
+        highp vec4 lightDirection = vec4(uLightPosition.xyz, 1.0);
+        highp float distance = length(vec3(lightDirection.xyz - vec3(vTextureCoords, 0.0)));
+        highp float light = pow((dot(normalize(lightDirection), normal) + 1.0) / 2.0, 7.0) * 1.5;
+
+        gl_FragColor = vec4(texColor.rgb * light, texColor.a);
+      }
+    </script>
+
+    <!-- END GLSL -->
+
+
+
+    <script src = "../globals.js"></script>
+    <script src = "../helpers/limit.js"></script>
+    <script src = "../libraries/arrayVec3D.js"></script>
+    <script src = "../systems/geometry/geometry.js"></script>
+    <script src = "../libraries/matrix.js"></script>
+    <script src = "../libraries/webgl_utils.js"></script>
+    <script src = "../systems/graphics/dynamic-lighting/point-light.js"></script>
+
+
+
+    <script>
+
+      var LIGHT_COLOR = [255,240,200],
+        IMAGE_SRC = 'herocombi.png',
+        NORMALS_SRC = '../assets/hero_standing_left_map.png',
+        canvas = document.getElementById("canvas");
+
+      var glProgram = new WebGLProgram(canvas, "vertexShader", "fragmentShader");
+      glProgram.use();
+      console.log(glProgram);
+      glProgram.bindDataToAttribute("aVertexCoords", [
+        -1.0, -1.0,  -3.0,
+         1.0, -1.0,  -3.0,
+         1.0,  1.0,  -3.0,
+        -1.0,  1.0,  -3.0,], 3);
+      glProgram.bindDataToAttribute("aTextureCoords", [
+        0.0,  1.0,
+        0.5,  1.0,
+        0.5,  0.0,
+        0.0,  0.0], 2);
+      glProgram.setMat4Uniform("uProjMatrix", glProgram.projectionMatrix);
+      glProgram.setMat4Uniform("uMVMatrix", glProgram.mvMatrix);
+      glProgram.setIntUniform("uSampler", 0);
+      glProgram.setVec3Uniform("uLightPosition", [0.0, 0.0]);
+
+      var gl = glProgram.gl;
+
+      var texture = gl.createTexture();
+      var texImage = new Image(256, 256);
+      texImage.onload = function(){
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texImage);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+        gl.generateMipmap(gl.TEXTURE_2D);
+
+        // gl.uniform1i(uSampler, 0);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        requestAnimationFrame(draw);
+      }
+      texImage.src = IMAGE_SRC;
+
+      function draw(){
+        gl.clear(glProgram.gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(glProgram.gl.TRIANGLE_FAN, 0, 4);
+        requestAnimationFrame(draw);
+      }
+
+      function setLight(x,y){
+        var V = ArrayVec3D;
+        var height = V.distance([x,y,0], [256,256,1]);
+        height = 256/height;
+        x = x / 256;
+        y = (y / 256) - 1.0;
+        console.log(height);
+        glProgram.setVec3Uniform("uLightPosition", [x, -y, height]);
+      }
+
+      window.addEventListener('mousemove', function(e){
+        setLight(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('touchstart', function(e){
+        if (e.touches.length == 1) {
+          setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
+        }
+      });
+
+      window.addEventListener('touchmove', function(e){
+        e.preventDefault();
+        if (e.touches.length == 1) {
+          setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
+        }
+      });
+
+    </script>
+
+
+  </body>
+
+</html>
