@@ -176,7 +176,7 @@ p, h3 {
   section#projects li.project-block p {
   }
 
-  section#projects li.project-block.mobile-big *:not(img) {
+  section#projects li.project-block.mobile-big a *:not(img) {
     padding-left: 30px;
     padding-right: 30px;
   }
@@ -186,12 +186,15 @@ p, h3 {
   }
 
   section#projects li.project-block.mobile-big img {
+    display: block;
+    float: none;
     height: auto;
+    margin: 0;
     text-align: center;
     width: 100%;
   }
 
-  section#projects li.project-block.mobile-small *:not(img){
+  section#projects li.project-block.mobile-small a * {
     padding-left: 30px;
   }
 
@@ -246,8 +249,8 @@ p, h3 {
   .project-block.tablet-big img {
     width: 100%;
   }
-  .project-block.project-webgl{order:1;}
-  .project-block.project-lightingtest{order:2;}
+  .project-block.project-webgl{order:2;}
+  .project-block.project-lightingtest{order:1;}
   .project-block.project-spritedemo{order:3;}
   .project-block.project-walkabout{order:4;}
   .project-block.project-sudoku{order:5;}
@@ -266,11 +269,11 @@ p, h3 {
     margin-left: 0;
     width: 100%;
   }
-  .project-block.project-webgl{order:1;}
-  .project-block.project-lightingtest{order:4;}
-  .project-block.project-spritedemo{order:3;}
-  .project-block.project-walkabout{order:5;}
-  .project-block.project-sudoku{order:2;}
+  .project-block.project-webgl{order:2;}
+  .project-block.project-lightingtest{order:1;}
+  .project-block.project-spritedemo{order:5;}
+  .project-block.project-walkabout{order:3;}
+  .project-block.project-sudoku{order:4;}
   .project-block.project-gamelevel{order:6;}
 }
 
@@ -503,6 +506,7 @@ main {
 .project-block h3 {
   font-size: 1.2em;
   margin-bottom: 10px;
+  padding-top: .25em;
 }
 
 #about {
