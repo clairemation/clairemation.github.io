@@ -7,10 +7,9 @@
 
   </head>
 
-  <body scroll="no">
+  <body scroll="no" style="background: #000;">
 
-    <div style="position: absolute; left:0; top: 0;"><canvas width=512 height=512 id="canvas" style="position: absolute; left:0; top: 0; z-index: -1"></div>
-
+    <div style="position: fixed; left: 0; top: 0; margin: 0; padding: 0; height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas"></div>
 
     <!-- GLSL -->
 
@@ -22,12 +21,14 @@
       uniform mat4 uProjMatrix;
 
       varying highp vec2 vTextureCoords;
+      varying highp vec2 vPosition;
 
       void main(void){
         uProjMatrix;
         uMVMatrix;
         gl_Position = vec4(aVertexCoords.xy, 0.0, 1.0);
         vTextureCoords = aTextureCoords;
+        vPosition = aVertexCoords.xy;
       }
     </script>
 
@@ -36,17 +37,23 @@
       uniform sampler2D uSampler;
       uniform vec3 uLightPosition;
       varying highp vec2 vTextureCoords;
+      varying highp vec2 vPosition;
 
       void main(void){
         lowp vec4 texColor = vec4(texture2D(uSampler, vec2(vTextureCoords.s, vTextureCoords.t)));
+        if (texColor.a == 0.0){ discard; }
         highp vec4 reading = texture2D(uSampler, vTextureCoords);
-        highp vec3 position = vec3(vTextureCoords.s, vTextureCoords.t, 1.0);
-        highp vec4 normal = normalize(vec4(texture2D(uSampler, vec2(vTextureCoords.s + 0.5, vTextureCoords.t)).rgb, 1.0));
-        highp vec4 lightDirection = vec4(uLightPosition.xyz, 1.0);
-        highp float distance = length(vec3(lightDirection.xyz - vec3(vTextureCoords, 0.0)));
-        highp float light = pow((dot(normalize(lightDirection), normal) + 1.0) / 2.0, 7.0) * 1.5;
-
-        gl_FragColor = vec4(texColor.rgb * light, texColor.a);
+        highp vec3 position = vec3(vPosition * 2.0 - 1.0, -1.0);
+        highp vec3 normal = vec3(texture2D(uSampler, vec2(vTextureCoords.s + 0.5, vTextureCoords.t)).rgb);
+        highp vec3 lightDirection = vec3(uLightPosition.xyz - position);
+        highp float distance = length(lightDirection);
+        lowp vec3 lightColor = vec3(1.2, 0.8, 0.5);
+        highp float light = dot(normalize(lightDirection), normalize(normal));
+        distance = max(distance, 0.0);
+        light = step(0.7, light) / pow(distance, 2.0);
+        light = min(light, 0.8);
+        lowp vec3 color = mix(lightColor, texColor.xyz, 1.0 - light);
+        gl_FragColor = vec4 (color, texColor.a);
       }
     </script>
 
@@ -67,9 +74,10 @@
     <script>
 
       var LIGHT_COLOR = [255,240,200],
-        IMAGE_SRC = 'herocombi.png',
+        IMAGE_SRC = 'herocombi3.png',
         NORMALS_SRC = '../assets/hero_standing_left_map.png',
-        canvas = document.getElementById("canvas");
+        canvas = document.getElementById("canvas"),
+        controller = document.getElementById("controller");
 
       var glProgram = new WebGLProgram(canvas, "vertexShader", "fragmentShader");
       glProgram.use();
@@ -109,20 +117,27 @@
       }
       texImage.src = IMAGE_SRC;
 
+      var lightPos = [0.0, 0.0, 3.0, 1.0];
+
       function draw(){
+        // console.log(lightPos);
+        // glProgram.setVec3Uniform("uLightPosition", lightPos);
         gl.clear(glProgram.gl.COLOR_BUFFER_BIT);
         gl.drawArrays(glProgram.gl.TRIANGLE_FAN, 0, 4);
+        // lightPos = Mat4.Rotation(0.0, 0.1, 0.0).timesVec4(lightPos);
+
+
         requestAnimationFrame(draw);
       }
 
       function setLight(x,y){
-        var V = ArrayVec3D;
-        var height = V.distance([x,y,0], [256,256,1]);
-        height = 256/height;
-        x = x / 256;
-        y = (y / 256) - 1.0;
-        console.log(height);
-        glProgram.setVec3Uniform("uLightPosition", [x, -y, height]);
+        x -= canvas.offsetLeft;
+        y -= canvas.offsetTop;
+        console.log([x,y]);
+        x = (x / 512 * 2.0) - 1.0;
+        y = (y / 512 * 2.0) - 1.0;
+        z = -Math.max(1.0 - ArrayVec3D.length([x,y,0]), 0.3);
+        glProgram.setVec3Uniform("uLightPosition", [x,-y,z]);
       }
 
       window.addEventListener('mousemove', function(e){
