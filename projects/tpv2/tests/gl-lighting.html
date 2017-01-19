@@ -17,15 +17,15 @@
       attribute vec3 aVertexCoords;
       attribute vec2 aTextureCoords;
 
-      uniform mat4 uMVMatrix;
-      uniform mat4 uProjMatrix;
+      // uniform mat4 uMVMatrix;
+      // uniform mat4 uProjMatrix;
 
       varying highp vec2 vTextureCoords;
       varying highp vec2 vPosition;
 
       void main(void){
-        uProjMatrix;
-        uMVMatrix;
+        // uProjMatrix;
+        // uMVMatrix;
         gl_Position = vec4(aVertexCoords.xy, 0.0, 1.0);
         vTextureCoords = aTextureCoords;
         vPosition = aVertexCoords.xy;
@@ -42,15 +42,15 @@
       void main(void){
         lowp vec4 texColor = vec4(texture2D(uSampler, vec2(vTextureCoords.s, vTextureCoords.t)));
         if (texColor.a == 0.0){ discard; }
-        highp vec4 reading = texture2D(uSampler, vTextureCoords);
+        lowp vec4 normalMapTexel = texture2D(uSampler, vec2(vTextureCoords.s + 0.5, vTextureCoords.t));
         highp vec3 position = vec3(vPosition * 2.0 - 1.0, -1.0);
-        highp vec3 normal = vec3(texture2D(uSampler, vec2(vTextureCoords.s + 0.5, vTextureCoords.t)).rgb);
+        highp vec3 normal = normalMapTexel.rgb;
         highp vec3 lightDirection = vec3(uLightPosition.xyz - position);
         highp float distance = length(lightDirection);
         lowp vec3 lightColor = vec3(1.2, 0.8, 0.5);
         highp float light = dot(normalize(lightDirection), normalize(normal));
         distance = max(distance, 0.0);
-        light = step(0.7, light) / pow(distance, 2.0);
+        light = step(0.7, light) / (distance / 2.5);
         light = min(light, 0.8);
         lowp vec3 color = mix(lightColor, texColor.xyz, 1.0 - light);
         gl_FragColor = vec4 (color, texColor.a);
@@ -92,13 +92,10 @@
         0.5,  1.0,
         0.5,  0.0,
         0.0,  0.0], 2);
-      glProgram.setMat4Uniform("uProjMatrix", glProgram.projectionMatrix);
-      glProgram.setMat4Uniform("uMVMatrix", glProgram.mvMatrix);
       glProgram.setIntUniform("uSampler", 0);
       glProgram.setVec3Uniform("uLightPosition", [0.0, 0.0]);
 
       var gl = glProgram.gl;
-
       var texture = gl.createTexture();
       var texImage = new Image(256, 256);
       texImage.onload = function(){
@@ -107,9 +104,6 @@
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
         gl.generateMipmap(gl.TEXTURE_2D);
-
-        // gl.uniform1i(uSampler, 0);
-
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -117,20 +111,17 @@
       }
       texImage.src = IMAGE_SRC;
 
-      var lightPos = [0.0, 0.0, 3.0, 1.0];
+      glProgram.setVec3Uniform("uLightPosition", [0.0,0.0,0.0]);
 
       function draw(){
-        // console.log(lightPos);
-        // glProgram.setVec3Uniform("uLightPosition", lightPos);
         gl.clear(glProgram.gl.COLOR_BUFFER_BIT);
         gl.drawArrays(glProgram.gl.TRIANGLE_FAN, 0, 4);
-        // lightPos = Mat4.Rotation(0.0, 0.1, 0.0).timesVec4(lightPos);
-
-
         requestAnimationFrame(draw);
       }
 
       function setLight(x,y){
+        x -= 110; // fudge factor, tweaked from observation
+        y += 90;  // fudge factor
         x -= canvas.offsetLeft;
         y -= canvas.offsetTop;
         console.log([x,y]);
