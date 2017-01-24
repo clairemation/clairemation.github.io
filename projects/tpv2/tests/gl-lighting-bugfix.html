@@ -74,7 +74,7 @@
           if (e.touches.length == 1) {
             setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
           }
-        });
+        }, true);
 
         window.addEventListener('mousemove', function(e){
           setLight(e.clientX, e.clientY);
@@ -85,7 +85,7 @@
           if (e.touches.length == 1) {
             setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
           }
-        });
+        }, true);
       }
     </script>
 
