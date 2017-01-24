@@ -76,6 +76,10 @@
           }
         }, true);
 
+        window.addEventListener('click', function(e){
+          setLight(e.clientX, e.clientY);
+        });
+        
         window.addEventListener('mousemove', function(e){
           setLight(e.clientX, e.clientY);
         });
