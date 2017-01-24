@@ -44,7 +44,10 @@
         glProgram.setUniform("uSampler", 0);
         glProgram.setUniform("uLightPosition", [0.0, 0.0]);
         glProgram.setUniform("uLightPosition", [0.0,0.0,0.0]);
-        glProgram.attachTexture(IMAGE_SRC).then(draw);
+        glProgram.attachTexture(IMAGE_SRC).then(function(){
+          addeventlisteners();
+          draw();
+        });
       }
 
       function draw(){
@@ -64,25 +67,26 @@
         glProgram.setUniform("uLightPosition", [x,-y,z]);
       }
 
-      window.addEventListener('touchmove', function(e){
-        e.preventDefault();
-        
-        if (e.touches.length == 1) {
-          setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
-        }
-      });
-      
-      window.addEventListener('mousemove', function(e){
-        setLight(e.clientX, e.clientY);
-      });
+      function addeventlisteners(){
+        window.addEventListener('touchmove', function(e){
+          e.preventDefault();
 
-      window.addEventListener('touchstart', function(e){
-        e.preventDefault();
-        if (e.touches.length == 1) {
-          setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
-        }
-      });
+          if (e.touches.length == 1) {
+            setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
+          }
+        });
 
+        window.addEventListener('mousemove', function(e){
+          setLight(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('touchstart', function(e){
+          e.preventDefault();
+          if (e.touches.length == 1) {
+            setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
+          }
+        });
+      }
     </script>
 
 
