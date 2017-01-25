@@ -4,10 +4,11 @@
 
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
 
   </head>
 
-  <body scroll="no" style="background: #0f0; height=100%; width=100%;">
+  <body scroll="no" style="background: #00f; height=100%; width=100%;">
 
     <div style="position: fixed; left: 0; top: 0; margin: 0; padding: 0; height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas"></div>
 
@@ -53,6 +54,7 @@
       function draw(){
         glProgram.gl.clear(glProgram.gl.COLOR_BUFFER_BIT | glProgram.gl.DEPTH_BUFFER_BIT);
         glProgram.gl.drawArrays(glProgram.gl.TRIANGLE_FAN, 0, 4);
+        requestAnimationFrame(draw);
       }
 
       function setLight(x,y){
@@ -64,22 +66,16 @@
         y = (y / 512 * 2.0) - 1.0;
         z = -Math.max(1.0 - ArrayVec3D.length([x,y,0]), 0.3);
         glProgram.setUniform("uLightPosition", [x,-y,z]);
-        draw();
       }
-
-      var body = document.getElementsByTagName("body")[0];
       
       function addEventListeners(){
-        
-        body.ontouchmove = touchSet;
-
-        body.addEventListener('click', function(e){
+       
+        window.addEventListener('mousemove', function(e){
           setLight(e.clientX, e.clientY);
         });
         
-        body.addEventListener('mousemove', function(e){
-          setLight(e.clientX, e.clientY);
-        });
+        window.ontouchstart = touchSet;
+        window.ontouchmove = touchSet;
 
         function touchSet(e){
           e.preventDefault();
