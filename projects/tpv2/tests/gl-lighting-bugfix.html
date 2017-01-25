@@ -7,7 +7,7 @@
 
   </head>
 
-  <body scroll="no" style="background: #f00; height=100%; width=100%;">
+  <body scroll="no" style="background: #0f0; height=100%; width=100%;">
 
     <div style="position: fixed; left: 0; top: 0; margin: 0; padding: 0; height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas"></div>
 
@@ -44,16 +44,12 @@
         glProgram.setUniform("uSampler", 0);
         glProgram.setUniform("uLightPosition", [0.0, 0.0]);
         glProgram.setUniform("uLightPosition", [0.0,0.0,0.0]);
-        glProgram.attachTexture(IMAGE_SRC).then(function(){
-          addeventlisteners();
-          requestAnimationFrame(draw);
-        });
+        glProgram.attachTexture(IMAGE_SRC).then(addEventListeners);
       }
 
       function draw(){
         glProgram.gl.clear(glProgram.gl.COLOR_BUFFER_BIT | glProgram.gl.DEPTH_BUFFER_BIT);
         glProgram.gl.drawArrays(glProgram.gl.TRIANGLE_FAN, 0, 4);
-        requestAnimationFrame(draw);
       }
 
       function setLight(x,y){
@@ -65,6 +61,7 @@
         y = (y / 512 * 2.0) - 1.0;
         z = -Math.max(1.0 - ArrayVec3D.length([x,y,0]), 0.3);
         glProgram.setUniform("uLightPosition", [x,-y,z]);
+        draw();
       }
 
       function addeventlisteners(){
@@ -75,7 +72,7 @@
           if (e.touches.length == 1) {
             setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
           }
-        }, true);
+        });
 
         window.addEventListener('click', function(e){
           setLight(e.clientX, e.clientY);
@@ -91,7 +88,7 @@
           if (e.touches.length == 1) {
             setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
           }
-        }, true);
+        });
       }
     </script>
 
