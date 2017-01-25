@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
   </head>
 
-  <body scroll="no" style="background: #f00;">
+  <body scroll="no" style="background: #0f0;">
     <div style="position: fixed; left: 0; top: 0; margin: 0; padding: 0; height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas"></div>
 
     <script src = "../libraries/arrayVec3D.js"></script>
@@ -67,8 +67,6 @@
       }
       
       function addEventListeners(){
-        
-        window.scrollTo(0,0);
        
         window.addEventListener('mousemove', function(e){
           setLight(e.clientX, e.clientY);
@@ -83,6 +81,8 @@
             setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
           }
         };
+        
+        window.scrollBy(0,0);
       }
     </script>
 
