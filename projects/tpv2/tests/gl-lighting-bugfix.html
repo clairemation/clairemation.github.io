@@ -46,7 +46,7 @@
         glProgram.setUniform("uLightPosition", [0.0,0.0,0.0]);
         glProgram.attachTexture(IMAGE_SRC).then(function(){
           addeventlisteners();
-          draw();
+          requestAnimationFrame(draw);
         });
       }
 
