@@ -83,7 +83,6 @@
         });
 
         window.addEventListener('touchstart', function(e){
-          alert("asdf");
           e.preventDefault();
           if (e.touches.length == 1) {
             setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
