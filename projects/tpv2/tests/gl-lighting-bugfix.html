@@ -8,13 +8,16 @@
 
   </head>
 
-  <body scroll="no" style="background: #f00; height=100%; width=100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas">
+  <body scroll="no" style="background: #f00; height=100%; width=100%;">
+    <div id="wrapper" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas"></div>
 
     <script src = "../libraries/arrayVec3D.js"></script>
     <script src = "../libraries/webgl_utils.js"></script>
     <script src = "../libraries/webgl-program.js"></script>
 
     <script>
+      document.getElementById("wrapper").height = window.innerHeight;
+      
       var vertScriptUrl = "../systems/sprite/gl-sprite-vertex-shader.vert",
         fragScriptUrl = "../systems/sprite/gl-sprite-fragment-shader.frag",
         IMAGE_SRC = 'herocombi3.png',
