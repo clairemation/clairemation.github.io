@@ -7,7 +7,7 @@
 
   </head>
 
-  <body scroll="no" style="background: #0f0; height=100%; width=100%;">
+  <body scroll="no" style="background: #f00; height=100%; width=100%;">
 
     <div style="position: fixed; left: 0; top: 0; margin: 0; padding: 0; height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas"></div>
 
@@ -44,7 +44,10 @@
         glProgram.setUniform("uSampler", 0);
         glProgram.setUniform("uLightPosition", [0.0, 0.0]);
         glProgram.setUniform("uLightPosition", [0.0,0.0,0.0]);
-        glProgram.attachTexture(IMAGE_SRC).then(addEventListeners);
+        glProgram.attachTexture(IMAGE_SRC).then(function(){
+          addEventListeners();
+          draw();
+        });
       }
 
       function draw(){
@@ -67,14 +70,8 @@
       var body = document.getElementsByTagName("body")[0];
       
       function addEventListeners(){
-        alert("add");
-        body.addEventListener('touchmove', function(e){
-          e.preventDefault();
-
-          if (e.touches.length == 1) {
-            setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
-          }
-        });
+        
+        body.ontouchmove = touchSet;
 
         body.addEventListener('click', function(e){
           setLight(e.clientX, e.clientY);
@@ -84,7 +81,7 @@
           setLight(e.clientX, e.clientY);
         });
 
-        body.addEventListener('touchstart', function(e){
+        function touchSet(e){
           e.preventDefault();
           if (e.touches.length == 1) {
             setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
