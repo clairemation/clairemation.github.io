@@ -7,7 +7,7 @@
     <meta name="viewport" content="user-scalable=no" />
   </head>
 
-  <body scroll="no" style="background: #00f; overflow: auto;">
+  <body scroll="no" style="background: #f00; overflow: auto;">
     <div style="position: absolute; overflow: auto; left: 0; top: 0; margin: 0; padding: 0; height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas"></div>
 
     <script src = "../libraries/arrayVec3D.js"></script>
@@ -77,6 +77,8 @@
         
         document.getElementsByTagName("body")[0].ontouchstart = blankFunction;
         document.getElementsByTagName("body")[0].ontouchmove = blankFunction;
+        document.getElementsByTagName("body")[0].removeEventListener("touchstart", blankFunction);
+        document.getElementsByTagName("body")[0].removeEventListener("touchmove", blankFunction);
         
         window.ontouchstart = touchSet;
         window.ontouchmove = touchSet;
@@ -88,8 +90,7 @@
           }
         };
         
-        document.getElementsByTagName("body")[0].removeEventListener("touchstart", blankFunction);
-        document.getElementsByTagName("body")[0].removeEventListener("touchmove", blankFunction);
+        
       }
     </script>
 
