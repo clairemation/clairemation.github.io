@@ -67,20 +67,15 @@
       window.addEventListener('mousemove', function(e){
         setLight(e.clientX, e.clientY);
       });
-
-      window.addEventListener('touchstart', function(e){
+      function touchSet(e){
         e.preventDefault();
         if (e.touches.length == 1) {
           setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
         }
-      });
-
-      window.addEventListener('touchmove', function(e){
-        e.preventDefault();
-        if (e.touches.length == 1) {
-          setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
-        }
-      });
+      };
+      var wrapper = document.getElementById("wrapper");
+      wrapper.ontouchstart = touchSet;
+      wrapper.ontouchmove = touchSet;
 
     </script>
 
