@@ -11,12 +11,12 @@
 
     <div id="wrapper" style="position: fixed; left: 0; top: 0; margin: 0; padding: 0; height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas" style="background: hsla(0,0%,0%,.2);"></div>
 
-    <button style="position: relative; width: 20%; height: 40px; z-index: 1;" onclick="drawFlame()">Flame</button>
-    <button style="position: relative; z-index: 1; width: 20%; height: 40px;" onclick="drawLiquid()">Liquid</button>
-    <button style="position: relative; z-index: 1; width: 20%; height: 40px;" onclick="drawSnow()">Snow</button>
+    <button style="position: relative; width: 20%; height: 40px; z-index: 1; font-size: 2em;" onclick="drawFlame()">Flame</button>
+    <button style="position: relative; width: 20%; height: 40px; z-index: 1; font-size: 2em;" onclick="drawLiquid()">Liquid</button>
+    <button style="position: relative; width: 20%; height: 40px; z-index: 1; font-size: 2em;" onclick="drawSnow()">Snow</button>
 
-    <script src = "../libraries/webgl_utils.js"></script>
-    <script src = "../libraries/webgl-program.js"></script>
+    <script src = "./libs/webgl_utils.js"></script>
+    <script src = "./libs/webgl-program.js"></script>
     <script src = "./flame/program_module.js"></script>
     <script src = "./liquid/program_module.js"></script>
     <script src = "./snow/program_module.js"></script>

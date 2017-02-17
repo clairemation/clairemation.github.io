@@ -33,19 +33,11 @@ void main(void){
 
   float wind = cos(delta*FREQ)/STRAIGHTNESS;
 
-  // convert to clipspace units
-  delta = delta * SPAN - SPAN_OFFSET;
+  delta = delta * SPAN;
+  vec2 point = vec2(delta, -delta*delta);
+  point = rotate(point, -displaceAngle+0.5) + vec2(-1.0, 0.5);
 
-  // behavior function
-  vec2 point = vec2(-delta);
-  point = rotate(point, wind);
+  gl_PointSize = (1.0-delta) * (30.0) + 30.0;
 
-  // add individual variation
-  point = point + vec2(displaceX/2.0, displaceY/2.0);
-
-  // ensure result is in clipspace
-  point = vec2(point.x * SPAN - SPAN_OFFSET, point.y-0.5);
-
-  gl_PointSize = 50.0;
   gl_Position = vec4((point), 0.0, 1.0);
 }

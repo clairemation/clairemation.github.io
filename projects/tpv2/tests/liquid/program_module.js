@@ -159,7 +159,7 @@ var drawLiquid = (function(){
           gl.clear(gl.COLOR_BUFFER_BIT);
           renderSnowProgram.setUniform("uDt", delta);
           gl.drawArrays(gl.POINTS, 0, numParticles);
-          delta += 0.0025;
+          delta += 0.005;
           if (delta >= 1.0) {delta = 0.0};
         }
 
