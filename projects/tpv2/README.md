@@ -39,7 +39,7 @@ Graphics (such as they are) by me. Uses no third-party frameworks, engines, or l
 ## TODO:
 
 - Modular build pipeline using Browserify or gulp
-- Rewrite view operations using WebGL
+- Rewrite view operations using WebGL; speed gains should allow for many more effects
 - Add sound
 - Data & event scripting schema
 - ...
