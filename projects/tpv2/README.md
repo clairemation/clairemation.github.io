@@ -1,28 +1,26 @@
-# Sprite Engine Demo
+# Sprite Framework Demo
 
-11/3/16 -- Whoah, that just got REAL slow with lighting and everything else running at the same time
-
-Very much a WIP. Not supported on Microsoft IE or iPhone. Works on iPad.
+Very much a WIP. Not supported on Microsoft IE or older mobile browsers.
 
 ---
 
 [See it live here] (https://clairemation.github.io/projects/tpv2/spritedemo.html).
 
+Move around using the arrow keys or by sliding a finger on the touch screen in the desired direction. 
+
+(If you want to download and run it yourself, it needs to be served over HTTP; COR issues in the canvas will not allow it to run via the file:// protocol.)
+
 Or check out the [lighting test] (http://clairemation.github.io/projects/tpv2/tests/lightingtest.html).
-
-<!-- If you want to run it yourself, it needs to be served over HTTP; COR issues in the canvas will not allow it to run via the file:// protocol.
-
-Use your favorite server, or in the Terminal, navigate to the root (tpv2) directory and type 'python -m SimpleHTTPServer'. Then in your browser go to localhost at the port # indicated (probably http://localhost:8000). Click spritedemo.html or the lighting test in the test folder. Go to Terminal and Control-C when done. -->
-
 
 ---
 
-Graphics (temp) by me. Uses no third-party frameworks, engines, or libraries.
+Graphics (such as they are) by me. Uses no third-party frameworks, engines, or libraries.
 
 ## Features:
 
 - Sprite animation
-- Dynamic cel-shaded lighting
+- Touch and keyboard controls for desktop and mobile
+- Dynamic cel-shaded lighting on main character
 - Parallax scrolling
 - Smooth, 8-directional movement
 - Natural physics including inertia and collision
@@ -38,6 +36,10 @@ Graphics (temp) by me. Uses no third-party frameworks, engines, or libraries.
 - Time-based animation
 - Spritesheets
 
-## Immediate TODOs:
+## TODO:
 
-- Lighting needs to drop off over distance
+- Modular build pipeline using Browserify or gulp
+- Rewrite view operations using WebGL
+- Add sound
+- Data & event scripting schema
+- ...
