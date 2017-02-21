@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+
+  </head>
+
+  <body scroll="no" style="background: #888;">
+
+    <div id="wrapper" style="position: fixed; left: 0; top: 0; margin: 0; padding: 0; height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas" style="border: 1px solid black; background: #000;"></div>
+
+    <button style="position: relative; height: 40px; z-index: 1; font-size: 2em;" onclick="drawFlame()">Flame</button>
+    <button style="position: relative; height: 40px; z-index: 1; font-size: 2em;" onclick="drawLiquid()">Liquid</button>
+    <button style="position: relative; height: 40px; z-index: 1; font-size: 2em;" onclick="drawSmoke()">Smoke</button>
+
+    <script src = "./libs/webgl_utils.js"></script>
+    <script src = "./libs/webgl-program.js"></script>
+    <script src = "./flame/program_module.js"></script>
+    <script src = "./liquid/program_module.js"></script>
+    <script src = "./smoke/program_module.js"></script>
+
+    <script>
+    "use strict";
+
+
+    </script>
+
+
+  </body>
+
+</html>
