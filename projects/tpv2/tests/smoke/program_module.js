@@ -1,9 +1,9 @@
-var drawLiquid = (function(){
+var drawSmoke = (function(){
 
-        var vertScriptUrl = "liquid/particles.vert",
-          fragScriptUrl = "liquid/particles.frag",
-          blurVertScriptUrl = "liquid/blur.vert",
-          blurFragScriptUrl = "liquid/blur.frag",
+        var vertScriptUrl = "smoke/particles.vert",
+          fragScriptUrl = "smoke/particles.frag",
+          blurVertScriptUrl = "smoke/blur.vert",
+          blurFragScriptUrl = "smoke/blur.frag",
           flameDir = "flame",
           canvas = document.getElementById("canvas"),
           renderSnowProgram = null,
@@ -19,7 +19,7 @@ var drawLiquid = (function(){
           rawParticlesTexture = null,
           delta = 0.0,
           loopID = null,
-          numParticles = 750,
+          numParticles = 1000,
           particles = [],
           colors = [],
           tmp = 0.0,
