@@ -10,8 +10,6 @@ Move around using the arrow keys or by sliding a finger on the touch screen in t
 
 (If you want to download and run it yourself, it needs to be served over HTTP; COR issues in the canvas will not allow it to run via the file:// protocol.)
 
-Or check out the [lighting test] (http://clairemation.github.io/projects/tpv2/tests/lightingtest.html).
-
 ---
 
 Graphics (such as they are) by me. Uses no third-party frameworks, engines, or libraries.
