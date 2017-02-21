@@ -17,7 +17,7 @@ void main(void){
     texture2D(uSampler, vTextureCoords + onePixel * vec2( 1,  0)) * uKernel[13]  +
     texture2D(uSampler, vTextureCoords + onePixel * vec2(-1,  1)) * uKernel[16]  +
     texture2D(uSampler, vTextureCoords + onePixel * vec2( 0,  1)) * uKernel[17]  +
-    texture2D(uSampler, vTextureCoords + onePixel * vec2( 1,  1)) * uKernel[18]  ;
+    texture2D(uSampler, vTextureCoords + onePixel * vec2( 1,  1)) * uKernel[18]  +
 
     // add these for a 5x5 kernel
     texture2D(uSampler, vTextureCoords + onePixel * vec2(-2, -2)) * uKernel[0]   +
@@ -42,5 +42,4 @@ void main(void){
   vec3 aqua = vec3(0.4, 0.8, 1.0);
   vec3 color = mix(aqua, sample.rgb, vTextureCoords.x);
   gl_FragColor = vec4(color, step(0.5, avg));
-  // gl_FragColor = vec4(1.0,0.0,0.0,1.0);
 }
