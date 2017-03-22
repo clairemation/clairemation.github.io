@@ -134,12 +134,10 @@ p, h3 {
     margin: 0;
     padding: 0;
     width: 100%; }
-  section#projects ul li.project-block:not(:first-of-type) {
+  section#projects ul li.project-block {
     overflow: auto;
     padding-top: 50px;
     position: relative; }
-  section#projects li.project-block:not(:first-of-type) {
-    padding-top: 50px; }
   section#projects li.project-block h3 {
     margin-bottom: 10px; }
   section#projects li.project-block img {
