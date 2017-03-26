@@ -3,167 +3,27 @@
 <html>
 
   <head>
-
-    <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One|Special+Elite" rel="stylesheet">
-
-    <link type="text/css" rel="stylesheet" href="main.css">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
-
-    <title>Claire's Dev Site</title>
+    <meta charset="UTF-8">
   </head>
 
-  <body>
+  <body scroll="no" style="background: #7f7ffe">&nbsp;
 
-    <section id="main-pane">
+    <!-- <img src = "app/tests/spherenormals.png" width=1024 height=512 /> -->
 
-      <header>
-        <section id="mobile-popup">
-          <input type="checkbox" id="mobilemenu-toggle"/>
-          <label for="mobilemenu-toggle" id="hamburger">&equiv;</label>
-          <label for="mobilemenu-toggle" id="whole-page-button" class="close">&nbsp;</label>
-          <nav id="mobilemenu">
-            <label for="mobilemenu-toggle" class="close">&times;</label>
-            <ul>
-              <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
-              <li><a href="#about" onclick="closeMenu()">About</a></li>
-              <li><a href="clairesamuelsresume_jan2017.pdf" onclick="closeMenu()">Resume</a></li>
-              <li><a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a></li>
-              <li><a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a></li>
-              <li><a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a></li>
-            </ul>
-          </nav>
-        </section>
-        <div id="maintitle">
-          <h1>Claire's Dev Site</h1>
+    <div id="root" style="display: flex; justify-content: center; align-items: center; align-content: center;">
+      <div style="position:relative;">
+        <div id = "ball" style="width: 10px; height: 10px; padding: 0;
+          position: absolute; font-size: 2em; line-height: 0;  letter-spacing: 0;">
+          &bull;
         </div>
-        <h2 id="intro">
-          Artful algorithms, algorithmic art
-        </h2>
-        <nav id="header-buttons">
-          <!-- <ul>
-            <li class="button">
-              <label for="contact-toggle"> -->
-                <a href="mailto:clairemation@gmail.com"><button class="contact-button">Contact</button></a>
-              <!-- </label>
-            </li>
-          </ul>
-          <input type="checkbox" id="contact-toggle"/>
-          <div class="contact-badges">
-            <a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a>
-            <a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a>
-            <a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a>
-          </div> -->
-        </nav>
-      </header>
 
-      <main>
+        <canvas id="scratch" style="width: 512px; height: 512px; margin: auto;" width=256 height=256></canvas>
+    </div>
+  </div>
 
-        <a name = "about"></a>
-        <section id="about">
-          <p>
-            I'm a creative full-stack engineer with experience crafting worlds in everything from cel animation to C++.
-          </p>
-        </section>
+    <script src="normals-bundle.js"></script>
 
-        <section id="projects">
-
-         <a name = "projects"></a>
-
-          <ul class="projects-ul">
-
-            <li class="project-block mobile-small project-lightingtest">
-              <a href="projects/tpv2/tests/gl-lighting.html">
-                <h4>WebGL</h4>
-                <img src="imgs/gl-lighting2.jpg"/>
-                <h3>Dynamic sprite lighting</h3>
-                <p>
-                  Rewriting my game engine's normal-mapping engine in buttery-smooth WebGL. Move the mouse or tap and drag a finger to set and move the light.
-                </p>
-              </a>
-            </li>
-
-            <li class="project-block mobile-big tablet-big desktop-med project-webgl">
-              <a href="http://clairemation.github.io/projects/tpv2/tests/webgltest.html">
-                <h4>3D</h4>
-                <img src="imgs/ss-cube.jpg"/>
-                <h3>Fun with WebGL</h3>
-                <p>
-                  Testing different lighting conditions on a spinnable textured cube. Uses no existing libraries, just pure WebGL and math.
-                </p>
-              </a>
-            </li>
-
-            <li class="project-block mobile-big project-spritedemo">
-              <a href="projects/timesprisoner">
-                <h4>Canvas</h4>
-                <img src="imgs/ss-sprite-engine2.jpg"/>
-                <h3>Sprite Engine Demo</h3>
-                <p>
-                  Scratch-written HTML5 2D game engine, no third-party libraries. Very much a WIP, currently does not work on IE or older mobile browsers. Graphics by me.
-                </p>
-              </a>
-            </li>
-
-            <li class="project-block mobile-small mobile-no-pic desktop-med project-walkabout">
-              <a href="http://github.com/clairemation/Walkabout">
-                <h4>React Native</h4>
-                <img src="imgs/ss-walkabout-cropped.png"/>
-                <h3>Walkabout</h3>
-                <p>
-                  Tour-guide app for iPhone, automatically narrating interesting points about your surroundings as you walk around. Team project; I wrote the control logic.
-                </p>
-              </a>
-            </li>
-
-            <li class="project-block mobile-small mobile-no-pic desktop-small project-sudoku">
-              <a href="http://shrouded-harbor-54304.herokuapp.com/">
-                <h4>Rails</h4>
-                <h3>Sudoku Solver</h3>
-                <p>
-                  Single-page Rails-based web app that solves any valid sudoku puzzle. Team project; I wrote the recursive brute-force algorithm in Ruby, and all the JS and CSS on the front end.
-                </p>
-              </a>
-            </li>
-
-            <li class="project-block mobile-small project-gamelevel">
-              <a href="projects/timesprisoner/timesprisoner.html">
-                <h4>Game</h4>
-                <img src="imgs/tpscreenshot.jpg"/>
-                <h3>Game Level Prototype</h3>
-                <p>
-                  Early prototype level for a graphical adventure game. Currently for desktop only. (Turn on your sound.)
-                </p>
-              </a>
-            </li>
-          </ul>
-
-          <p class = "breakout">
-            Got a project? <a href="mailto:clairemation@gmail.com">Hit me up!</a>
-          </p>
-
-        </section>
-
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-
-      <script>
-
-        function closeMenu(){
-          document.getElementById("mobilemenu-toggle").checked = false;
-          $("main, header > *:not(#mobile-popup)").removeClass("blur");
-        }
-
-        $("#mobilemenu-toggle").on("click", function(e){
-          if (this.checked){
-            $("main, header > *:not(#mobile-popup)").addClass("blur");
-          }
-          else {
-            $("main, header > *:not(#mobile-popup)").removeClass("blur");
-          }
-        });
-
-      </script>
 
   </body>
+
 </html>
