@@ -6,25 +6,17 @@
     <meta charset="UTF-8">
   </head>
 
-  <body scroll="no" style="background: #7f7ffe">&nbsp;
-    
-    <h2 style="position: absolute; color: #fff;">Move the ball around and over the bump by using the arrow keys or touch-joysticking anywhere.</h2>
-
-    <div id="root" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; padding: 0; position: absolute; display: flex; justify-content: center; align-items: center;">
-      <div id = "wrapper" style="position: relative;">
-        <div id = "ball" style="width: 10px; height: 10px; padding: 0;
-        position: absolute; font-size: 2em; line-height: 0; letter-spacing: 0; z-index: 1;">
-          <span style="margin: -1em -1em 0 0">&bull;</span>
-        </div>
-
-        <img src="ballcolorcropped.png" style="width:512px; height: 512px; position: relative; z-index: 0; margin-left: 0em; border-radius: 50%;" />
-        <!-- <canvas id="scratch" style="width: 512px; height: 512px; margin: auto;" width=256 height=256></canvas> -->
-      </div>
-    </div>
-
-    <script src="bundle.js"></script>
-
+  <body>
+    <h1>Perturbing object paths using normal maps</h1>
+    <p>For my game project I want the environments to have a subjective, painterly look, but I don't want them to feel like flat backdrops. So I thought of painting the environments in 2D, and using normal maps to create 3D terrain. I've never heard of normal maps being used for this purpose, but I think the effect could be really cool.
+    <p>Right now I'm just subtracting the "penetration" vector from your movement vector. Probably a better way to go would be to rotate your plane of movement. I'm still figuring out how I might do this (something something surface tangents).</p>
+    <p>(All the assets were drawn in Photoshop. Nothing is 3d-modeled.)</p>
+    <h2><a href="sphere.html">Experiment 1: A sphere</a></h2>
+    <p>A ball follows the contours of a sphere.
+    <h2><a href="ramps.html">Experiment 2: A bunch of ramps</a></h2>
+    <p>Here I blocked movement if the surface in front of you is too sheer. This even allowed me to set up invisible "rails" around the ramps. The behavior all around is super janky, though. In an actual game I would actually use collision, but this is an experiment to see how far I can go with this.</p>
 
   </body>
 
 </html>
+
