@@ -519,7 +519,6 @@ var $ = __webpack_require__(0),
 
 
 var image = new Image(256, 256),
-    colors = [],
     startx = 0,
     starty = 0,
     sourceWidth = 256,
@@ -582,14 +581,15 @@ function processNormalsImage() {
     }();
     for (var i = 0; i < data.length; i += 4) {
       // Normalize and convert to -1 - 1 space
-      var color = [data[i], data[i + 1], data[i + 2]];
-      colors.push(color);
       var normal = $([data[i], data[i + 1], 255 - data[i + 2]]).divideBy(256).times(2).plus(-1).unit().$;
       normals.push(normal);
     }
     resolve();
   });
 }
+
+var rotationMatrix = [],
+    newDirection = [];
 
 function tick(dt) {
   loop = requestAnimationFrame(tick);
@@ -609,20 +609,14 @@ function tick(dt) {
           y = _axis[1],
           z = _axis[2];
 
-      var rotMat = [t * x * x + c, t * x * y - z * s, t * x * z + y * s, t * x * y + z * s, t * y * y + c, t * y * z - x * s, t * x * z + y * s, t * y * z + x * s, t * z * z + c];
-      var rotationMatrix = $([0, 0, 1]).rotationMatrixTo([0, 0, 1]).$;
-      // console.log(rotMat)
+      rotationMatrix = [t * x * x + c, t * x * y - z * s, t * x * z + y * s, t * x * y + z * s, t * y * y + c, t * y * z - x * s, t * x * z + y * s, t * y * z + x * s, t * z * z + c];
     } else {
-      var rotMat = idMatrix;
+      rotationMatrix = idMatrix;
     }
-    var newD = vTimesM(ballDirection, rotMat);
-  } else newD = [ballDirection[0], ballDirection[2], ballDirection[2]];
+    newDirection = vTimesM(ballDirection, rotationMatrix);
+  } else newDirection = [ballDirection[0], ballDirection[2], ballDirection[2]];
 
-  // var dot = $(tNorm).dot(ballDirection).$
-  // var penetrationVector = $(tNorm).times(dot).$;
-  // var ballVector = $(ballDirection).minusVector(penetrationVector).unit().times(ballSpeed).$;
-  // if (dot > 0.65) ballVector = [0,0,0];
-  ballVector = $(newD).times(ballSpeed).$;
+  ballVector = $(newDirection).times(ballSpeed).$;
 
   var _ref = [ballX + ballVector[0], ballY + ballVector[1], ballZ + ballVector[2] / 256];
   ballX = _ref[0];
@@ -630,19 +624,8 @@ function tick(dt) {
   ballZ = _ref[2];
   ;
 
-  // if new position is still onscreen
-  // if (newBallPosition[0] > -wrapper.offsetLeft && newBallPosition[0] < wrapper.offsetLeft + wrapper.clientWidth
-  //   && newBallPosition[1] > -wrapper.offsetTop && newBallPosition[1] < wrapper.offsetTop + wrapper.clientHeight) {
-  //   [ballX, ballY, ballZ] = newBallPosition;
-  // }
-
-  //   var ballSize = 100 + ballZ * 100;
-  // }
-
-
   ball.style.top = ballY.toString() + 'px';
   ball.style.left = ballX.toString() + 'px';
-  // ball.style.fontSize = (24 + ballSize * 1.5).toString() + 'px';
 }
 
 window.onload = function () {
@@ -701,11 +684,8 @@ window.onload = function () {
     var touch = e.changedTouches[0];
     var newVec = [touch.clientX, touch.clientY];
     var direction = $(newVec).minusVector(startVec).divideBy(200).$;
-    // direction = $(direction).unit().$;
     ballDirection[0] = Math.max(Math.min(direction[0], 2), -2);
     ballDirection[2] = Math.max(Math.min(direction[1], 2), -2);
-    // console.log(ballDirection);
-    // startVec = newVec;
   });
 
   root.addEventListener('touchend', function (e) {
