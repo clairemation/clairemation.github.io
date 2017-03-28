@@ -9,14 +9,14 @@
   <body>
     <h1>Perturbing object paths using normal maps</h1>
     <p>For my game project I want the environments to have a subjective, painterly look, but I don't want them to feel like flat backdrops. So I thought of painting the environments in 2D, and using normal maps to create 3D terrain. I've never heard of normal maps being used for this purpose, but I think the effect could be really cool.
-    <p>Right now I'm just subtracting the "penetration" vector from your movement vector. Probably a better way to go would be to rotate your plane of movement. I'm still figuring out how I might do this (something something surface tangents).</p>
     <p>(All the assets were drawn in Photoshop. Nothing is 3d-modeled.)</p>
     <h2><a href="sphere.html">Experiment 1: A sphere</a></h2>
-    <p>A ball follows the contours of a sphere.
-    <h2><a href="ramps.html">Experiment 2: A bunch of ramps</a></h2>
-    <p>Here I blocked movement if the surface in front of you is too sheer. This even allowed me to set up invisible "rails" around the ramps. The behavior all around is super janky, though. In an actual game I would actually use collision, but this is an experiment to see how far I can go with this.</p>
+    <p>A ball follows the contours of a sphere. This was my first attempt, in which I just calculated a faux penetration vector and subtracted it from the movement vector. I'm pretty sure the math is off, but it's visually convincing.</p>
+    <h2><a href="ramp.html">Experiment 2: A bunch of ramps</a></h2>
+    <p>Here I had another idea: rotate the character's plane of movement to the plane defined by the surface normal. This seems to allow more precision.</p>
 
   </body>
 
 </html>
+
 

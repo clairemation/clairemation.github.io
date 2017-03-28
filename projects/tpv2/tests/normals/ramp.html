@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+  </head>
+
+  <body scroll="no" style="background: #000;">&nbsp;
+
+    <p style="position: absolute; color: #fff">Move the dot over the ramps by using the arrow keys or touch-joysticking anywhere.</p>
+
+    <!-- <img src = "app/tests/spherenormals.png" width=1024 height=512 /> -->
+
+    <div id="root" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; padding: 0; position: absolute; display: flex; justify-content: center; align-items: center;">
+      <div id = "wrapper" style="position: relative;">
+        <div id = "ball" style="background: #fff; width: 10px; height: 10px; padding: 0;
+        position: absolute; z-index: 1;">
+          &nbsp;
+        </div>
+
+        <img src="ramp.png" style="width:512px; height: 512px; position: relative; z-index: 0;"/>
+        <!-- <canvas id="scratch" style="width: 512px; height: 512px; margin: auto;" width=256 height=256></canvas> -->
+      </div>
+    </div>
+
+    <script src="ramps-bundle.js"></script>
+
+
+  </body>
+
+</html>
