@@ -681,7 +681,9 @@ var processNormalsImage = __webpack_require__(1),
     sin = Math.sin,
     root = document.getElementById('root'),
     ball = document.getElementById('ball'),
-    wrapper = document.getElementById('wrapper');
+    wrapper = document.getElementById('wrapper'),
+    loader = document.getElementById('loader-wrapper'),
+    loaderText = document.getElementById('loader-text');
 
 
 var image = new Image(WIN_WIDTH, WIN_HEIGHT),
@@ -698,6 +700,7 @@ image.onload = function () {
   processNormalsImage({ image: image, normals: normals, alphas: depths }).then(function () {
     ball.className = "showing";
     loader.className = "hidden";
+    loaderText.className = "hidden";
     loop = requestAnimationFrame(tick);
   });
 };
