@@ -692,10 +692,12 @@ var image = new Image(WIN_WIDTH, WIN_HEIGHT),
     ballY = 256,
     ballX = 256,
     ballZ = 0,
-    ballSpeed = 3;
+    ballSpeed = 2;
 
 image.onload = function () {
   processNormalsImage({ image: image, normals: normals, alphas: depths }).then(function () {
+    ball.className = "showing";
+    loader.className = "hidden";
     loop = requestAnimationFrame(tick);
   });
 };
