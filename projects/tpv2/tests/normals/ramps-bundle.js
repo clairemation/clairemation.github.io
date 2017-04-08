@@ -752,41 +752,47 @@ function tick(dt) {
 
     // If we're on the inside side of the boundary
     if (!$(newPosition2d).isLeftOf(boundaryVector).$) {
+      var forceToMaintainDistanceFromVertex = function forceToMaintainDistanceFromVertex(point, vertex, distanceThreshold) {
+        var dist = $(point).distanceTo(vertex).$;
+        if (dist < distanceThreshold) {
+          close = true;
+          return $([].concat(p1, newPosition2d)).coordPairToVector().unit().times(distanceThreshold - dist).$;
+        } else return false;
+      };
+
+      var rayActiveAreaBoundingBox = function rayActiveAreaBoundingBox(ray, size) {
+        var box = [];
+        var side1 = ray;
+        var normal = $(ray).coordPairToVector().leftNormal().times(size).$;
+        var side2 = [ray[2], ray[3]].concat(_toConsumableArray($([ray[2], ray[3]]).plus(normal).$));
+        var side4 = [].concat(_toConsumableArray($([ray[0], ray[1]]).plus(normal).$), [ray[0], ray[1]]);
+        var side3 = [side2[2], side2[3], side4[0], side4[1]];
+        box.push(side1);
+        box.push(side2);
+        box.push(side3);
+        box.push(side4);
+        return box;
+      };
+
       var close = false,
           proximityVector = [];
 
-      // check point 1
-      var dist = $(newPosition2d).distanceTo(p1).$;
-      if (dist < DISTANCE_THRESHOLD) {
-        close = true;
-        proximityVector = $([].concat(_toConsumableArray(p1), newPosition2d)).coordPairToVector().unit().times(DISTANCE_THRESHOLD - dist).$;
+      var proximityVector = null;
+      var bBox = rayActiveAreaBoundingBox(boundary, DISTANCE_THRESHOLD);
+      if (!insidePolygon(newPosition2d, bBox)) {
+        proximityVector = forceToMaintainDistanceFromVertex(newPosition2d, p1, DISTANCE_THRESHOLD) || forceToMaintainDistanceFromVertex(newPosition2d, p2, DISTANCE_THRESHOLD);
       } else {
-        // check point 2
-        dist = $(newPosition2d).distanceTo(p2).$;
-        if (dist < DISTANCE_THRESHOLD) {
-          close = true;
-          proximityVector = $([].concat(_toConsumableArray(p2), newPosition2d)).coordPairToVector().unit().times(DISTANCE_THRESHOLD - dist).$;
-        } else {
-          // Bounding box check
-
-          // Extend bbox around vertices
-          p1 = $(p1).minusVector($(boundaryVector).times(DISTANCE_THRESHOLD).$).$;
-          p2 = $(p2).plus($(boundaryVector).times(DISTANCE_THRESHOLD).$).$;
-
-          if (newPosition2d[0] < p1[0] != newPosition2d[0] < p2[0] && newPosition2d[1] < p1[1] != newPosition2d[1] < p2[1]) {
-            // check distance to line
-            var distanceTestVector = $(boundaryNormal).times(DISTANCE_THRESHOLD).$;
-            var distanceRay = [].concat(newPosition2d, _toConsumableArray($(newPosition2d).minusVector(distanceTestVector).$));
-            var intersection = intersects.apply(undefined, _toConsumableArray(distanceRay).concat(_toConsumableArray(boundary)));
-            if (intersection) {
-              close = true;
-              dist = $([].concat(newPosition2d, _toConsumableArray(intersection))).coordPairToVector().length().$;
-              proximityVector = $([].concat(_toConsumableArray(intersection), newPosition2d)).coordPairToVector().unit().times(DISTANCE_THRESHOLD - dist).$;
-            }
-          }
+        // TODO: Add broad phase test
+        // Check distance to line
+        var distanceTestVector = $(boundaryNormal).times(DISTANCE_THRESHOLD).$;
+        var distanceRay = [].concat(newPosition2d, _toConsumableArray($(newPosition2d).minusVector(distanceTestVector).$));
+        var intersection = intersects.apply(undefined, _toConsumableArray(distanceRay).concat(_toConsumableArray(boundary)));
+        if (intersection) {
+          var dist = $([].concat(newPosition2d, _toConsumableArray(intersection))).coordPairToVector().length().$;
+          proximityVector = $([].concat(_toConsumableArray(intersection), newPosition2d)).coordPairToVector().unit().times(DISTANCE_THRESHOLD - dist).$;
         }
       }
-      if (close) {
+      if (!!proximityVector) {
         var wallForce = $([proximityVector[0], 0, proximityVector[1]]).rotateToPlane(PERSPECTIVE).$;
         newPosition = $(newPosition).plus(wallForce).$;
       }
@@ -794,22 +800,28 @@ function tick(dt) {
   }
 
   // Only apply changes if they're still inside the walkable polygon
-  var horizontalRay = [].concat(newPosition2d, [WIN_WIDTH, newPosition2d[1]]);
-  var crossings = 0;
-  // make sure no boundary vertices are on our test ray
-  var boundaries = [];
-  for (var _i = 0; _i < BOUNDARIES.length; _i++) {
-    var boundary = BOUNDARIES[_i];
-    if (boundary[1] === newPosition2d[1]) boundary[1] += 1;
-    if (boundary[3] === newPosition2d[1]) boundary[3] += 1;
-    boundaries.push(boundary);
+  function insidePolygon(point, sides) {
+    var horizontalRay = [].concat(_toConsumableArray(point), [WIN_WIDTH, point[1]]);
+    var crossings = 0;
+    // make sure no boundary vertices are on our test ray
+    var boundaries = [];
+    for (var _i = 0; _i < sides.length; _i++) {
+      var boundary = sides[_i];
+      if (boundary[1] === point[1]) boundary[1] += 1;
+      if (boundary[3] === point[1]) boundary[3] += 1;
+      boundaries.push(boundary);
+    }
+    for (var _i2 = 0; _i2 < boundaries.length; _i2++) {
+      var boundary = boundaries[_i2];
+      var intersection = intersects.apply(undefined, _toConsumableArray(horizontalRay).concat(_toConsumableArray(boundary)));
+      if (intersection) crossings++;
+    }
+    return crossings % 2 != 0;
   }
-  for (var _i2 = 0; _i2 < boundaries.length; _i2++) {
-    var boundary = boundaries[_i2];
-    var intersection = intersects.apply(undefined, _toConsumableArray(horizontalRay).concat(_toConsumableArray(boundary)));
-    if (intersection) crossings++;
-  }
-  if (crossings % 2 != 0) {
+
+  if (insidePolygon(newPosition2d, BOUNDARIES)) {
+    ;
+
     var _newPosition = newPosition;
 
     var _newPosition2 = _slicedToArray(_newPosition, 3);
@@ -817,9 +829,7 @@ function tick(dt) {
     ballX = _newPosition2[0];
     ballY = _newPosition2[1];
     ballZ = _newPosition2[2];
-  }
-
-  // }
+  } // }
   ball.style.left = (ballX - 5).toString() + 'px';
   ball.style.top = (ballY - 10).toString() + 'px';
 }
