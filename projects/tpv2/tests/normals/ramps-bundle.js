@@ -1,4 +1,4 @@
-var $ =
+var App =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -790,6 +790,12 @@ function boundaryForce2d(point, boundaries, distanceThreshold) {
   }
 }
 
+function jump() {
+  window.cancelAnimationFrame(loop);
+  tick = inAir;
+  requestAnimationFrame(tick);
+}
+
 var groundPos = [0, 0, 0],
     airCurrentPos = [0, 0, 0],
     airNewPos = [0, 0, 0],
@@ -919,7 +925,7 @@ window.onload = function () {
         ballImpulse[2] = 1;
         break;
       case SPACEBAR:
-        tick = inAir;
+        jump();
         break;
     }
     ballImpulse = $(ballImpulse).unit().$;
@@ -946,16 +952,22 @@ window.onload = function () {
   });
 
   var startVec = [0, 0];
+  var button = document.getElementById('jump-button');
 
   root.addEventListener('touchstart', function (e) {
     e.preventDefault();
     var touch = e.changedTouches[0];
+    if (e.target.id === 'jump-button') {
+      jump();
+      return;
+    }
     startVec = [touch.clientX, touch.clientY];
   });
 
   root.addEventListener('touchmove', function (e) {
     e.preventDefault();
     var touch = e.changedTouches[0];
+    if (e.target.id === 'jump-button') return;
     var newVec = [touch.clientX, touch.clientY];
     var direction = $(newVec).minusVector(startVec).unit().$;
     ballImpulse[0] = direction[0];
@@ -964,13 +976,14 @@ window.onload = function () {
 
   root.addEventListener('touchend', function (e) {
     e.preventDefault();
+    if (e.target.id === 'jump-button') return;
     ballImpulse[0] = 0;
     ballImpulse[2] = 0;
     startVec = [0, 0, 0];
   });
 };
 
-module.exports = $;
+module.exports = { $: $, jump: jump };
 
 /***/ })
 /******/ ]);

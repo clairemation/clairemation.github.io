@@ -74,10 +74,6 @@
     <script src="ramps-bundle.js"></script>
     <script>
       var button = document.getElementById('jump-button');
-      button.addEventListener('touchstart', function(e){
-        e.preventDefault();
-        App.jump();
-      });
       button.addEventListener('click', function(e){
         e.preventDefault();
         App.jump();
