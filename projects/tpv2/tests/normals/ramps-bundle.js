@@ -410,6 +410,13 @@ Vector.prototype.projectedLength = function (v) {
   return this;
 };
 
+Vector.prototype.scalarProjection = function (b) {
+  var a = values.pop();
+  var bLength = $(b).length().$;
+  values.push(bLength === 0 ? 0 : $(a).dot(b).$ / $(b).length().$);
+  return this;
+};
+
 // Todo: Add versions for other size matrices
 Vector.prototype.transpose = function () {
   var v = values.pop();
@@ -696,6 +703,8 @@ var image = new Image(WIN_WIDTH, WIN_HEIGHT),
     ballZ = 0,
     ballSpeed = 2;
 
+var tick = inAir;
+
 image.onload = function () {
   processNormalsImage({ image: image, normals: normals, alphas: depths }).then(function () {
     ball.className = "showing";
@@ -707,32 +716,155 @@ image.onload = function () {
 image.src = 'hills3.png';
 
 // TODO: Boundary class, specifies innie or outie, provides bins for optimization
-var BOUNDARIES = [[2, 190, 261, 187], [261, 187, 277, 200], [277, 200, 378, 216], [378, 216, 360, 286], [360, 286, 508, 360], [508, 360, 510, 508], [510, 508, 248, 508], [248, 508, 200, 428], [200, 428, 63, 451], [63, 451, 3, 412], [3, 412, 2, 190]
+var BOUNDARIES = [[2, 190, 261, 187], [261, 187, 277, 200], [277, 200, 378, 216], [378, 216, 360, 286], [360, 286, 508, 360], [508, 360, 510, 508], [510, 508, 248, 508], [248, 508, 200, 428], [200, 428, 63, 451], [63, 451, 3, 412], [3, 412, 2, 190]];
 
-// [248, 207, 268, 241],
-// [268, 241, 227, 250],
-// [227, 250, 186, 213],
-// [186, 213, 248, 207],
+function forceToMaintainDistanceFromVertex(point, vertex, distanceThreshold) {
+  var dist = $(point).distanceTo(vertex).$;
+  if (dist < distanceThreshold) {
+    close = true;
+    return $([].concat(_toConsumableArray(vertex), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
+  } else return false;
+}
 
-// [98, 236, 116, 238,],
-// [116, 238, 192, 288],
-// [192, 288, 127, 274],
-// [127, 274, 98, 236]
+function frontOfRayBBox(ray, size) {
+  var box = [];
+  var side1 = ray;
+  var normal = $(ray).coordPairToVector().leftNormal().times(size).$;
+  var side2 = [ray[2], ray[3]].concat(_toConsumableArray($([ray[2], ray[3]]).plus(normal).$));
+  var side4 = [].concat(_toConsumableArray($([ray[0], ray[1]]).plus(normal).$), [ray[0], ray[1]]);
+  var side3 = [side2[2], side2[3], side4[0], side4[1]];
+  box.push(side1);
+  box.push(side2);
+  box.push(side3);
+  box.push(side4);
+  return box;
+}
 
-];
-function tick(dt) {
+function insidePolygon(point, sides) {
+  var horizontalRay = [].concat(_toConsumableArray(point), [WIN_WIDTH, point[1]]);
+  var crossings = 0;
+  // make sure no boundary vertices are on our test ray
+  var boundaries = [];
+  for (var i = 0; i < sides.length; i++) {
+    var boundary = sides[i];
+    if (boundary[1] === point[1]) boundary[1] += 1;
+    if (boundary[3] === point[1]) boundary[3] += 1;
+    boundaries.push(boundary);
+  }
+  for (var _i = 0; _i < boundaries.length; _i++) {
+    var boundary = boundaries[_i];
+    var intersection = intersects.apply(undefined, _toConsumableArray(horizontalRay).concat(_toConsumableArray(boundary)));
+    if (intersection) crossings++;
+  }
+  return crossings % 2 != 0;
+}
+
+function boundaryForce2d(point, boundaries, distanceThreshold) {
+  for (var i = 0; i < boundaries.length; i++) {
+    var boundary = boundaries[i],
+        p1 = [boundary[0], boundary[1]],
+        p2 = [boundary[2], boundary[3]],
+        boundaryVector = $(boundary).coordPairToVector().$,
+        boundaryNormal = $(boundaryVector).leftNormal().$;
+
+    // If we're on the inside side of the boundary
+    if (!$(point).isLeftOf(boundaryVector).$) {
+      var proximityVector = null;
+      var bBox = frontOfRayBBox(boundary, distanceThreshold);
+      if (!insidePolygon(point, bBox)) {
+        proximityVector = forceToMaintainDistanceFromVertex(point, p1, distanceThreshold) || forceToMaintainDistanceFromVertex(point, p2, distanceThreshold);
+      } else {
+        // Check distance to line
+        var distanceTestVector = $(boundaryNormal).times(distanceThreshold).$;
+        var distanceRay = [].concat(_toConsumableArray(point), _toConsumableArray($(point).minusVector(distanceTestVector).$));
+        var intersection = intersects.apply(undefined, _toConsumableArray(distanceRay).concat(_toConsumableArray(boundary)));
+        if (intersection) {
+          var dist = $([].concat(_toConsumableArray(point), _toConsumableArray(intersection))).coordPairToVector().length().$;
+          proximityVector = $([].concat(_toConsumableArray(intersection), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
+        }
+      }
+      if (proximityVector) {
+        return proximityVector;
+      }
+    }
+  }
+}
+
+var groundPos = [0, 0, 0],
+    airCurrentPos = [0, 0, 0],
+    airNewPos = [0, 0, 0],
+    init = true,
+    gravity = 0;
+
+function inAir(dt) {
   loop = requestAnimationFrame(tick);
-  var b = ballImpulse,
-      x = parseInt(ballX),
-      y = parseInt(ballY),
+  airCurrentPos = [ballX, ballY, ballZ];
+  if (init) {
+    groundPos = [ballX, ballY, ballZ];
+    gravity = -7;
+    init = false;
+  }
+  var x = parseInt(groundPos[0]),
+      y = parseInt(groundPos[1]),
       normal = [0, 0, -1],
       depth = 0;
-  if (x >= 0 && x <= WIN_WIDTH && y >= 0 && y <= WIN_HEIGHT) {
+  if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
     normal = normals[WIN_WIDTH * y + x];
     depth = depths[WIN_WIDTH * y + x];
   }
-  var offset = $(b).rotateToPlane(normal).$;
-  var vector = $(b).plus(offset).unit().times(ballSpeed).rotateToPlane(PERSPECTIVE).$;
+
+  normal = [normal[0], normal[1], 0];
+  var airVector = $(ballImpulse).times(ballSpeed).$;
+  var groundNormalOffset = $(airVector).rotateToPlane(normal).$;
+  var groundDir = $(airVector).plus(groundNormalOffset).unit().$;
+  var groundProjectionAmt = $(airVector).scalarProjection(groundDir).$;
+  var groundVector = $(groundDir).times(groundProjectionAmt).rotateToPlane(PERSPECTIVE).$;
+  groundPos = $(groundPos).plus(groundVector).$;
+  airVector = $(airVector).plus([0, gravity, 0]).rotateToPlane(PERSPECTIVE).$;
+  airNewPos = $(airCurrentPos).plus(airVector).$;
+
+  var wallForce2d = boundaryForce2d([groundPos[0], groundPos[1]], BOUNDARIES, DISTANCE_THRESHOLD);
+  if (wallForce2d) {
+    var wallForce = $([wallForce2d[0], 0, wallForce2d[1]]).rotateToPlane(PERSPECTIVE).$;
+    groundPos = $(groundPos).plus(wallForce).$;
+    airNewPos = $(airNewPos).plus(wallForce).$;
+    // airNewPos = [groundPos[0], airNewPos[1], groundPos[2]];
+  }
+
+  if (gravity > 0 && airNewPos[1] >= groundPos[1]) {
+    init = true;
+    tick = onGround;
+    window.cancelAnimationFrame(loop);
+    requestAnimationFrame(tick);
+  }
+
+  var _airNewPos = airNewPos;
+
+  var _airNewPos2 = _slicedToArray(_airNewPos, 3);
+
+  ballX = _airNewPos2[0];
+  ballY = _airNewPos2[1];
+  ballZ = _airNewPos2[2];
+
+  gravity += 0.4;
+
+  ball.style.left = (ballX - 5).toString() + 'px';
+  ball.style.top = (ballY - 10).toString() + 'px';
+}
+
+function onGround(dt) {
+  loop = requestAnimationFrame(tick);
+  var x = parseInt(ballX),
+      y = parseInt(ballY),
+      normal = [0, 0, -1],
+      depth = 0;
+
+  if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
+    normal = normals[WIN_WIDTH * y + x];
+    depth = depths[WIN_WIDTH * y + x];
+  }
+  var normalOffset = $(ballImpulse).rotateToPlane(normal).$;
+  var vector = $(ballImpulse).plus(normalOffset).unit().times(ballSpeed).rotateToPlane(PERSPECTIVE).$;
   var currentPosition = [ballX, ballY, ballZ];
   var newPosition = $(currentPosition).plus(vector).$;
 
@@ -742,87 +874,17 @@ function tick(dt) {
   // Minor fudge to avoid divide-by-zero situations:
   if (currentPosition2d[0] === newPosition2d[0]) newPosition2d[0] += 0.001;
 
-  var movementRay = [].concat(newPosition2d, currentPosition2d);
-
   // TODO: Refactor, cache normals during init
-  for (var i = 0; i < BOUNDARIES.length; i++) {
+  // Maintain distance from walls
 
-    var boundary = BOUNDARIES[i],
-        p1 = [boundary[0], boundary[1]],
-        p2 = [boundary[2], boundary[3]],
-        boundaryVector = $(boundary).coordPairToVector().$,
-        boundaryNormal = $(boundaryVector).leftNormal().$;
-
-    // Maintain distance from walls
-
-    // If we're on the inside side of the boundary
-    if (!$(newPosition2d).isLeftOf(boundaryVector).$) {
-      var forceToMaintainDistanceFromVertex = function forceToMaintainDistanceFromVertex(point, vertex, distanceThreshold) {
-        var dist = $(point).distanceTo(vertex).$;
-        if (dist < distanceThreshold) {
-          close = true;
-          return $([].concat(p1, newPosition2d)).coordPairToVector().unit().times(distanceThreshold - dist).$;
-        } else return false;
-      };
-
-      var rayActiveAreaBoundingBox = function rayActiveAreaBoundingBox(ray, size) {
-        var box = [];
-        var side1 = ray;
-        var normal = $(ray).coordPairToVector().leftNormal().times(size).$;
-        var side2 = [ray[2], ray[3]].concat(_toConsumableArray($([ray[2], ray[3]]).plus(normal).$));
-        var side4 = [].concat(_toConsumableArray($([ray[0], ray[1]]).plus(normal).$), [ray[0], ray[1]]);
-        var side3 = [side2[2], side2[3], side4[0], side4[1]];
-        box.push(side1);
-        box.push(side2);
-        box.push(side3);
-        box.push(side4);
-        return box;
-      };
-
-      var close = false,
-          proximityVector = [];
-
-      var proximityVector = null;
-      var bBox = rayActiveAreaBoundingBox(boundary, DISTANCE_THRESHOLD);
-      if (!insidePolygon(newPosition2d, bBox)) {
-        proximityVector = forceToMaintainDistanceFromVertex(newPosition2d, p1, DISTANCE_THRESHOLD) || forceToMaintainDistanceFromVertex(newPosition2d, p2, DISTANCE_THRESHOLD);
-      } else {
-        // TODO: Add broad phase test
-        // Check distance to line
-        var distanceTestVector = $(boundaryNormal).times(DISTANCE_THRESHOLD).$;
-        var distanceRay = [].concat(newPosition2d, _toConsumableArray($(newPosition2d).minusVector(distanceTestVector).$));
-        var intersection = intersects.apply(undefined, _toConsumableArray(distanceRay).concat(_toConsumableArray(boundary)));
-        if (intersection) {
-          var dist = $([].concat(newPosition2d, _toConsumableArray(intersection))).coordPairToVector().length().$;
-          proximityVector = $([].concat(_toConsumableArray(intersection), newPosition2d)).coordPairToVector().unit().times(DISTANCE_THRESHOLD - dist).$;
-        }
-      }
-      if (!!proximityVector) {
-        var wallForce = $([proximityVector[0], 0, proximityVector[1]]).rotateToPlane(PERSPECTIVE).$;
-        newPosition = $(newPosition).plus(wallForce).$;
-      }
-    }
+  var wallForce2d = boundaryForce2d(newPosition2d, BOUNDARIES, DISTANCE_THRESHOLD);
+  if (wallForce2d) {
+    var wallForce = $([wallForce2d[0], 0, wallForce2d[1]]).rotateToPlane(PERSPECTIVE).$;
+    newPosition = $(newPosition).plus(wallForce).$;
   }
 
   // Only apply changes if they're still inside the walkable polygon
-  function insidePolygon(point, sides) {
-    var horizontalRay = [].concat(_toConsumableArray(point), [WIN_WIDTH, point[1]]);
-    var crossings = 0;
-    // make sure no boundary vertices are on our test ray
-    var boundaries = [];
-    for (var _i = 0; _i < sides.length; _i++) {
-      var boundary = sides[_i];
-      if (boundary[1] === point[1]) boundary[1] += 1;
-      if (boundary[3] === point[1]) boundary[3] += 1;
-      boundaries.push(boundary);
-    }
-    for (var _i2 = 0; _i2 < boundaries.length; _i2++) {
-      var boundary = boundaries[_i2];
-      var intersection = intersects.apply(undefined, _toConsumableArray(horizontalRay).concat(_toConsumableArray(boundary)));
-      if (intersection) crossings++;
-    }
-    return crossings % 2 != 0;
-  }
+
 
   if (insidePolygon(newPosition2d, BOUNDARIES)) {
     ;
@@ -855,6 +917,9 @@ window.onload = function () {
         break;
       case DOWN_KEY:
         ballImpulse[2] = 1;
+        break;
+      case SPACEBAR:
+        tick = inAir;
         break;
     }
     ballImpulse = $(ballImpulse).unit().$;
