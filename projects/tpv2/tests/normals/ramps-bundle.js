@@ -725,26 +725,30 @@ for (var i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++) {
   BOUNDARIES.push([].concat(_toConsumableArray(BOUNDARY_POLYGON_POINTS[i]), _toConsumableArray(BOUNDARY_POLYGON_POINTS[i + 1])));
 }
 
+function readNormal(x, y) {
+  var normal = [0, 0, -1];
+  var depth = 0;
+  if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
+    normal = normals[WIN_WIDTH * y + x];
+    depth = depths[WIN_WIDTH * y + x];
+  }
+  return { normal: normal, depth: depth };
+}
+
 function forceToMaintainDistanceFromVertex(point, vertex, distanceThreshold) {
   var dist = $(point).distanceTo(vertex).$;
   if (dist < distanceThreshold) {
-    close = true;
     return $([].concat(_toConsumableArray(vertex), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
   } else return false;
 }
 
 function frontOfRayBBox(ray, size) {
-  var box = [];
   var side1 = ray;
   var normal = $(ray).coordPairToVector().leftNormal().times(size).$;
   var side2 = [ray[2], ray[3]].concat(_toConsumableArray($([ray[2], ray[3]]).plus(normal).$));
   var side4 = [].concat(_toConsumableArray($([ray[0], ray[1]]).plus(normal).$), [ray[0], ray[1]]);
   var side3 = [side2[2], side2[3], side4[0], side4[1]];
-  box.push(side1);
-  box.push(side2);
-  box.push(side3);
-  box.push(side4);
-  return box;
+  return [side1, side2, side3, side4];
 }
 
 function insidePolygon(point, sides) {
@@ -763,33 +767,35 @@ function insidePolygon(point, sides) {
     var intersection = intersects.apply(undefined, _toConsumableArray(horizontalRay).concat(_toConsumableArray(_boundary)));
     if (intersection) crossings++;
   }
-  // return true;
   return crossings % 2 != 0;
 }
 
 function boundaryForce2d(point, boundaries, distanceThreshold) {
-  var proximityVector = null;
-  for (var _i3 = 0; _i3 < boundaries.length; _i3++) {
-    var boundary = boundaries[_i3],
+  // No restrictions if we're already out of bounds-- so we can get back in
+  if (!insidePolygon(point, boundaries)) return false;
+  var proximityVector = [0, 0];
+  for (var _i3 = 0; _i3 < BOUNDARY_POLYGON_POINTS.length - 1; _i3++) {
+    var vec = forceToMaintainDistanceFromVertex(point, BOUNDARY_POLYGON_POINTS[_i3], distanceThreshold);
+    proximityVector = vec || false;
+  }
+  for (var _i4 = 0; _i4 < boundaries.length; _i4++) {
+    var boundary = boundaries[_i4],
         p1 = [boundary[0], boundary[1]],
         p2 = [boundary[2], boundary[3]],
         boundaryVector = $(boundary).coordPairToVector().$,
         boundaryNormal = $(boundaryVector).leftNormal().$;
 
-    // If we're on the inside side of the boundary
+    // If we're on the inside side of the boundary, maintain distance
     if (!$(point).isLeftOf(boundaryVector).$) {
       var bBox = frontOfRayBBox(boundary, distanceThreshold);
-      // proximityVector = forceToMaintainDistanceFromVertex(point, p1, distanceThreshold) || forceToMaintainDistanceFromVertex(point, p2, distanceThreshold);
-      // } else {
-      // Check distance to line
       if (insidePolygon(point, bBox)) {
         var distanceTestVector = $(boundaryNormal).times(distanceThreshold).$;
         var distanceRay = [].concat(_toConsumableArray(point), _toConsumableArray($(point).minusVector(distanceTestVector).$));
         var intersection = intersects.apply(undefined, _toConsumableArray(distanceRay).concat(_toConsumableArray(boundary)));
         if (intersection) {
           var dist = $([].concat(_toConsumableArray(point), _toConsumableArray(intersection))).coordPairToVector().length().$;
-          var vec = $([].concat(_toConsumableArray(intersection), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
-          if (proximityVector) proximityVector = $(proximityVector).plus(vec).$;else proximityVector = vec;
+          var _vec = $([].concat(_toConsumableArray(intersection), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
+          if (proximityVector) proximityVector = $(proximityVector).plus(_vec).$;else proximityVector = _vec;
         }
       }
     }
@@ -814,21 +820,23 @@ function inAir(dt) {
   airCurrentPos = [ballX, ballY, ballZ];
   groundPos = [ballX, groundPos[1], ballZ];
   if (init) {
-    groundPos = [ballX, ballY, ballZ];
+    groundPos[1] = ballY;
     gravity = -7;
     init = false;
   }
   var groundOldPos = groundPos;
   var x = parseInt(groundPos[0]),
-      y = parseInt(groundPos[1]),
-      normal = [0, 0, -1],
-      depth = 0;
-  if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
-    normal = normals[WIN_WIDTH * y + x];
-    depth = depths[WIN_WIDTH * y + x];
-  }
+      y = parseInt(groundPos[1]);
+
+  var _readNormal = readNormal(x, y),
+      normal = _readNormal.normal,
+      depth = _readNormal.depth;
+
+  // Zero out normal Z component; makes sheer surfaces not block you
+
 
   normal = [normal[0], normal[1], 0];
+
   var airVector = $(ballImpulse).times(ballSpeed).$;
   var groundNormalOffset = $(airVector).rotateToPlane(normal).$;
   var groundDir = $(airVector).plus(groundNormalOffset).unit().$;
@@ -845,26 +853,19 @@ function inAir(dt) {
   if (wallForce2d) {
     var wallForce = $([wallForce2d[0], wallForce2d[1], 0]).$;
     groundPos = $(groundPos).plus(wallForce).$;
+    airNewPos = $(airNewPos).plus(wallForce).$;
   }
 
-  if (!insidePolygon([groundPos[0], groundPos[1]], BOUNDARIES)) {
-    // var movementRay = [...groundOldPos, ...groundPos];
-    // for (let i = 0; i < BOUNDARIES.length; i++){
-    //   var boundary = BOUNDARIES[i];
-    //   var intersection = intersects(...movementRay, ...boundary);
-    //   if (intersection){
-    //     var force = $([...groundPos, ...intersection]).coordPairToVector().unit().times(DISTANCE_THRESHOLD).$;
-    //     groundPos = $(intersection).plus(force).$;
-    // var boundaryForce = boundaryForce2d([])
+  // Only stops us when going from inside bounds to out--
+  // So in case everything fails and we go out of bounds, at least we can get back in
+  if (!insidePolygon([groundPos[0], groundPos[1]], BOUNDARIES) && insidePolygon([groundOldPos[0], groundOldPos[1]], BOUNDARIES)) {
     groundPos = groundOldPos;
-    // }
-    // }
-
-    airNewPos = [groundPos[0], airNewPos[1], groundPos[2]];
+    airNewPos = [groundOldPos[0], airNewPos[1], groundOldPos[2]];
   }
 
   if (gravity > 0 && airNewPos[1] >= groundPos[1]) {
     init = true;
+    airNewPos[1] = groundPos[1];
     window.cancelAnimationFrame(loop);
     tick = onGround;
     requestAnimationFrame(tick);
@@ -887,17 +888,16 @@ function inAir(dt) {
 function onGround(dt) {
   loop = requestAnimationFrame(tick);
   var x = parseInt(ballX),
-      y = parseInt(ballY),
-      normal = [0, 0, -1],
-      depth = 0;
+      y = parseInt(ballY);
 
-  if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
-    normal = normals[WIN_WIDTH * y + x];
-    depth = depths[WIN_WIDTH * y + x];
-  }
+  var _readNormal2 = readNormal(x, y),
+      normal = _readNormal2.normal,
+      depth = _readNormal2.depth;
+
+  var currentPosition = [ballX, ballY, ballZ];
   var normalOffset = $(ballImpulse).rotateToPlane(normal).$;
   var vector = $(ballImpulse).plus(normalOffset).unit().times(ballSpeed).rotateToPlane(PERSPECTIVE).$;
-  var currentPosition = [ballX, ballY, ballZ];
+
   var newPosition = $(currentPosition).plus(vector).$;
 
   var currentPosition2d = [currentPosition[0], currentPosition[1]],
@@ -914,9 +914,7 @@ function onGround(dt) {
     newPosition = $(newPosition).plus(wallForce).$;
   }
 
-  // Only apply changes if they're still inside the walkable polygon
-
-  if (!insidePolygon(newPosition2d, BOUNDARIES)) {
+  if (!insidePolygon([newPosition[0], newPosition[1]], BOUNDARIES) && insidePolygon(currentPosition2d, BOUNDARIES)) {
     newPosition = currentPosition;
   }
 
