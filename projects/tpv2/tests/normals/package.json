@@ -2,7 +2,7 @@
   "name": "game",
   "version": "1.0.0",
   "description": "",
-  "main": "./app/index.js",
+  "main": "./ramps.js",
   "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.23.1",
