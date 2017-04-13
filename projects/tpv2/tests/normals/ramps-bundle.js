@@ -717,23 +717,13 @@ image.src = 'hills3.png';
 
 // TODO: Boundary class, specifies innie or outie, provides bins for optimization
 
-// const BOUNDARY_POLYGON_POINTS = [
-//   [0,190],
-//   [249,190],
-//   [277,210],
-//   [381,210],
-//   [365,256],
-//   [362,286],
-//   [407,307],
-//   [441,307],
-//   [466,340],
-//   [512,340],
-//   [512,0],
-//   [0,0],
-//   [0,190],
-// ];
+var BOUNDARY_POLYGON_POINTS = [[-1, 191], [242, 192], [256, 196], [276, 210], [375, 216], [363, 256], [361, 287], [409, 308], [446, 309], [465, 337], [512, 342], [511, 512], [241, 511], [191, 431], [90, 453], [0, 420], [-1, 191]];
 
-var BOUNDARIES = [[2, 190, 261, 187], [261, 187, 277, 200], [277, 200, 378, 216], [378, 216, 360, 286], [360, 286, 508, 360], [508, 360, 510, 508], [510, 508, 248, 509], [248, 509, 200, 428], [200, 428, 63, 451], [63, 451, 3, 412], [3, 412, 2, 190]];
+var BOUNDARIES = [];
+
+for (var i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++) {
+  BOUNDARIES.push([].concat(_toConsumableArray(BOUNDARY_POLYGON_POINTS[i]), _toConsumableArray(BOUNDARY_POLYGON_POINTS[i + 1])));
+}
 
 function forceToMaintainDistanceFromVertex(point, vertex, distanceThreshold) {
   var dist = $(point).distanceTo(vertex).$;
@@ -762,14 +752,14 @@ function insidePolygon(point, sides) {
   var crossings = 0;
   // make sure no boundary vertices are on our test ray
   var boundaries = [];
-  for (var i = 0; i < sides.length; i++) {
-    var boundary = sides[i];
+  for (var _i = 0; _i < sides.length; _i++) {
+    var boundary = sides[_i];
     if (boundary[1] === point[1]) boundary[1] += 1;
     if (boundary[3] === point[1]) boundary[3] += 1;
     boundaries.push(boundary);
   }
-  for (var _i = 0; _i < boundaries.length; _i++) {
-    var _boundary = boundaries[_i];
+  for (var _i2 = 0; _i2 < boundaries.length; _i2++) {
+    var _boundary = boundaries[_i2];
     var intersection = intersects.apply(undefined, _toConsumableArray(horizontalRay).concat(_toConsumableArray(_boundary)));
     if (intersection) crossings++;
   }
@@ -779,8 +769,8 @@ function insidePolygon(point, sides) {
 
 function boundaryForce2d(point, boundaries, distanceThreshold) {
   var proximityVector = null;
-  for (var i = 0; i < boundaries.length; i++) {
-    var boundary = boundaries[i],
+  for (var _i3 = 0; _i3 < boundaries.length; _i3++) {
+    var boundary = boundaries[_i3],
         p1 = [boundary[0], boundary[1]],
         p2 = [boundary[2], boundary[3]],
         boundaryVector = $(boundary).coordPairToVector().$,
