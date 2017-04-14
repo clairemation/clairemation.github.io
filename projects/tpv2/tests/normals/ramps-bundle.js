@@ -688,6 +688,7 @@ var processNormalsImage = __webpack_require__(1),
     sin = Math.sin,
     root = document.getElementById('root'),
     ball = document.getElementById('ball'),
+    shadow = document.getElementById('shadow'),
     wrapper = document.getElementById('wrapper'),
     loader = document.getElementById('loader-wrapper'),
     loaderText = document.getElementById('loader-text');
@@ -708,12 +709,13 @@ var tick = inAir;
 image.onload = function () {
   processNormalsImage({ image: image, normals: normals, alphas: depths }).then(function () {
     ball.className = "showing";
+    shadow.className = "showing";
     loader.className = "hidden";
     loaderText.className = "hidden";
     loop = requestAnimationFrame(tick);
   });
 };
-image.src = 'hills3.png';
+image.src = 'hills4.png';
 
 // TODO: Boundary class, specifies innie or outie, provides bins for optimization
 
@@ -832,9 +834,10 @@ function inAir(dt) {
       normal = _readNormal.normal,
       depth = _readNormal.depth;
 
+  var tilt = normal[2];
+  var rotation = $(normal).angle2d().$;
+
   // Zero out normal Z component; makes sheer surfaces not block you
-
-
   normal = [normal[0], normal[1], 0];
 
   var airVector = $(ballImpulse).times(ballSpeed).$;
@@ -883,20 +886,37 @@ function inAir(dt) {
 
   ball.style.left = (ballX - 5).toString() + 'px';
   ball.style.top = (ballY - 10).toString() + 'px';
+  shadow.style.left = (groundPos[0] - 5).toString() + 'px';
+  shadow.style.top = groundPos[1].toString() + 'px';
+  console.log(normal[2]);
+  shadow.style.transform = 'rotate(' + rotation + 'rad) scaleY(' + (1 + tilt) + ')';
 }
 
 function onGround(dt) {
   loop = requestAnimationFrame(tick);
   var x = parseInt(ballX),
       y = parseInt(ballY);
+  var gravity = [0, 0, 0];
 
   var _readNormal2 = readNormal(x, y),
       normal = _readNormal2.normal,
       depth = _readNormal2.depth;
 
+  var tilt = normal[2];
+  var zRotation = $(normal).angle2d().$;
+  var xRotation = $([normal[1], normal[2]]).angle2d().$;
+
+  if (zRotation < -1 && zRotation > -2.7) {
+    gravity = $(gravity).plus([0, 2 * zRotation, 0]).rotateToPlane(normal).$;
+    console.log(zRotation);
+  }
+  if (xRotation < 2.0 && xRotation > 0.8) {
+    gravity = $(gravity).plus([0, 2 * xRotation, 0]).rotateToPlane(normal).$;
+  }
+
   var currentPosition = [ballX, ballY, ballZ];
   var normalOffset = $(ballImpulse).rotateToPlane(normal).$;
-  var vector = $(ballImpulse).plus(normalOffset).unit().times(ballSpeed).rotateToPlane(PERSPECTIVE).$;
+  var vector = $(ballImpulse).plus(normalOffset).plus(gravity).unit().times(ballSpeed).rotateToPlane(PERSPECTIVE).$;
 
   var newPosition = $(currentPosition).plus(vector).$;
 
@@ -928,6 +948,9 @@ function onGround(dt) {
   ballZ = _newPosition2[2];
   ball.style.left = (ballX - 5).toString() + 'px';
   ball.style.top = (ballY - 10).toString() + 'px';
+  shadow.style.left = (ballX - 5).toString() + 'px';
+  shadow.style.top = ballY.toString() + 'px';
+  shadow.style.transform = 'rotate(' + zRotation + 'rad) scaleY(' + (1 + tilt) + ')';
 }
 
 window.onload = function () {
