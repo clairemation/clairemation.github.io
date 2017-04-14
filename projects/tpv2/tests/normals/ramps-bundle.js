@@ -888,8 +888,9 @@ function inAir(dt) {
   ball.style.top = (ballY - 10).toString() + 'px';
   shadow.style.left = (groundPos[0] - 5).toString() + 'px';
   shadow.style.top = groundPos[1].toString() + 'px';
-  console.log(normal[2]);
-  shadow.style.transform = 'rotate(' + rotation + 'rad) scaleY(' + (1 + tilt) + ')';
+  var scale = 2 / $(airNewPos).distanceTo(groundPos).$ + 0.8;
+  // scale = scale * 2;
+  shadow.style.transform = 'rotate(' + rotation + 'rad) scaleY(' + (1 + tilt) * scale + ') scaleX(' + scale + ')';
 }
 
 function onGround(dt) {
@@ -908,7 +909,6 @@ function onGround(dt) {
 
   if (zRotation < -1 && zRotation > -2.7) {
     gravity = $(gravity).plus([0, 2 * zRotation, 0]).rotateToPlane(normal).$;
-    console.log(zRotation);
   }
   if (xRotation < 2.0 && xRotation > 0.8) {
     gravity = $(gravity).plus([0, 2 * xRotation, 0]).rotateToPlane(normal).$;
