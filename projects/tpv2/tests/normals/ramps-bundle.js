@@ -705,6 +705,7 @@ var image = new Image(WIN_WIDTH, WIN_HEIGHT),
     ballSpeed = 2;
 
 var tick = inAir;
+var loop = null;
 
 image.onload = function () {
   processNormalsImage({ image: image, normals: normals, alphas: depths }).then(function () {
@@ -712,7 +713,7 @@ image.onload = function () {
     shadow.className = "showing";
     loader.className = "hidden";
     loaderText.className = "hidden";
-    loop = requestAnimationFrame(tick);
+    tick();
   });
 };
 image.src = 'hills4.png';
@@ -871,7 +872,7 @@ function inAir(dt) {
     airNewPos[1] = groundPos[1];
     window.cancelAnimationFrame(loop);
     tick = onGround;
-    requestAnimationFrame(tick);
+    loop = requestAnimationFrame(tick);
   }
 
   var _airNewPos = airNewPos;
@@ -884,13 +885,9 @@ function inAir(dt) {
 
   gravity += 0.4;
 
-  ball.style.left = (ballX - 5).toString() + 'px';
-  ball.style.top = (ballY - 10).toString() + 'px';
-  shadow.style.left = (groundPos[0] - 5).toString() + 'px';
-  shadow.style.top = groundPos[1].toString() + 'px';
+  ball.style.transform = 'translate(' + (ballX - 5) + 'px, ' + (ballY - 10) + 'px)';
   var scale = 2 / $(airNewPos).distanceTo(groundPos).$ + 0.8;
-  // scale = scale * 2;
-  shadow.style.transform = 'rotate(' + rotation + 'rad) scaleY(' + (1 + tilt) * scale + ') scaleX(' + scale + ')';
+  shadow.style.transform = 'translate(' + (groundPos[0] - 5) + 'px, ' + groundPos[1] + 'px) rotate(' + rotation + 'rad) scaleY(' + (1 + tilt) * scale + ') scaleX(' + scale + ')';
 }
 
 function onGround(dt) {
@@ -939,6 +936,10 @@ function onGround(dt) {
   }
 
   // }
+  // ball.style.left = (ballX-5).toString() + 'px';
+  // ball.style.top = (ballY-10).toString() + 'px';
+  // shadow.style.left = (ballX-5).toString() + 'px';
+  // shadow.style.top = (ballY).toString() + 'px';
   var _newPosition = newPosition;
 
   var _newPosition2 = _slicedToArray(_newPosition, 3);
@@ -946,11 +947,8 @@ function onGround(dt) {
   ballX = _newPosition2[0];
   ballY = _newPosition2[1];
   ballZ = _newPosition2[2];
-  ball.style.left = (ballX - 5).toString() + 'px';
-  ball.style.top = (ballY - 10).toString() + 'px';
-  shadow.style.left = (ballX - 5).toString() + 'px';
-  shadow.style.top = ballY.toString() + 'px';
-  shadow.style.transform = 'rotate(' + zRotation + 'rad) scaleY(' + (1 + tilt) + ')';
+  ball.style.transform = 'translate(' + (ballX - 5) + 'px, ' + (ballY - 10) + 'px)';
+  shadow.style.transform = 'translate(' + (ballX - 5) + 'px, ' + ballY + 'px) rotate(' + zRotation + 'rad) scaleY(' + (1 + tilt) + ')';
 }
 
 window.onload = function () {
