@@ -604,7 +604,7 @@ function intersection(x1, y1, x2, y2, u1, v1, u2, v2) {
   if ((x1 - xi) * (xi - x2) >= 0 && (u1 - xi) * (xi - u2) >= 0 && (y1 - yi) * (yi - y2) >= 0 && (v1 - yi) * (yi - v2) >= 0) {
     return [xi, yi];
   } else {
-    return false;
+    return null;
   }
 }
 
@@ -722,27 +722,56 @@ image.src = 'hills4.png';
 
 var BOUNDARY_POLYGON_POINTS = [[-1, 191], [242, 192], [256, 196], [276, 210], [375, 216], [363, 256], [361, 287], [409, 308], [446, 309], [465, 337], [512, 342], [511, 512], [241, 511], [191, 431], [90, 453], [0, 420], [-1, 191]];
 
-var BOUNDARIES = [];
+var BOUNDARIES = function () {
+  var boundaries = [];
+  for (var i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++) {
+    boundaries.push([].concat(_toConsumableArray(BOUNDARY_POLYGON_POINTS[i]), _toConsumableArray(BOUNDARY_POLYGON_POINTS[i + 1])));
+  }
+  return boundaries;
+}();
 
-for (var i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++) {
-  BOUNDARIES.push([].concat(_toConsumableArray(BOUNDARY_POLYGON_POINTS[i]), _toConsumableArray(BOUNDARY_POLYGON_POINTS[i + 1])));
-}
+var BOUNDARY_VECTORS = function () {
+  var bVecs = [];
+  for (var i = 0; i < BOUNDARIES.length; i++) {
+    bVecs.push($(BOUNDARIES[i]).coordPairToVector().$);
+  }
+  return bVecs;
+}();
+
+var BOUNDARY_NORMALS = function () {
+  var bNorms = [];
+  for (var i = 0; i < BOUNDARY_VECTORS.length; i++) {
+    bNorms.push($(BOUNDARY_VECTORS[i]).leftNormal().$);
+  }
+  return bNorms;
+}();
 
 function readNormal(x, y) {
-  var normal = [0, 0, -1];
-  var depth = 0;
   if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
-    normal = normals[WIN_WIDTH * y + x];
-    depth = depths[WIN_WIDTH * y + x];
-  }
-  return { normal: normal, depth: depth };
+    return { normal: normals[WIN_WIDTH * y + x], depth: depths[WIN_WIDTH * y + x] };
+  } else return { normal: [0, 0, -1], depth: 0 };
 }
 
-function forceToMaintainDistanceFromVertex(point, vertex, distanceThreshold) {
+function forceAwayFromVertex(point, vertex) {
+  var distanceThreshold = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DISTANCE_THRESHOLD;
+
   var dist = $(point).distanceTo(vertex).$;
   if (dist < distanceThreshold) {
     return $([].concat(_toConsumableArray(vertex), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
   } else return false;
+}
+
+function forceAwayFromVertices(point) {
+  var vertices = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : BOUNDARY_POLYGON_POINTS;
+  var distanceThreshold = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DISTANCE_THRESHOLD;
+
+  var proximityVector = [0, 0];
+  var vec = false;
+  for (var i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++) {
+    vec = forceAwayFromVertex(point, BOUNDARY_POLYGON_POINTS[i], distanceThreshold);
+    if (vec) proximityVector = $(proximityVector).plus(vec).$;
+  }
+  return proximityVector;
 }
 
 function frontOfRayBBox(ray, size) {
@@ -759,51 +788,60 @@ function insidePolygon(point, sides) {
   var crossings = 0;
   // make sure no boundary vertices are on our test ray
   var boundaries = [];
-  for (var _i = 0; _i < sides.length; _i++) {
-    var boundary = sides[_i];
+  for (var i = 0; i < sides.length; i++) {
+    var boundary = sides[i];
     if (boundary[1] === point[1]) boundary[1] += 1;
     if (boundary[3] === point[1]) boundary[3] += 1;
     boundaries.push(boundary);
   }
-  for (var _i2 = 0; _i2 < boundaries.length; _i2++) {
-    var _boundary = boundaries[_i2];
+  for (var _i = 0; _i < boundaries.length; _i++) {
+    var _boundary = boundaries[_i];
     var intersection = intersects.apply(undefined, _toConsumableArray(horizontalRay).concat(_toConsumableArray(_boundary)));
     if (intersection) crossings++;
   }
   return crossings % 2 != 0;
 }
 
-function boundaryForce2d(point, boundaries, distanceThreshold) {
-  // No restrictions if we're already out of bounds-- so we can get back in
-  if (!insidePolygon(point, boundaries)) return false;
-  var proximityVector = [0, 0];
-  for (var _i3 = 0; _i3 < BOUNDARY_POLYGON_POINTS.length - 1; _i3++) {
-    var vec = forceToMaintainDistanceFromVertex(point, BOUNDARY_POLYGON_POINTS[_i3], distanceThreshold);
-    proximityVector = vec || false;
-  }
-  for (var _i4 = 0; _i4 < boundaries.length; _i4++) {
-    var boundary = boundaries[_i4],
-        p1 = [boundary[0], boundary[1]],
-        p2 = [boundary[2], boundary[3]],
-        boundaryVector = $(boundary).coordPairToVector().$,
-        boundaryNormal = $(boundaryVector).leftNormal().$;
+function boundaryForce2d(point) {
+  var boundaries = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : BOUNDARIES;
+  var distanceThreshold = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DISTANCE_THRESHOLD;
 
-    // If we're on the inside side of the boundary, maintain distance
+  // No restrictions if we're already out of bounds-- so we can get back in
+  if (!insidePolygon(point, boundaries)) return [0, 0];
+
+  // If we're too close to a vertex, add the counter-force to our vector
+  var proximityVector = forceAwayFromVertices(point);
+
+  // Now test against polygon sides
+  for (var i = 0; i < boundaries.length; i++) {
+    var boundary = boundaries[i];
+
+    var boundaryVector = BOUNDARY_VECTORS[i];
+
+    // If we're on the inside side of the boundary
     if (!$(point).isLeftOf(boundaryVector).$) {
+
+      // If we're inside the boundary's active zone
       var bBox = frontOfRayBBox(boundary, distanceThreshold);
       if (insidePolygon(point, bBox)) {
+
+        var boundaryNormal = BOUNDARY_NORMALS[i];
+
+        // Test for intersection between distance ray and boundary ray
         var distanceTestVector = $(boundaryNormal).times(distanceThreshold).$;
         var distanceRay = [].concat(_toConsumableArray(point), _toConsumableArray($(point).minusVector(distanceTestVector).$));
         var intersection = intersects.apply(undefined, _toConsumableArray(distanceRay).concat(_toConsumableArray(boundary)));
+
+        // If we're too close to the boundary
         if (intersection) {
           var dist = $([].concat(_toConsumableArray(point), _toConsumableArray(intersection))).coordPairToVector().length().$;
-          var _vec = $([].concat(_toConsumableArray(intersection), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
-          if (proximityVector) proximityVector = $(proximityVector).plus(_vec).$;else proximityVector = _vec;
+          var vec = $([].concat(_toConsumableArray(intersection), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
+          proximityVector = $(proximityVector).plus(vec).$;
         }
       }
     }
   }
-  return proximityVector || false;
+  return proximityVector;
 }
 
 function jump() {
@@ -867,6 +905,7 @@ function inAir(dt) {
     airNewPos = [groundOldPos[0], airNewPos[1], groundOldPos[2]];
   }
 
+  // If we're falling down and we hit or pass the ground projection, we land (stick to ground Y and switch to onGround state)
   if (gravity > 0 && airNewPos[1] >= groundPos[1]) {
     init = true;
     airNewPos[1] = groundPos[1];
@@ -913,6 +952,8 @@ function onGround(dt) {
 
   var currentPosition = [ballX, ballY, ballZ];
   var normalOffset = $(ballImpulse).rotateToPlane(normal).$;
+
+  // TODO: calculate plane rotations on init and cache rotated versions
   var vector = $(ballImpulse).plus(normalOffset).plus(gravity).unit().times(ballSpeed).rotateToPlane(PERSPECTIVE).$;
 
   var newPosition = $(currentPosition).plus(vector).$;
@@ -923,7 +964,6 @@ function onGround(dt) {
   // Minor fudge to avoid divide-by-zero situations:
   if (currentPosition2d[0] === newPosition2d[0]) newPosition2d[0] += 0.001;
 
-  // TODO: Refactor, cache normals during init
   // Maintain distance from walls
   var wallForce2d = boundaryForce2d(newPosition2d, BOUNDARIES, DISTANCE_THRESHOLD);
   if (wallForce2d) {
@@ -935,11 +975,6 @@ function onGround(dt) {
     newPosition = currentPosition;
   }
 
-  // }
-  // ball.style.left = (ballX-5).toString() + 'px';
-  // ball.style.top = (ballY-10).toString() + 'px';
-  // shadow.style.left = (ballX-5).toString() + 'px';
-  // shadow.style.top = (ballY).toString() + 'px';
   var _newPosition = newPosition;
 
   var _newPosition2 = _slicedToArray(_newPosition, 3);
@@ -947,6 +982,8 @@ function onGround(dt) {
   ballX = _newPosition2[0];
   ballY = _newPosition2[1];
   ballZ = _newPosition2[2];
+
+
   ball.style.transform = 'translate(' + (ballX - 5) + 'px, ' + (ballY - 10) + 'px)';
   shadow.style.transform = 'translate(' + (ballX - 5) + 'px, ' + ballY + 'px) rotate(' + zRotation + 'rad) scaleY(' + (1 + tilt) + ')';
 }

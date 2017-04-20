@@ -15,6 +15,7 @@ const processNormalsImage = require('lib/extract-normals'),
   {cos, sin} = Math,
   root = document.getElementById('root'),
   ball = document.getElementById('ball'),
+  shadow = document.getElementById('shadow'),
   wrapper = document.getElementById('wrapper'),
   loader = document.getElementById('loader-wrapper'),
   loaderText = document.getElementById('loader-text');
@@ -31,16 +32,19 @@ var image = new Image(WIN_WIDTH, WIN_HEIGHT),
   ballSpeed = 2;
 
 var tick = inAir;
+var loop = null;
+
 
 image.onload = function(){
   processNormalsImage({image, normals, alphas: depths}).then(() => {
     ball.className = "showing";
+    shadow.className = "showing";
     loader.className = "hidden";
     loaderText.className = "hidden";
-    loop = requestAnimationFrame(tick);
+    tick();
   })
 };
-image.src = 'hills3.png';
+image.src = 'hills4.png';
 
 // TODO: Boundary class, specifies innie or outie, provides bins for optimization
 
@@ -64,33 +68,63 @@ const BOUNDARY_POLYGON_POINTS = [
   [-1,191]
 ];
 
-const BOUNDARIES = [];
+const BOUNDARIES = (function(){
+  var boundaries = [];
+  for (let i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++){
+    boundaries.push([...BOUNDARY_POLYGON_POINTS[i], ...BOUNDARY_POLYGON_POINTS[i+1]]);
+  }
+  return boundaries;
+}());
 
-for (let i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++){
-  BOUNDARIES.push([...BOUNDARY_POLYGON_POINTS[i], ...BOUNDARY_POLYGON_POINTS[i+1]]);
+const BOUNDARY_VECTORS = (function(){
+  var bVecs = [];
+  for (let i = 0; i < BOUNDARIES.length; i++){
+    bVecs.push($(BOUNDARIES[i]).coordPairToVector().$);
+  }
+  return bVecs;
+}());
+
+const BOUNDARY_NORMALS = (function(){
+  var bNorms = [];
+  for (let i = 0; i < BOUNDARY_VECTORS.length; i++){
+    bNorms.push($(BOUNDARY_VECTORS[i]).leftNormal().$);
+  }
+  return bNorms;
+}());
+
+
+function readNormal(x, y){
+  if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
+    return { normal: normals[WIN_WIDTH * y + x], depth: depths[WIN_WIDTH * y + x] };
+  }
+  else return { normal: [0, 0, -1], depth: 0 }
 }
 
-function forceToMaintainDistanceFromVertex(point, vertex, distanceThreshold){
+function forceAwayFromVertex(point, vertex, distanceThreshold = DISTANCE_THRESHOLD){
   var dist = $(point).distanceTo(vertex).$;
   if (dist < distanceThreshold) {
-    close = true;
     return $([...vertex, ...point]).coordPairToVector().unit().times(distanceThreshold - dist).$;
   }
   else return false;
 }
 
+function forceAwayFromVertices(point, vertices = BOUNDARY_POLYGON_POINTS, distanceThreshold = DISTANCE_THRESHOLD){
+  var proximityVector = [0, 0];
+  var vec = false;
+  for (let i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++){
+    vec = forceAwayFromVertex(point, BOUNDARY_POLYGON_POINTS[i], distanceThreshold);
+    if (vec) proximityVector = $(proximityVector).plus(vec).$;
+  }
+  return proximityVector
+}
+
 function frontOfRayBBox(ray, size){
-  var box = [];
   var side1 = ray;
   var normal = $(ray).coordPairToVector().leftNormal().times(size).$;
   var side2 = [ray[2], ray[3], ...$([ray[2], ray[3]]).plus(normal).$];
   var side4 = [...$([ray[0], ray[1]]).plus(normal).$, ray[0], ray[1]];
   var side3 = [side2[2], side2[3], side4[0], side4[1]];
-  box.push(side1);
-  box.push(side2);
-  box.push(side3);
-  box.push(side4);
-  return box;
+  return [side1, side2, side3, side4];
 }
 
 function insidePolygon(point, sides){
@@ -109,39 +143,46 @@ function insidePolygon(point, sides){
     var intersection = intersects(...horizontalRay, ...boundary);
     if (intersection) crossings ++;
   }
-  // return true;
   return crossings % 2 != 0;
 }
 
-function boundaryForce2d(point, boundaries, distanceThreshold){
-  var proximityVector = null;
+function boundaryForce2d(point, boundaries = BOUNDARIES, distanceThreshold = DISTANCE_THRESHOLD){
+  // No restrictions if we're already out of bounds-- so we can get back in
+  if (!insidePolygon(point, boundaries)) return [0, 0];
+
+  // If we're too close to a vertex, add the counter-force to our vector
+  var proximityVector = forceAwayFromVertices(point);
+
+  // Now test against polygon sides
   for (let i = 0; i < boundaries.length; i++){
-    var boundary = boundaries[i],
-      p1 = [boundary[0], boundary[1]],
-      p2 = [boundary[2], boundary[3]],
-      boundaryVector = $(boundary).coordPairToVector().$,
-      boundaryNormal = $(boundaryVector).leftNormal().$;
+    var boundary = boundaries[i];
+
+    var boundaryVector = BOUNDARY_VECTORS[i];
 
     // If we're on the inside side of the boundary
     if (!($(point).isLeftOf(boundaryVector).$)){
+
+      // If we're inside the boundary's active zone
       var bBox = frontOfRayBBox(boundary, distanceThreshold);
-        // proximityVector = forceToMaintainDistanceFromVertex(point, p1, distanceThreshold) || forceToMaintainDistanceFromVertex(point, p2, distanceThreshold);
-      // } else {
-        // Check distance to line
       if (insidePolygon(point, bBox)) {
+
+        var boundaryNormal = BOUNDARY_NORMALS[i];
+
+        // Test for intersection between distance ray and boundary ray
         var distanceTestVector = $(boundaryNormal).times(distanceThreshold).$;
         var distanceRay = [...point, ...$(point).minusVector(distanceTestVector).$];
         var intersection = intersects(...distanceRay, ...boundary);
+
+        // If we're too close to the boundary
         if (intersection) {
           var dist = $([...point, ...intersection]).coordPairToVector().length().$;
           var vec = $([...intersection, ...point]).coordPairToVector().unit().times(distanceThreshold - dist).$;
-          if (proximityVector) proximityVector = $(proximityVector).plus(vec).$;
-          else proximityVector = vec;
+          proximityVector = $(proximityVector).plus(vec).$;
         }
       }
     }
   }
-  return proximityVector || false;
+  return proximityVector;
 }
 
 
@@ -162,21 +203,20 @@ function inAir(dt){
   airCurrentPos = [ballX, ballY, ballZ];
   groundPos = [ballX, groundPos[1], ballZ];
   if (init) {
-    groundPos = [ballX, ballY, ballZ];
+    groundPos[1] = ballY;
     gravity = -7;
     init = false;
   }
   var groundOldPos = groundPos;
   var x = parseInt(groundPos[0]),
-    y = parseInt(groundPos[1]),
-    normal = [0,0,-1],
-    depth = 0;
-  if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
-    normal = normals[WIN_WIDTH * y + x];
-    depth = depths[WIN_WIDTH * y + x];
-  }
+    y = parseInt(groundPos[1]);
+  var {normal, depth} = readNormal(x, y);
+  var tilt = normal[2];
+  var rotation = $(normal).angle2d().$;
 
+  // Zero out normal Z component; makes sheer surfaces not block you
   normal = [normal[0], normal[1], 0];
+
   var airVector = $(ballImpulse).times(ballSpeed).$
   var groundNormalOffset = $(airVector).rotateToPlane(normal).$;
   var groundDir = $(airVector).plus(groundNormalOffset).unit().$;
@@ -193,38 +233,31 @@ function inAir(dt){
   if (wallForce2d) {
     var wallForce = $([wallForce2d[0], wallForce2d[1], 0]).$;
     groundPos = $(groundPos).plus(wallForce).$;
+    airNewPos = $(airNewPos).plus(wallForce).$;
   }
 
-  if (!insidePolygon([groundPos[0], groundPos[1]], BOUNDARIES)){
-    // var movementRay = [...groundOldPos, ...groundPos];
-    // for (let i = 0; i < BOUNDARIES.length; i++){
-    //   var boundary = BOUNDARIES[i];
-    //   var intersection = intersects(...movementRay, ...boundary);
-    //   if (intersection){
-    //     var force = $([...groundPos, ...intersection]).coordPairToVector().unit().times(DISTANCE_THRESHOLD).$;
-    //     groundPos = $(intersection).plus(force).$;
-        // var boundaryForce = boundaryForce2d([])
+  // Only stops us when going from inside bounds to out--
+  // So in case everything fails and we go out of bounds, at least we can get back in
+  if (!insidePolygon([groundPos[0], groundPos[1]], BOUNDARIES) && insidePolygon([groundOldPos[0], groundOldPos[1]], BOUNDARIES)){
     groundPos = groundOldPos;
-      // }
-    // }
-
-    airNewPos = [groundPos[0], airNewPos[1], groundPos[2]];
+    airNewPos = [groundOldPos[0], airNewPos[1], groundOldPos[2]];
   }
 
-
-
+  // If we're falling down and we hit or pass the ground projection, we land (stick to ground Y and switch to onGround state)
   if (gravity > 0 && airNewPos[1] >= groundPos[1]) {
     init = true;
+    airNewPos[1] = groundPos[1];
     window.cancelAnimationFrame(loop);
     tick = onGround;
-    requestAnimationFrame(tick);
+    loop = requestAnimationFrame(tick);
   }
 
   [ballX, ballY, ballZ] = airNewPos;
   gravity += 0.4;
 
-  ball.style.left = (ballX-5).toString() + 'px';
-  ball.style.top = (ballY-10).toString() + 'px';
+  ball.style.transform = `translate(${ballX-5}px, ${ballY - 10}px)`;
+  var scale = 2/$(airNewPos).distanceTo(groundPos).$ + 0.8;
+  shadow.style.transform = `translate(${groundPos[0] - 5}px, ${groundPos[1]}px) rotate(${rotation}rad) scaleY(${(1 + tilt) * scale}) scaleX(${scale})`;
 
 
 
@@ -233,17 +266,27 @@ function inAir(dt){
 function onGround(dt){
   loop = requestAnimationFrame(tick);
   var x = parseInt(ballX),
-    y = parseInt(ballY),
-    normal = [0,0,-1],
-    depth = 0;
+    y = parseInt(ballY);
+  var gravity = [0, 0, 0];
 
-  if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
-    normal = normals[WIN_WIDTH * y + x];
-    depth = depths[WIN_WIDTH * y + x];
+  var {normal, depth} = readNormal(x, y);
+  var tilt = normal[2];
+  var zRotation = $(normal).angle2d().$;
+  var xRotation = $([normal[1], normal[2]]).angle2d().$;
+
+  if (zRotation < -1 && zRotation > -2.7) {
+    gravity = $(gravity).plus([0, 2 * zRotation, 0]).rotateToPlane(normal).$;
   }
-  var normalOffset = $(ballImpulse).rotateToPlane(normal).$;
-  var vector = $(ballImpulse).plus(normalOffset).unit().times(ballSpeed).rotateToPlane(PERSPECTIVE).$;
+  if (xRotation < 2.0 && xRotation > 0.8) {
+    gravity = $(gravity).plus([0, 2 * xRotation, 0]).rotateToPlane(normal).$;
+  }
+
   var currentPosition = [ballX, ballY, ballZ];
+  var normalOffset = $(ballImpulse).rotateToPlane(normal).$;
+
+  // TODO: calculate plane rotations on init and cache rotated versions
+  var vector = $(ballImpulse).plus(normalOffset).plus(gravity).unit().times(ballSpeed).rotateToPlane(PERSPECTIVE).$;
+
   var newPosition = $(currentPosition).plus(vector).$;
 
   var currentPosition2d = [currentPosition[0], currentPosition[1]],
@@ -252,24 +295,21 @@ function onGround(dt){
   // Minor fudge to avoid divide-by-zero situations:
   if (currentPosition2d[0] === newPosition2d[0]) newPosition2d[0] += 0.001;
 
-  // TODO: Refactor, cache normals during init
-    // Maintain distance from walls
+  // Maintain distance from walls
   var wallForce2d = boundaryForce2d(newPosition2d, BOUNDARIES, DISTANCE_THRESHOLD);
   if (wallForce2d) {
     var wallForce = $([wallForce2d[0], wallForce2d[1], 0]).$;
     newPosition = $(newPosition).plus(wallForce).$;
   }
 
-  // Only apply changes if they're still inside the walkable polygon
-
-  if (!insidePolygon(newPosition2d, BOUNDARIES)){
+  if (!insidePolygon([newPosition[0], newPosition[1]], BOUNDARIES) && insidePolygon(currentPosition2d, BOUNDARIES)) {
     newPosition = currentPosition;
   }
 
   [ballX, ballY, ballZ] = newPosition;
-  // }
-  ball.style.left = (ballX-5).toString() + 'px';
-  ball.style.top = (ballY-10).toString() + 'px';
+
+  ball.style.transform = `translate(${ballX-5}px, ${ballY-10}px)`;
+  shadow.style.transform = `translate(${ballX-5}px, ${ballY}px) rotate(${zRotation}rad) scaleY(${1 + tilt})`;
 }
 
 window.onload = function(){
