@@ -722,7 +722,7 @@ var image = new Image(WIN_WIDTH, WIN_HEIGHT),
     ballX = 256,
     ballSpeed = 2;
 
-var tick = onGround;
+var tick = inAir;
 var loop = null;
 
 image.onload = function () {
