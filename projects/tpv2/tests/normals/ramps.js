@@ -39,6 +39,8 @@ var loop = null;
 
 image.onload = function(){
   terrainMap = new NormalMap({image, normals, alphas: depths, sourceWidth: WIN_WIDTH, sourceHeight: WIN_HEIGHT});
+  // Make terrain map into a map of downhill forces
+  terrainMap.transform(downhillForce);
   ball.className = "showing";
   shadow.className = "showing";
   loader.className = "hidden";
@@ -46,8 +48,6 @@ image.onload = function(){
   tick();
 };
 image.src = 'hills4.png';
-
-// TODO: Boundary class, specifies innie or outie, provides bins for optimization
 
 
 // BOUNDARY CONSTANTS =======================================================
@@ -317,20 +317,17 @@ function inAir(dt){
   }
   airPos = [ballX, ballY];
   groundPos = [ballX, groundPos[1]];
-  var normal = terrainMap.lookup(parseInt(groundPos[0]), parseInt(groundPos[1]));
-  var shadowRotation = $(normal).angle2d().$;
+  var slope = terrainMap.lookup(parseInt(groundPos[0]), parseInt(groundPos[1]));
+  var shadowRotation = $(slope).angle2d().$;
 
   var airVector = $(ballImpulse).plus([0, gravity]).$;
 
-  var slope = downhillForce(normal);
-  var dot = $(ballImpulse).dot(slope).$;
-  var groundVector = (dot < 0) ? $(ballImpulse).minusVector(slope).$ : groundVector = $(ballImpulse).plus(slope).$
+  var groundVector = ($(ballImpulse).dot(slope).$ < 0) ? $(ballImpulse).minusVector(slope).$ : groundVector = $(ballImpulse).plus(slope).$
 
   airPos = $(airPos).plus(airVector).$;
   groundPos = $(groundPos).plus(groundVector).$;
 
   var boundaryForce = forceAwayFromBoundaries(groundPos, BOUNDARIES, DISTANCE_THRESHOLD);
-
   groundPos = $(groundPos).plus(boundaryForce).$;
   airPos = $(airPos).plus(boundaryForce).$;
 
@@ -352,11 +349,11 @@ function inAir(dt){
 
 function onGround(dt){
   loop = requestAnimationFrame(tick);
-  var normal = terrainMap.lookup(parseInt(ballX), parseInt(ballY));
-  var shadowRotation = $(normal).angle2d().$;
+  var slope = terrainMap.lookup(parseInt(ballX), parseInt(ballY));
+  var shadowRotation = $(slope).angle2d().$;
   var position = [ballX, ballY];
   position = $(position).plus(ballImpulse).$
-  position = $(position).plus($(downhillForce(normal)).times(ballSpeed).$).$;
+  position = $(position).plus($(slope).times(ballSpeed).$).$;
   position = $(position).plus(forceAwayFromBoundaries(position, BOUNDARIES, DISTANCE_THRESHOLD)).$;
   [ballX, ballY] = position;
   ball.style.transform = `translate(${ballX-5}px, ${ballY-10}px)`;
