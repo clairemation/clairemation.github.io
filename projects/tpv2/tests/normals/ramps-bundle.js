@@ -64,7 +64,7 @@ var App =
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,7 +78,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var END_TAG = '$';
 
-var Stack = __webpack_require__(3),
+var Stack = __webpack_require__(6),
     sin = Math.sin,
     cos = Math.cos,
     vectorInstance = new Vector(),
@@ -349,9 +349,9 @@ Vector.prototype.isLeftOf = function (r) {
 
 Vector.prototype.unit = function () {
   var value = values.peek();
-  if (value[0] === 0 && value[1] === 0 && value[2] === 0) {
+  if (value[0] === 0 && value[1] === 0 && (value.length === 2 || value[2] === 0)) {
     values.pop();
-    values.push([0, 0, 0]);
+    values.push([0, 0, 0].slice(-value.length));
   } else {
     values.push(this.divideByScalar($(values.peek()).length()[END_TAG])[END_TAG]);
   }
@@ -413,7 +413,7 @@ Vector.prototype.projectedLength = function (v) {
 Vector.prototype.scalarProjection = function (b) {
   var a = values.pop();
   var bLength = $(b).length().$;
-  values.push(bLength === 0 ? [0, 0, 0].slice(-bLength) : $(b).unit().times($(a).dot(b).$ / $(b).squaredLength().$).$);
+  values.push(bLength === 0 ? [0, 0].slice(-a.length) : $(b).unit().times($(a).dot(b).$ / $(b).squaredLength().$).$);
   return this;
 };
 
@@ -506,6 +506,22 @@ Vector.prototype.rotateToPlane = function (planeNormal) {
   return this;
 };
 
+Vector.prototype.toHexString = function () {
+  var v = values.pop();
+  var r = ('00' + v[0].toString(16)).slice(-2),
+      g = ('00' + v[1].toString(16)).slice(-2),
+      b = ('00' + v[2].toString(16)).slice(-2);
+  values.push(r + g + b);
+  return this;
+};
+
+Vector.prototype.fromHexString = function () {
+  var v = values.pop();
+  var arr = [parseInt(v.slice(0, 1), 16), parseInt(v.slice(2, 3), 16), parseInt(v.slice(4, 5), 16)];
+  values.push(arr);
+  return this;
+};
+
 Vector.prototype.hexColor = function () {
   var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
@@ -562,12 +578,11 @@ module.exports = $;
 
 
 var $ = __webpack_require__(0);
+var getImageData = __webpack_require__(5);
 
-function extractNormals(_ref) {
+function NormalMap(_ref) {
   var image = _ref.image,
       normals = _ref.normals,
-      _ref$alphas = _ref.alphas,
-      alphas = _ref$alphas === undefined ? [] : _ref$alphas,
       _ref$startx = _ref.startx,
       startx = _ref$startx === undefined ? 0 : _ref$startx,
       _ref$starty = _ref.starty,
@@ -577,25 +592,32 @@ function extractNormals(_ref) {
       _ref$sourceHeight = _ref.sourceHeight,
       sourceHeight = _ref$sourceHeight === undefined ? 512 : _ref$sourceHeight;
 
-  return new Promise(function (resolve, reject) {
-    var data = function getImageData() {
-      var tempCanvas = document.createElement('canvas');
-      tempCanvas.width = sourceWidth;
-      tempCanvas.height = sourceHeight;
-      var tempCtx = tempCanvas.getContext('2d');
-      tempCtx.drawImage(image, startx, starty, sourceWidth, sourceHeight, 0, 0, sourceWidth, sourceHeight);
-      return tempCtx.getImageData(0, 0, sourceWidth, sourceHeight).data;
-    }();
-    for (var i = 0; i < data.length; i += 4) {
-      var normal = $([data[i], data[i + 1], data[i + 2]]).divideBy(256).times(2).plus(-1).unit().$;
-      normals.push(normal);
-      alphas.push(data[i + 3]);
+  this.positionNormals = [];
+  this.normals = {};
+  this.width = sourceWidth;
+  this.height = sourceHeight;
+  var data = getImageData({ image: image, sourceWidth: sourceWidth, sourceHeight: sourceHeight });
+  var normal = [0, 0, 0];
+  var hex = 0;
+  for (var i = 0; i < data.length; i += 4) {
+    hex = parseInt($([data[i], data[i + 1], data[i + 2]]).toHexString().$, 16);
+    if (normals[hex]) {
+      this.positionNormals.push(hex);
+    } else {
+      normal = $([data[i], data[i + 1], data[i + 2]]).divideBy(256).times(2).plus(-1).unit().$;
+      this.normals[hex] = normal;
+      this.positionNormals.push(hex);
     }
-    resolve({ normals: normals, alphas: alphas });
-  });
+  }
 }
 
-module.exports = extractNormals;
+NormalMap.prototype.lookup = function (x, y) {
+  var normalIndex = this.positionNormals[this.width * y + x];
+  var normal = this.normals[normalIndex];
+  return normal || [0, 0];
+};
+
+module.exports = NormalMap;
 
 /***/ }),
 /* 2 */
@@ -630,6 +652,75 @@ module.exports = intersection;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function clamp(x, min, max) {
+  return Math.max(Math.min(x, max), min);
+}
+
+function threshold(x, threshold, min, max) {
+  if (x < threshold) return min;
+  return max;
+}
+
+module.exports = { clamp: clamp, threshold: threshold };
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var $ = __webpack_require__(0);
+
+var downhillForce = function () {
+  function slopeForceFunc(normal) {
+    var gravity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [0, 1, 0];
+
+    var rollDirection = $(gravity).scalarProjection(normal).unit().$;
+    var rollSpeed = 1 - $(gravity).dot(normal).$;
+    var rollVector = $(rollDirection).times(rollSpeed).$;
+    return rollVector;
+  };
+  return slopeForceFunc;
+}();
+
+module.exports = downhillForce;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function getImageData(_ref) {
+  var image = _ref.image,
+      _ref$startx = _ref.startx,
+      startx = _ref$startx === undefined ? 0 : _ref$startx,
+      _ref$starty = _ref.starty,
+      starty = _ref$starty === undefined ? 0 : _ref$starty,
+      _ref$sourceWidth = _ref.sourceWidth,
+      sourceWidth = _ref$sourceWidth === undefined ? 512 : _ref$sourceWidth,
+      _ref$sourceHeight = _ref.sourceHeight,
+      sourceHeight = _ref$sourceHeight === undefined ? 512 : _ref$sourceHeight;
+
+  var tempCanvas = document.createElement('canvas');
+  tempCanvas.width = sourceWidth;
+  tempCanvas.height = sourceHeight;
+  var tempCtx = tempCanvas.getContext('2d');
+  tempCtx.drawImage(image, startx, starty, sourceWidth, sourceHeight, 0, 0, sourceWidth, sourceHeight);
+  return tempCtx.getImageData(0, 0, sourceWidth, sourceHeight).data;
+};
+
+module.exports = getImageData;
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -678,7 +769,7 @@ SimpleStack.prototype.toArr = function () {
 module.exports = SimpleStack;
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -688,9 +779,12 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var processNormalsImage = __webpack_require__(1),
+var NormalMap = __webpack_require__(1),
     $ = __webpack_require__(0),
     intersects = __webpack_require__(2),
+    _require = __webpack_require__(3),
+    clamp = _require.clamp,
+    downhillForce = __webpack_require__(4),
     DISTANCE_THRESHOLD = 5,
     SPACEBAR = 32,
     LEFT_KEY = 37,
@@ -701,8 +795,6 @@ var processNormalsImage = __webpack_require__(1),
     WIN_HEIGHT = 512,
     TILE_WIDTH = 32,
     TILE_HEIGHT = 32,
-    PERSPECTIVE = $([0, 0, -1]).unit().$,
-    DISPLACEMENT_FACTOR = 2.5,
     cos = Math.cos,
     sin = Math.sin,
     root = document.getElementById('root'),
@@ -714,25 +806,26 @@ var processNormalsImage = __webpack_require__(1),
 
 
 var image = new Image(WIN_WIDTH, WIN_HEIGHT),
+    terrainMap = null,
     normals = [],
     depths = [],
     loop = null,
-    ballImpulse = [0, 0, 0],
+    ballImpulse = [0, 0],
     ballY = 256,
     ballX = 256,
-    ballSpeed = 2;
+    ballSpeed = 2,
+    ballVelocity = [0, 0];
 
-var tick = inAir;
+var tick = onGround;
 var loop = null;
 
 image.onload = function () {
-  processNormalsImage({ image: image, normals: normals, alphas: depths }).then(function () {
-    ball.className = "showing";
-    shadow.className = "showing";
-    loader.className = "hidden";
-    loaderText.className = "hidden";
-    tick();
-  });
+  terrainMap = new NormalMap({ image: image, normals: normals, alphas: depths, sourceWidth: WIN_WIDTH, sourceHeight: WIN_HEIGHT });
+  ball.className = "showing";
+  shadow.className = "showing";
+  loader.className = "hidden";
+  loaderText.className = "hidden";
+  tick();
 };
 image.src = 'hills4.png';
 
@@ -767,9 +860,59 @@ var BOUNDARY_POLYGON_POINTS = [
 // ],
 
 // hills
-[[-1, 191], [242, 192], [256, 196], [276, 210], [375, 216], [363, 256], [361, 287], [409, 308], [446, 309], [465, 337], [512, 342], [511, 512], [241, 511], [191, 431], [90, 453], [0, 420], [-1, 191]]];
+[[-1, 191], [242, 192], [256, 196], [276, 210], [375, 216], [363, 256], [361, 287], [409, 308], [446, 309], [465, 337], [512, 342], [511, 512], [241, 511], [191, 431], [90, 453], [0, 420], [-1, 191]]
 
-var BOUNDARY_LINE_POINTS = [[[269, 403], [206, 403]]];
+// ziggurat layout
+// [
+//   [569.588, 701.58],
+//   [518.59, 733.078],
+//   [424.095, 850.072],
+//   [359.598, 814.074],
+//   [359.6, 791.575],
+//   [329.6, 767.577],
+//   [290.602, 766.077],
+
+//   [290.602, 766.077],
+//   [329.6, 767.577],
+//   [359.6, 791.575],
+//   [359.598, 814.074],
+//   [424.095, 850.072],
+//   [518.59, 733.078],
+//   [569.588, 701.58],
+// ],
+// [
+//   [134, 155],
+//   [186, 193],
+//   [265, 146]
+// ],
+// [
+//   [898, 493],
+//   [669, 313],
+//   [620, 252],
+//   [522, 317],
+//   [384, 225],
+//   [194, 466]
+// ],
+// [
+//   [1024, 530],
+//   [999, 553],
+//   [898, 680],
+//   [769, 775.826],
+//   [665, 775.826],
+//   [620, 800],
+// ],
+// [
+//   [526, 918],
+//   [469, 962],
+//   [306, 845],
+//   [306, 828],
+//   [278, 807],
+//   [227, 804],
+//   [186, 775.826],
+//   [78, 771],
+//   [0, 724]
+// ]
+];
 
 var BOUNDARIES = function () {
   var boundaries = [];
@@ -808,21 +951,14 @@ var BOUNDARY_BBOXES = function () {
 
 // NORMALS FUNCTIONS ============================================================
 
+// TODO: Optimize memory by only indexing normals values, reducing redundancy
 function readNormal(x, y) {
   if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
-    return { normal: normals[WIN_WIDTH * y + x], depth: depths[WIN_WIDTH * y + x] };
+    var normalIndex = normals.positionNormals[WIN_WIDTH * y + x];
+    var normal = normals.normals[normalIndex];
+    return { normal: normal };
   } else return { normal: [0, 0, -1], depth: 0 };
 }
-
-// TODO: memoize results
-function groundGravity(normal) {
-  var gravity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [0, 1, 0];
-
-  var rollDirection = $(gravity).scalarProjection(normal).unit().$;
-  var rollSpeed = 1 - $(gravity).dot(normal).$;
-  var rollVector = $(rollDirection).times(rollSpeed).$;
-  return rollVector;
-};
 
 // BOUNDARY COLLISION FUNCTIONS ================================================================
 
@@ -842,8 +978,10 @@ function forceAwayFromVertices(point) {
   var proximityVector = [0, 0];
   var vec = false;
   for (var i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++) {
-    vec = forceAwayFromVertex(point, BOUNDARY_POLYGON_POINTS[i], distanceThreshold);
-    if (vec) proximityVector = $(proximityVector).plus(vec).$;
+    for (var j = 0; j < BOUNDARY_POLYGON_POINTS[i].length; j++) {
+      vec = forceAwayFromVertex(point, BOUNDARY_POLYGON_POINTS[i][j], distanceThreshold);
+      if (vec) proximityVector = $(proximityVector).plus(vec).$;
+    }
   }
   return proximityVector;
 }
@@ -937,137 +1075,72 @@ function jump() {
 }
 
 var groundPos = [0, 0],
-    airCurrentPos = [0, 0],
-    airNewPos = [0, 0],
+    airPos = [0, 0],
     init = true,
     gravity = 0;
 
 function inAir(dt) {
   loop = requestAnimationFrame(tick);
-  airCurrentPos = [ballX, ballY];
-  groundPos = [ballX, groundPos[1]];
   if (init) {
     groundPos[1] = ballY;
     gravity = -7;
     init = false;
   }
-  var groundOldPos = groundPos;
-  var x = parseInt(groundPos[0]),
-      y = parseInt(groundPos[1]);
-
-  var _readNormal = readNormal(x, y),
-      normal = _readNormal.normal,
-      depth = _readNormal.depth;
-
+  airPos = [ballX, ballY];
+  groundPos = [ballX, groundPos[1]];
+  var normal = terrainMap.lookup(parseInt(groundPos[0]), parseInt(groundPos[1]));
   var shadowRotation = $(normal).angle2d().$;
 
-  var b = [].concat(_toConsumableArray(ballImpulse));
+  var airVector = $(ballImpulse).plus([0, gravity]).$;
 
-  var airVector = $(b).times(ballSpeed).$;
+  var slope = downhillForce(normal);
+  var dot = $(ballImpulse).dot(slope).$;
+  var groundVector = dot < 0 ? $(ballImpulse).minusVector(slope).$ : groundVector = $(ballImpulse).plus(slope).$;
 
-  var currentPosition = [ballX, ballY];
-  var groundNormalOffset = $(b).scalarProjection(normal).$;
-
-  // Only offset the Y coordinate
-  var groundVector = $(b).plus([0, groundNormalOffset[1], 0]).unit().$;
-  // var groundSpeed = $([airVector[0], 0, 0]).scalarProjection(groundVector).$;
-  groundVector = $(groundVector).times(ballSpeed).$;
-
-  // var groundNormalOffset = $(b).scalarProjection(normal).$;
-  // var groundDir = $(airVector).plus([0, groundNormalOffset[1] * DISPLACEMENT_FACTOR, 0]).$;
-  // var groundVector = $(airVector).scalarProjection(groundDir).$;
-
-  airVector = $(airVector).plus([0, gravity, 0]).$;
+  airPos = $(airPos).plus(airVector).$;
   groundPos = $(groundPos).plus(groundVector).$;
-  airNewPos = $(airCurrentPos).plus(airVector).$;
-  // airNewPos = [groundPos[0], airNewPos[1], groundPos[2]];
 
-  // Fudge to avoid divide-by-zero
-  if (groundPos[0] === groundOldPos[0]) groundPos[0] += 0.005;
+  var boundaryForce = forceAwayFromBoundaries(groundPos, BOUNDARIES, DISTANCE_THRESHOLD);
 
-  var wallForce2d = forceAwayFromBoundaries([groundPos[0], groundPos[1]], BOUNDARIES, DISTANCE_THRESHOLD);
-  if (wallForce2d) {
-    var wallForce = $([wallForce2d[0], wallForce2d[1], 0]).$;
-    groundPos = $(groundPos).plus(wallForce).$;
-    airNewPos = $(airNewPos).plus(wallForce).$;
-  }
-
-  // Only stops us when going from inside bounds to out--
-  // So in case everything fails and we go out of bounds, at least we can get back in
-  if (!insidePolygon([groundPos[0], groundPos[1]], BOUNDARIES) && insidePolygon([groundOldPos[0], groundOldPos[1]], BOUNDARIES)) {}
-  // groundPos = groundOldPos;
-  // airNewPos = [groundOldPos[0], airNewPos[1], groundOldPos[2]];
-
+  groundPos = $(groundPos).plus(boundaryForce).$;
+  airPos = $(airPos).plus(boundaryForce).$;
 
   // If we're falling down and we hit or pass the ground projection, we land (stick to ground Y and switch to onGround state)
-  if (gravity > 0 && airNewPos[1] >= groundPos[1]) {
+  if (gravity > 0 && airPos[1] >= groundPos[1]) {
     init = true;
-    airNewPos[1] = groundPos[1];
+    airPos[1] = groundPos[1];
     window.cancelAnimationFrame(loop);
     tick = onGround;
     loop = requestAnimationFrame(tick);
   }
 
-  var _airNewPos = airNewPos;
+  var _airPos = airPos;
 
-  var _airNewPos2 = _slicedToArray(_airNewPos, 2);
+  var _airPos2 = _slicedToArray(_airPos, 2);
 
-  ballX = _airNewPos2[0];
-  ballY = _airNewPos2[1];
+  ballX = _airPos2[0];
+  ballY = _airPos2[1];
 
   gravity += 0.4;
 
   ball.style.transform = 'translate(' + (ballX - 5) + 'px, ' + (ballY - 10) + 'px)';
-  var scale = 2 / $(airNewPos).distanceTo(groundPos).$ + 0.8;
   shadow.style.transform = 'translate(' + (groundPos[0] - 5) + 'px, ' + groundPos[1] + 'px) rotate(' + shadowRotation + 'rad)';
 }
 
 function onGround(dt) {
   loop = requestAnimationFrame(tick);
-  var x = parseInt(ballX),
-      y = parseInt(ballY);
-  var gravity = [0, 0, 0];
+  var normal = terrainMap.lookup(parseInt(ballX), parseInt(ballY));
+  var shadowRotation = $(normal).angle2d().$;
+  var position = [ballX, ballY];
+  position = $(position).plus(ballImpulse).$;
+  position = $(position).plus($(downhillForce(normal)).times(ballSpeed).$).$;
+  position = $(position).plus(forceAwayFromBoundaries(position, BOUNDARIES, DISTANCE_THRESHOLD)).$;
+  var _position = position;
 
-  var _readNormal2 = readNormal(x, y),
-      normal = _readNormal2.normal,
-      depth = _readNormal2.depth;
-  // TODO: Memoize
+  var _position2 = _slicedToArray(_position, 2);
 
-
-  var shadowRotation = $([normal[0], normal[1]]).angle2d().$;
-  var currentPosition = [ballX, ballY];
-  var b = [].concat(_toConsumableArray(ballImpulse));
-
-  // Only offset the Y coordinate
-  var vector = $(b).times(ballSpeed).plus($(groundGravity(normal)).times(ballSpeed).$).$;
-
-  // vector = $(vector).plus(gravity).$;
-  var newPosition = $(currentPosition).plus(vector).$;
-
-  var currentPosition2d = [currentPosition[0], currentPosition[1]],
-      newPosition2d = [newPosition[0], newPosition[1]],
-      vector2d = [vector[0], vector[1]];
-  // Minor fudge to avoid divide-by-zero situations:
-  if (currentPosition2d[0] === newPosition2d[0]) newPosition2d[0] += 0.001;
-
-  // Maintain distance from walls
-  var wallForce2d = forceAwayFromBoundaries(newPosition2d, BOUNDARIES, DISTANCE_THRESHOLD);
-  if (wallForce2d) {
-    var wallForce = $([wallForce2d[0], wallForce2d[1], 0]).$;
-    newPosition = $(newPosition).plus(wallForce).$;
-  }
-
-  if (!insidePolygon([newPosition[0], newPosition[1]], BOUNDARIES) && insidePolygon(currentPosition2d, BOUNDARIES)) {
-    newPosition = currentPosition;
-  }
-
-  var _newPosition = newPosition;
-
-  var _newPosition2 = _slicedToArray(_newPosition, 2);
-
-  ballX = _newPosition2[0];
-  ballY = _newPosition2[1];
-
+  ballX = _position2[0];
+  ballY = _position2[1];
 
   ball.style.transform = 'translate(' + (ballX - 5) + 'px, ' + (ballY - 10) + 'px)';
   shadow.style.transform = 'translate(' + (ballX - 5) + 'px, ' + ballY + 'px) rotate(' + shadowRotation + 'rad)';
@@ -1097,7 +1170,7 @@ window.onload = function () {
         spaceDown = true;
         break;
     }
-    ballImpulse = $(ballImpulse).unit().$;
+    ballImpulse = $(ballImpulse).unit().times(ballSpeed).$;
   });
 
   window.addEventListener("keyup", function (e) {
@@ -1120,7 +1193,7 @@ window.onload = function () {
         spaceDown = false;
         break;
     }
-    ballImpulse = $(ballImpulse).unit().$;
+    ballImpulse = $(ballImpulse).unit().times(ballSpeed).$;
   });
 
   var startVec = [0, 0];
@@ -1151,7 +1224,7 @@ window.onload = function () {
     if (e.target.id === 'jump-button') return;
     ballImpulse[0] = 0;
     ballImpulse[1] = 0;
-    startVec = [0, 0, 0];
+    startVec = [0, 0];
   });
 };
 
