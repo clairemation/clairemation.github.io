@@ -215,7 +215,7 @@ function forceAwayFromVertex(point, vertex, distanceThreshold = DISTANCE_THRESHO
 function forceAwayFromVertices(point, vertices = BOUNDARY_POLYGON_POINTS, distanceThreshold = DISTANCE_THRESHOLD){
   var proximityVector = [0, 0];
   var vec = false;
-  for (let i = 0; i < BOUNDARY_POLYGON_POINTS.length - 1; i++){
+  for (let i = 0; i < BOUNDARY_POLYGON_POINTS.length; i++){
     for (let j = 0; j < BOUNDARY_POLYGON_POINTS[i].length; j++){
       vec = forceAwayFromVertex(point, BOUNDARY_POLYGON_POINTS[i][j], distanceThreshold);
       if (vec) proximityVector = $(proximityVector).plus(vec).$;
