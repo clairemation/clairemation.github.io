@@ -64,7 +64,7 @@ var App =
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,7 +78,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var END_TAG = '$';
 
-var Stack = __webpack_require__(6),
+var Stack = __webpack_require__(8),
     sin = Math.sin,
     cos = Math.cos,
     vectorInstance = new Vector(),
@@ -577,10 +577,196 @@ module.exports = $;
 "use strict";
 
 
-var $ = __webpack_require__(0);
-var getImageData = __webpack_require__(5);
+function intersection(x1, y1, x2, y2, u1, v1, u2, v2) {
 
-function NormalMap(_ref) {
+  // x and y are used for line 1, u and v for line 2
+  // input x1,y1 input x2,y2 input u1,v1 input u2,v2
+
+
+  var b1 = (y2 - y1) / (x2 - x1);
+  var b2 = (v2 - v1) / (u2 - u1);
+
+  var a1 = y1 - b1 * x1;
+  var a2 = v1 - b2 * u1;
+
+  var xi = -(a1 - a2) / (b1 - b2);
+  var yi = a1 + b1 * xi;
+
+  if ((x1 - xi) * (xi - x2) >= 0 && (u1 - xi) * (xi - u2) >= 0 && (y1 - yi) * (yi - y2) >= 0 && (v1 - yi) * (yi - v2) >= 0) {
+    return [xi, yi];
+  } else {
+    return null;
+  }
+}
+
+module.exports = intersection;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var $ = __webpack_require__(0),
+    intersects = __webpack_require__(1);
+
+var DISTANCE_THRESHOLD = 5;
+
+// BOUNDARY COLLECTION OBJECT ==========================
+
+function BoundaryCollection(points, distanceThreshold) {
+  var _this = this;
+
+  this.distanceThreshold = distanceThreshold;
+  this.points = points;
+  this.rays = function () {
+    var boundaries = [];
+    for (var i = 0; i < points.length; i++) {
+      var polygon = points[i];
+      for (var j = 0; j < polygon.length - 1; j++) {
+        boundaries.push([].concat(_toConsumableArray(polygon[j]), _toConsumableArray(polygon[j + 1])));
+      }
+    }
+    return boundaries;
+  }();
+  this.vectors = function () {
+    var bVecs = [];
+    for (var i = 0; i < _this.rays.length; i++) {
+      bVecs.push($(_this.rays[i]).coordPairToVector().$);
+    }
+    return bVecs;
+  }();
+  this.normals = function () {
+    var bNorms = [];
+    for (var i = 0; i < _this.vectors.length; i++) {
+      bNorms.push($(_this.vectors[i]).leftNormal().$);
+    }
+    return bNorms;
+  }();
+  this.bboxes = function () {
+    var boxes = [];
+    for (var i = 0; i < _this.rays.length; i++) {
+      boxes.push(frontOfRayBBox(_this.rays[i], _this.distanceThreshold));
+    }
+    return boxes;
+  }();
+}
+
+function forceAwayFromPoint(position, point, distanceThreshold) {
+  var dist = $(position).distanceTo(point).$;
+  if (dist < distanceThreshold) {
+    return $([].concat(_toConsumableArray(point), _toConsumableArray(position))).coordPairToVector().unit().times(distanceThreshold - dist).$;
+  } else return false;
+}
+
+function forceAwayFromPoints(position, points, distanceThreshold) {
+  var proximityVector = [0, 0];
+  var vec = false;
+  for (var i = 0; i < points.length; i++) {
+    for (var j = 0; j < points[i].length; j++) {
+      vec = forceAwayFromPoint(position, points[i][j], distanceThreshold);
+      if (vec) proximityVector = $(proximityVector).plus(vec).$;
+    }
+  }
+  return proximityVector;
+}
+
+// Bounding box for a boundary's "active zone"
+// aka a box parallel to the line whose width = size
+function frontOfRayBBox(ray, size) {
+  var side1 = ray;
+  var normal = $(ray).coordPairToVector().leftNormal().times(size).$;
+  var side2 = [ray[2], ray[3]].concat(_toConsumableArray($([ray[2], ray[3]]).plus(normal).$));
+  var side4 = [].concat(_toConsumableArray($([ray[0], ray[1]]).plus(normal).$), [ray[0], ray[1]]);
+  var side3 = [side2[2], side2[3], side4[0], side4[1]];
+  return [side1, side2, side3, side4];
+}
+
+function insidePolygon(point, sides) {
+  var horizontalRay = [0, point[1]].concat(_toConsumableArray(point));
+  var crossings = 0;
+
+  // make sure no boundary points are on our test ray
+  var boundaries = [];
+  for (var i = 0; i < sides.length; i++) {
+    var boundary = sides[i];
+    if (boundary[1] === point[1]) boundary[1] += 1;
+    if (boundary[3] === point[1]) boundary[3] += 1;
+    boundaries.push(boundary);
+  }
+
+  for (var _i = 0; _i < boundaries.length; _i++) {
+    var _boundary = boundaries[_i];
+    var intersection = intersects.apply(undefined, _toConsumableArray(horizontalRay).concat(_toConsumableArray(_boundary)));
+    if (intersection) crossings++;
+  }
+
+  // If crossings is odd, we're inside. If even, we're outside.
+  return crossings % 2 != 0;
+}
+
+BoundaryCollection.prototype.forceAway = function (position) {
+  var _this2 = this;
+
+  // If we're too close to a vertex, add the counter-force to our vector
+  var force = forceAwayFromPoints(position, this.points, this.distanceThreshold);
+  // Now test against polygon sides
+
+  var _loop = function _loop(i) {
+    boundary = _this2.rays[i];
+
+
+    (function () {
+      var boundaryVector = _this2.vectors[i];
+
+      // If we're on the inside side of the boundary
+      if (!$(position).isLeftOf(boundaryVector).$) {
+        // If we're inside the boundary's active zone
+        var bBox = _this2.bboxes[i];
+        if (insidePolygon(position, bBox)) {
+
+          var boundaryNormal = _this2.normals[i];
+
+          // Test for intersection between distance ray and boundary ray
+          var distanceTestVector = $(boundaryNormal).times(_this2.distanceThreshold).$;
+          var distanceRay = [].concat(_toConsumableArray(position), _toConsumableArray($(position).minusVector(distanceTestVector).$));
+          var intersection = intersects.apply(undefined, _toConsumableArray(distanceRay).concat(_toConsumableArray(boundary)));
+
+          // If we're too close to the boundary
+          if (intersection) {
+            var dist = $([].concat(_toConsumableArray(position), _toConsumableArray(intersection))).coordPairToVector().length().$;
+            var vec = $([].concat(_toConsumableArray(intersection), _toConsumableArray(position))).coordPairToVector().unit().times(_this2.distanceThreshold - dist).$;
+            force = $(force).plus(vec).$;
+          }
+        }
+      }
+    })();
+  };
+
+  for (var i = 0; i < this.rays.length; i++) {
+    var boundary;
+
+    _loop(i);
+  }
+  return force;
+};
+
+module.exports = BoundaryCollection;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var $ = __webpack_require__(0);
+var getImageData = __webpack_require__(7);
+
+function IndexedNormalMap(_ref) {
   var image = _ref.image,
       normals = _ref.normals,
       _ref$startx = _ref.startx,
@@ -611,53 +797,22 @@ function NormalMap(_ref) {
   }
 }
 
-NormalMap.prototype.lookup = function (x, y) {
+IndexedNormalMap.prototype.lookup = function (x, y) {
   var normalIndex = this.positionNormals[this.width * y + x];
   var normal = this.normals[normalIndex];
   return normal || [0, 0];
 };
 
-NormalMap.prototype.transform = function (func) {
+IndexedNormalMap.prototype.transform = function (func) {
   for (var n in this.normals) {
     this.normals[n] = func(this.normals[n]);
   }
 };
 
-module.exports = NormalMap;
+module.exports = IndexedNormalMap;
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function intersection(x1, y1, x2, y2, u1, v1, u2, v2) {
-
-  // x and y are used for line 1, u and v for line 2
-  // input x1,y1 input x2,y2 input u1,v1 input u2,v2
-
-
-  var b1 = (y2 - y1) / (x2 - x1);
-  var b2 = (v2 - v1) / (u2 - u1);
-
-  var a1 = y1 - b1 * x1;
-  var a2 = v1 - b2 * u1;
-
-  var xi = -(a1 - a2) / (b1 - b2);
-  var yi = a1 + b1 * xi;
-
-  if ((x1 - xi) * (xi - x2) >= 0 && (u1 - xi) * (xi - u2) >= 0 && (y1 - yi) * (yi - y2) >= 0 && (v1 - yi) * (yi - v2) >= 0) {
-    return [xi, yi];
-  } else {
-    return null;
-  }
-}
-
-module.exports = intersection;
-
-/***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -675,7 +830,7 @@ function threshold(x, threshold, min, max) {
 module.exports = { clamp: clamp, threshold: threshold };
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -698,7 +853,25 @@ var downhillForce = function () {
 module.exports = downhillForce;
 
 /***/ }),
-/* 5 */
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// mountain
+var mountain = [[[30, 155.5], [224, 163.5], [439, 140.5], [512, 140.505], [512.005, 174.5], [271, 189.5], [266, 189.505], [262, 413.5], [337, 444.5], [512, 417.5], [516, 511.5], [0, 511.505], [0.005, 458.5], [132, 493.5], [54, 418.5], [0, 341.5], [0.005, 221.5], [59, 176.5], [38, 175.505], [30, 155.5]]];
+
+// hills
+var hills = [[[0.05, 191], [242, 192], [256, 196], [276, 210], [375, 216], [363, 256], [361, 287], [409, 308], [446, 309], [465, 337], [512, 342], [511, 512], [241, 511], [191, 431], [90, 453], [0.01, 420], [0.05, 191]]];
+
+// ziggurat
+var ziggurat = [[[569.588, 701.58], [518.59, 733.078], [424.095, 850.072], [359.598, 814.074], [359.6, 791.575], [329.6, 767.577], [290.602, 766.077], [290.602, 766.077], [329.6, 767.577], [359.6, 791.575], [359.598, 814.074], [424.095, 850.072], [518.59, 733.078], [569.588, 701.58]], [[134, 155], [186, 193], [265, 146]], [[898, 493], [669, 313], [620, 252], [522, 317], [384, 225], [194, 466]], [[1024, 530], [999, 553], [898, 680], [769, 775.826], [665, 775.826], [620, 800]], [[526, 918], [469, 962], [306, 845], [306, 828], [278, 807], [227, 804], [186, 775.826], [78, 771], [0, 724]]];
+
+module.exports = { mountain: mountain, hills: hills, ziggurat: ziggurat };
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -726,7 +899,7 @@ function getImageData(_ref) {
 module.exports = getImageData;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -775,7 +948,7 @@ SimpleStack.prototype.toArr = function () {
 module.exports = SimpleStack;
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -783,14 +956,13 @@ module.exports = SimpleStack;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-var NormalMap = __webpack_require__(1),
+var IndexedNormalMap = __webpack_require__(3),
     $ = __webpack_require__(0),
-    intersects = __webpack_require__(2),
-    _require = __webpack_require__(3),
+    BoundaryCollection = __webpack_require__(2),
+    intersects = __webpack_require__(1),
+    _require = __webpack_require__(4),
     clamp = _require.clamp,
-    downhillForce = __webpack_require__(4),
+    downhillForce = __webpack_require__(5),
     DISTANCE_THRESHOLD = 5,
     SPACEBAR = 32,
     LEFT_KEY = 37,
@@ -822,11 +994,11 @@ var image = new Image(WIN_WIDTH, WIN_HEIGHT),
     ballSpeed = 2,
     ballVelocity = [0, 0];
 
-var tick = onGround;
+var tick = inAir;
 var loop = null;
 
 image.onload = function () {
-  terrainMap = new NormalMap({ image: image, normals: normals, alphas: depths, sourceWidth: WIN_WIDTH, sourceHeight: WIN_HEIGHT });
+  terrainMap = new IndexedNormalMap({ image: image, normals: normals, sourceWidth: WIN_WIDTH, sourceHeight: WIN_HEIGHT });
   // Make terrain map into a map of downhill forces
   terrainMap.transform(downhillForce);
   ball.className = "showing";
@@ -839,239 +1011,8 @@ image.src = 'hills4.png';
 
 // BOUNDARY CONSTANTS =======================================================
 
-var BOUNDARY_POLYGON_POINTS = [
-// mountain
-// [
-//   [30,155.5],
-//   [224,163.5],
-//   [439,140.5],
-//   [512,140.505],
-//   [512.005,174.5],
-//   [271,189.5],
-//   [266,189.505],
-//   [262,413.5],
-//   [337,444.5],
-//   [512,417.5],
-//   [516,511.5],
-//   [0,511.505],
-//   [0.005,458.5],
-//   [132,493.5],
-//   [54,418.5],
-//   [0,341.5],
-//   [0.005,221.5],
-//   [59,176.5],
-//   [38,175.505],
-//   [30,155.5]
-// ],
-
-// hills
-[[-1, 191], [242, 192], [256, 196], [276, 210], [375, 216], [363, 256], [361, 287], [409, 308], [446, 309], [465, 337], [512, 342], [511, 512], [241, 511], [191, 431], [90, 453], [0, 420], [-1, 191]]
-
-// ziggurat layout
-// [
-//   [569.588, 701.58],
-//   [518.59, 733.078],
-//   [424.095, 850.072],
-//   [359.598, 814.074],
-//   [359.6, 791.575],
-//   [329.6, 767.577],
-//   [290.602, 766.077],
-
-//   [290.602, 766.077],
-//   [329.6, 767.577],
-//   [359.6, 791.575],
-//   [359.598, 814.074],
-//   [424.095, 850.072],
-//   [518.59, 733.078],
-//   [569.588, 701.58],
-// ],
-// [
-//   [134, 155],
-//   [186, 193],
-//   [265, 146]
-// ],
-// [
-//   [898, 493],
-//   [669, 313],
-//   [620, 252],
-//   [522, 317],
-//   [384, 225],
-//   [194, 466]
-// ],
-// [
-//   [1024, 530],
-//   [999, 553],
-//   [898, 680],
-//   [769, 775.826],
-//   [665, 775.826],
-//   [620, 800],
-// ],
-// [
-//   [526, 918],
-//   [469, 962],
-//   [306, 845],
-//   [306, 828],
-//   [278, 807],
-//   [227, 804],
-//   [186, 775.826],
-//   [78, 771],
-//   [0, 724]
-// ]
-];
-
-var BOUNDARIES = function () {
-  var boundaries = [];
-  for (var i = 0; i < BOUNDARY_POLYGON_POINTS.length; i++) {
-    var polygon = BOUNDARY_POLYGON_POINTS[i];
-    for (var j = 0; j < polygon.length - 1; j++) {
-      boundaries.push([].concat(_toConsumableArray(polygon[j]), _toConsumableArray(polygon[j + 1])));
-    }
-  }
-  return boundaries;
-}();
-
-var BOUNDARY_VECTORS = function () {
-  var bVecs = [];
-  for (var i = 0; i < BOUNDARIES.length; i++) {
-    bVecs.push($(BOUNDARIES[i]).coordPairToVector().$);
-  }
-  return bVecs;
-}();
-
-var BOUNDARY_NORMALS = function () {
-  var bNorms = [];
-  for (var i = 0; i < BOUNDARY_VECTORS.length; i++) {
-    bNorms.push($(BOUNDARY_VECTORS[i]).leftNormal().$);
-  }
-  return bNorms;
-}();
-
-var BOUNDARY_BBOXES = function () {
-  var boxes = [];
-  for (var i = 0; i < BOUNDARIES.length; i++) {
-    boxes.push(frontOfRayBBox(BOUNDARIES[i], DISTANCE_THRESHOLD));
-  }
-  return boxes;
-}();
-
-// NORMALS FUNCTIONS ============================================================
-
-// TODO: Optimize memory by only indexing normals values, reducing redundancy
-function readNormal(x, y) {
-  if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT) {
-    var normalIndex = normals.positionNormals[WIN_WIDTH * y + x];
-    var normal = normals.normals[normalIndex];
-    return { normal: normal };
-  } else return { normal: [0, 0, -1], depth: 0 };
-}
-
-// BOUNDARY COLLISION FUNCTIONS ================================================================
-
-function forceAwayFromVertex(point, vertex) {
-  var distanceThreshold = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DISTANCE_THRESHOLD;
-
-  var dist = $(point).distanceTo(vertex).$;
-  if (dist < distanceThreshold) {
-    return $([].concat(_toConsumableArray(vertex), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
-  } else return false;
-}
-
-function forceAwayFromVertices(point) {
-  var vertices = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : BOUNDARY_POLYGON_POINTS;
-  var distanceThreshold = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DISTANCE_THRESHOLD;
-
-  var proximityVector = [0, 0];
-  var vec = false;
-  for (var i = 0; i < BOUNDARY_POLYGON_POINTS.length; i++) {
-    for (var j = 0; j < BOUNDARY_POLYGON_POINTS[i].length; j++) {
-      vec = forceAwayFromVertex(point, BOUNDARY_POLYGON_POINTS[i][j], distanceThreshold);
-      if (vec) proximityVector = $(proximityVector).plus(vec).$;
-    }
-  }
-  return proximityVector;
-}
-
-// Bounding box for a boundary's "active zone"
-// aka a box parallel to the line whose width = size
-function frontOfRayBBox(ray, size) {
-  var side1 = ray;
-  var normal = $(ray).coordPairToVector().leftNormal().times(size).$;
-  var side2 = [ray[2], ray[3]].concat(_toConsumableArray($([ray[2], ray[3]]).plus(normal).$));
-  var side4 = [].concat(_toConsumableArray($([ray[0], ray[1]]).plus(normal).$), [ray[0], ray[1]]);
-  var side3 = [side2[2], side2[3], side4[0], side4[1]];
-  return [side1, side2, side3, side4];
-}
-
-function insidePolygon(point, sides) {
-  var horizontalRay = [].concat(_toConsumableArray(point), [WIN_WIDTH + 10, point[1]]);
-  var crossings = 0;
-
-  // make sure no boundary vertices are on our test ray
-  var boundaries = [];
-  for (var i = 0; i < sides.length; i++) {
-    var boundary = sides[i];
-    if (boundary[1] === point[1]) boundary[1] += 1;
-    if (boundary[3] === point[1]) boundary[3] += 1;
-    boundaries.push(boundary);
-  }
-
-  for (var _i = 0; _i < boundaries.length; _i++) {
-    var _boundary = boundaries[_i];
-    var intersection = intersects.apply(undefined, _toConsumableArray(horizontalRay).concat(_toConsumableArray(_boundary)));
-    if (intersection) crossings++;
-  }
-
-  // If crossings is odd, we're inside. If even, we're outside.
-  return crossings % 2 != 0;
-}
-
-function forceAwayFromBoundaries(point) {
-  var boundaries = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : BOUNDARIES;
-  var distanceThreshold = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : DISTANCE_THRESHOLD;
-
-  // If we're too close to a vertex, add the counter-force to our vector
-  var force = forceAwayFromVertices(point);
-
-  // Now test against polygon sides
-
-  var _loop = function _loop(i) {
-    boundary = boundaries[i];
-
-
-    (function boundaryProximityVector() {
-      var boundaryVector = BOUNDARY_VECTORS[i];
-
-      // If we're on the inside side of the boundary
-      if (!$(point).isLeftOf(boundaryVector).$) {
-        // If we're inside the boundary's active zone
-        var bBox = BOUNDARY_BBOXES[i];
-        if (insidePolygon(point, bBox)) {
-
-          var boundaryNormal = BOUNDARY_NORMALS[i];
-
-          // Test for intersection between distance ray and boundary ray
-          var distanceTestVector = $(boundaryNormal).times(distanceThreshold).$;
-          var distanceRay = [].concat(_toConsumableArray(point), _toConsumableArray($(point).minusVector(distanceTestVector).$));
-          var intersection = intersects.apply(undefined, _toConsumableArray(distanceRay).concat(_toConsumableArray(boundary)));
-
-          // If we're too close to the boundary
-          if (intersection) {
-            var dist = $([].concat(_toConsumableArray(point), _toConsumableArray(intersection))).coordPairToVector().length().$;
-            var vec = $([].concat(_toConsumableArray(intersection), _toConsumableArray(point))).coordPairToVector().unit().times(distanceThreshold - dist).$;
-            force = $(force).plus(vec).$;
-          }
-        }
-      }
-    })();
-  };
-
-  for (var i = 0; i < boundaries.length; i++) {
-    var boundary;
-
-    _loop(i);
-  }
-  return force;
-}
+var boundsFromFile = __webpack_require__(6).hills;
+var boundaries = new BoundaryCollection(boundsFromFile, DISTANCE_THRESHOLD);
 
 function jump() {
   window.cancelAnimationFrame(loop);
@@ -1103,7 +1044,7 @@ function inAir(dt) {
   airPos = $(airPos).plus(airVector).$;
   groundPos = $(groundPos).plus(groundVector).$;
 
-  var boundaryForce = forceAwayFromBoundaries(groundPos, BOUNDARIES, DISTANCE_THRESHOLD);
+  var boundaryForce = boundaries.forceAway(groundPos);
   groundPos = $(groundPos).plus(boundaryForce).$;
   airPos = $(airPos).plus(boundaryForce).$;
 
@@ -1136,7 +1077,7 @@ function onGround(dt) {
   var position = [ballX, ballY];
   position = $(position).plus(ballImpulse).$;
   position = $(position).plus($(slope).times(ballSpeed).$).$;
-  position = $(position).plus(forceAwayFromBoundaries(position, BOUNDARIES, DISTANCE_THRESHOLD)).$;
+  position = $(position).plus(boundaries.forceAway(position)).$;
   var _position = position;
 
   var _position2 = _slicedToArray(_position, 2);
@@ -1216,7 +1157,7 @@ window.onload = function () {
     var touch = e.changedTouches[0];
     if (e.target.id === 'jump-button') return;
     var newVec = [touch.clientX, touch.clientY];
-    var direction = $(newVec).minusVector(startVec).unit().$;
+    var direction = $(newVec).minusVector(startVec).unit().times(ballSpeed).$;
     ballImpulse[0] = direction[0];
     ballImpulse[1] = direction[1];
   });
