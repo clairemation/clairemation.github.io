@@ -112,13 +112,20 @@ function loadImage(url) {
   });
 }
 
+function imageLoadPromises(urls) {
+  return urls.map(function (url) {
+    return loadImage(url);
+  });
+}
+
 // Loads images in parallel, displays them in order
 function appendLoadedImagesInOrder(thumbsList, fullsizeList) {
+  var imagePromises = imageLoadPromises(thumbsList);
   var seq = Promise.resolve();
 
   var _loop = function _loop(i) {
     seq = seq.then(function () {
-      return loadImage(thumbsList[i]);
+      return imagePromises[i];
     }).then(function (img) {
       img.onclick = function () {
         popup(fullsizeList[i]);

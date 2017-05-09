@@ -28,11 +28,16 @@ function loadImage(url){
   })
 }
 
+function imageLoadPromises(urls){
+  return urls.map(url => loadImage(url));
+}
+
 // Loads images in parallel, displays them in order
 function appendLoadedImagesInOrder(thumbsList, fullsizeList){
+  var imagePromises = imageLoadPromises(thumbsList);
   var seq = Promise.resolve();
   for (let i = 0; i < thumbsList.length; i++){
-    seq = seq.then(() => loadImage(thumbsList[i]))
+    seq = seq.then(() => imagePromises[i])
     .then((img) => {
       img.onclick = function(){popup(fullsizeList[i])};
       imageSection.appendChild(img);
