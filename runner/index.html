@@ -1,0 +1,40 @@
+<!doctype HTML>
+
+<html>
+	<head>
+	</head>
+
+	<body>
+
+		<canvas id="canvas" width=512 height=512></canvas>
+
+
+		<script>
+
+			var canvas = document.getElementById("canvas");
+			var ctx = canvas.getContext("2d");
+			ctx.font = "30px Arial";
+			ctx.fillStyle = "black";
+			ctx.textAlign = "center";
+			var xPos = canvas.width / 2;
+			var yPos = canvas.height / 2;
+
+			var worker = new Worker("webworker.js");
+
+			worker.onmessage = function(evt){
+				updateCanvas(evt.data);
+			}
+
+			worker.postMessage(0);
+
+			function updateCanvas(num){
+
+				ctx.clearRect(0, 0, 512, 512);
+				ctx.fillText(num, xPos, yPos);
+			}
+
+		</script>
+	
+	</body>
+
+	</html>
