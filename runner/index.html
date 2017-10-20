@@ -33,6 +33,10 @@
 				ctx.fillText(num, xPos, yPos);
 			}
 
+			window.onbeforeunload = function(e){
+				worker.terminate();
+			}
+
 		</script>
 	
 	</body>
