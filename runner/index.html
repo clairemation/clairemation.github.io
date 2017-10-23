@@ -49,8 +49,8 @@
 					lastTime = timestamp;
 				}
 				var dt = (timestamp - lastTime) / 1000;
-				lastCoins = coins;
 				count += dt;
+				lastCoins = coins;
 				coins = Math.floor(count);
 				sessionStorage.setItem("count", count.toString());
 				if (dt > 2) {
