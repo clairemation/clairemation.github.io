@@ -36,7 +36,7 @@
 			// worker.postMessage("start");
 
 
-			var lastTime;
+			var lastTime = parseFloat(sessionStorage.getItem("lastTime"));
 			var count = parseFloat(sessionStorage.getItem("count")) || 0;
 			var coins;
 			var lastCoins;
@@ -57,7 +57,8 @@
 					displayMessage();
 				}
 				lastTime = timestamp
-			}
+				sessionStorage.setItem("lastTime", lastTime.toString())
+;			}
 
 			function displayCount(timestamp){
 				displayCountLoop = requestAnimationFrame(displayCount);
