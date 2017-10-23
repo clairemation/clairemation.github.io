@@ -12,16 +12,15 @@
 		<script>
 			var canvas = document.getElementById("canvas");
 			var ctx = canvas.getContext("2d");
-			ctx.font = "30px Arial";
+			ctx.font = "20px Arial";
 			ctx.fillStyle = "black";
 			ctx.textAlign = "center";
 			var xPos = canvas.width / 2;
 			var yPos = canvas.height / 2;
 
-
-			function updateCanvas(num){
+			function updateCanvas(txt){
 				ctx.clearRect(0, 0, 512, 512);
-				ctx.fillText(num, xPos, yPos);
+				ctx.fillText(txt, xPos, yPos);
 			}
 
 			// var worker = new Worker("webworker.js");
@@ -36,24 +35,48 @@
 
 			// worker.postMessage("start");
 
-			var count = 0;
-			var lastTime;
-			var dt = 0;
 
-			function tick(timestamp){
-				requestAnimationFrame(tick);
+			var lastTime;
+			var count = parseFloat(sessionStorage.getItem("count")) || 0;
+			var coins;
+			var lastCoins;
+			var countUpLoop;
+			var displayCountLoop;
+
+			function countUp(timestamp){
+				countUpLoop = requestAnimationFrame(countUp);
 				if (!lastTime){
 					lastTime = timestamp;
 				}
-				dt += (timestamp - lastTime) / 1000;
-				if (dt > 1){
-					count = Math.floor(dt);
+				var dt = (timestamp - lastTime) / 1000;
+				lastCoins = coins;
+				count += dt;
+				coins = Math.floor(count);
+				sessionStorage.setItem("count", count.toString());
+				if (dt > 2) {
+					displayMessage();
 				}
-				updateCanvas(Math.floor(count));
 				lastTime = timestamp
 			}
 
-			requestAnimationFrame(tick);
+			function displayCount(timestamp){
+				displayCountLoop = requestAnimationFrame(displayCount);
+				updateCanvas("Coins:\n" + coins);
+			}
+
+			function displayMessage(){
+				cancelAnimationFrame(displayCountLoop);
+				updateCanvas("Your knight gained " + (coins - lastCoins) + " coins while you were away!\n(OK)");
+				canvas.addEventListener("click", canvasOnClick);
+			}
+
+			function canvasOnClick(e){
+				displayCountLoop = requestAnimationFrame(displayCount);
+				canvas.removeEventListener("click", canvasOnClick, true);
+			}
+
+			countUpLoop = requestAnimationFrame(countUp);
+			displayCountLoop = requestAnimationFrame(displayCount);
 
 
 		</script>
