@@ -67,7 +67,7 @@
 
 			function displayMessage(){
 				cancelAnimationFrame(displayCountLoop);
-				updateCanvas("Your knight gained " + (coins - lastCoins) + " coins while you were away!\n(OK)");
+				updateCanvas("Your knight gained " + (coins - lastCoins) + " coins while you were away!\n(Click)");
 				canvas.addEventListener("click", canvasOnClick);
 			}
 
