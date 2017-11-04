@@ -1,212 +1,71 @@
+
 <!DOCTYPE html>
 
 <html>
 
   <head>
-
-    <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One|Special+Elite" rel="stylesheet">
-
-    <link type="text/css" rel="stylesheet" href="main.css">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
-
-    <title>Claire's Dev Site</title>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
   </head>
 
-  <body>
+  <body scroll="no" style="background: #000; font-family: 'Press Start 2P';">&nbsp;
 
-    <section id="main-pane">
+    <div id="root" style="width: 640px; height: 480px; position: relative; overflow: hidden">
 
-      <header>
-        <section id="mobile-popup">
-          <input type="checkbox" id="mobilemenu-toggle"/>
-          <label for="mobilemenu-toggle" id="hamburger">&equiv;</label>
-          <label for="mobilemenu-toggle" id="whole-page-button" class="close">&nbsp;</label>
-          <nav id="mobilemenu">
-            <label for="mobilemenu-toggle" class="close">&times;</label>
-            <ul>
-              <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
-              <li><a href="#about" onclick="closeMenu()">About</a></li>
-              <li><a href="http://eclair-voyant.blogspot.com">Art</a></li>
-              <li><a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a></li>
-              <li><a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a></li>
-              <li><a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a></li>
-            </ul>
-          </nav>
-        </section>
-        <div id="maintitle">
-          <h1>Claire's Dev Site</h1>
+      <img id="bg1" src="assets/bgb.jpg" style="position: absolute; width: 1280; height: 480px; left: 0; top: 0; image-rendering: pixelated; visibility: hidden" />
+
+      <canvas width=320 height=240 id="canvas"
+        style="position: absolute; width: 640px; height: 480px;
+          image-rendering: optimizeSpeed;             /* Older versions of FF          */
+          image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+          image-rendering: -webkit-optimize-contrast; /* Safari                        */
+          image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+          image-rendering: pixelated;                 /* Awesome future-browsers       */
+          -ms-interpolation-mode: nearest-neighbor;   /* IE                            */">
+      </canvas>
+
+      <img id="fg1" src="assets/fg2b.png" style="position: absolute; left: 0; top: 0; width: 1280; height: 480px; image-rendering: pixelated; visibility: hidden"/>
+
+      <div id="scoreboard" style="position: absolute; left: 540px; top: 40px; width: 100px; height: 100px; color: #000; font-size: 16px; text-align: center; visibility: hidden">SCORE: 0</div>
+
+      <div id="message-wrapper" style="position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+
+        <div id="message" style="width: 90%; height: 90%; background: hsl(0, 0%, 0%); border: 3px solid #fff; visibility: hidden; display: flex; align-items: center; justify-content: center; color: #fff;">
         </div>
-        <h2 id="intro">
-          Artful algorithms, algorithmic art
-        </h2>
-        <nav id="header-buttons">
-          <!-- <ul>
-            <li class="button">
-              <label for="contact-toggle"> -->
-                <a href="mailto:clairemation@gmail.com"><button class="contact-button">Contact</button></a>
-              <!-- </label>
-            </li>
-          </ul>
-          <input type="checkbox" id="contact-toggle"/>
-          <div class="contact-badges">
-            <a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a>
-            <a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a>
-            <a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a>
-          </div> -->
-        </nav>
-      </header>
 
-      <main>
+      </div>
 
-        <a name = "about"></a>
-        <section id="about">
-          <p>
-            I'm a software engineer at Viacom, and on my own time I dabble in everything from games to independent comics. This page is my personal work. You can also see some of my art from (fizzled) indie comic projects here: <a href="http://eclair-voyant.blogspot.com">http://eclair-voyant.blogspot.com</a>.
-          </p>
-        </section>
+    </div>
 
-        <section id="projects">
+    <section style="font-family: Arial; color: #fff; width: 600px;">
+      <h1>Raptor Run</h1>
+      <p>
+        Press spacebar to flap. Use any foothold to avoid falling into the tar pit. Stomp protoceratopses for points.
+      </p>
+    </section>
 
-         <a name = "projects"></a>
-          
-          <ul class="projects-ul">
-        
-            <li class="project-block mobile-big desktop-med project-normals">
-              <a href="projects/tpv2/tests/normals/hills.html">
-                <h4>etc.</h4>
-                <img src="imgs/hills-screenshot.jpg"/>
-                <h3>2.5D terrain</h3>
-                <p>
-                  An experiment in creating a 3D-feeling game field using only flat 2D assets. The environment is hand-painted, but affects your movement as if it were 3D.
-                </p>
-              </a>
-            </li>
-            
-            <li class="project-block mobile-small project-coolgebra">
-              <a href="http://github.com/clairemation/coolgebra-js">
-                <h4>Math</h4>
-                <h3>Coolgebra</h3>
-                <p>
-                  A performant, expressive JavaScript API for complex vector and matrix operations.
-                </p>
-              </a>
-            </li>
-            
-            <li class="project-block mobile-small project-particles">
-              <a href="projects/tpv2/tests/particles.html">
-                <h4>WebGL</h4>
-                <h3>Particle effects</h3>
-                <p>
-                  More experiments with WebGL. Generate cartoon-style flame, liquid, and smoke. I came up with a way to make the particles as state-free as possible and do all position calculations on the GPU for optimal performance.
-                </p>
-              </a>
-            </li>
+      <audio id="flapsound">
+        <source src="assets/flap.wav"/>
+      </audio>
 
-            <li class="project-block mobile-small project-lightingtest">
-              <a href="projects/tpv2/tests/lightingtest/index.html">
-                <h4>WebGL</h4>
-                <img src="imgs/gl-lighting2.jpg"/>
-                <h3>Dynamic sprite lighting</h3>
-                <p>
-                  Rewriting my game engine's normal-mapping engine in buttery-smooth WebGL. The light follows your mouse or touch.
-                </p>
-              </a>
-            </li>
+      <audio id="crunchsound">
+        <source src="assets/crunch.wav"/>
+      </audio>
 
-            <li class="project-block mobile-small project-webgl">
-              <a href="http://clairemation.github.io/projects/tpv2/tests/webgltest.html">
-                <h4>3D</h4>
-                <img src="imgs/ss-cube.jpg"/>
-                <h3>Fun with WebGL</h3>
-                <p>
-                  Beginner dabbling with WebGL. Playing around with lighting conditions on a basic model. Uses no existing libraries, just pure WebGL and math.
-                </p>
-              </a>
-            </li>
+      <audio id="crunchsound2">
+        <source src="assets/crunch2.wav"/>
+      </audio>
 
-            <li class="project-block mobile-big desktop-med project-spritedemo">
-              <a href="projects/timesprisoner">
-                <h4>Canvas</h4>
-                <img src="imgs/ss-sprite-engine2.jpg"/>
-                <h3>Sprite Engine Demo</h3>
-                <p>
-                  Scratch-written HTML5 2D game engine, no third-party libraries. Very much a WIP, currently does not work on IE or older mobile browsers. Graphics by me.
-                </p>
-              </a>
-            </li>
+      <audio id="blopsound">
+        <source src="assets/blop.wav"/>
+      </audio>
 
-            <li class="project-block mobile-big desktop-med project-walkabout">
-              <a href="http://github.com/clairemation/Walkabout">
-                <h4>React Native</h4>
-                <img src="imgs/ss-walkabout-cropped.png"/>
-                <h3>Walkabout</h3>
-                <p>
-                  Tour-guide app for iPhone, automatically narrating interesting points about your surroundings as you walk around. Team project; I wrote the control logic.
-                </p>
-              </a>
-            </li>
+      <audio id="screechsound">
+        <source src="assets/pusou.wav"/>
+      </audio>
 
-            <li class="project-block mobile-small mobile-no-pic desktop-small project-sudoku">
-              <a href="http://shrouded-harbor-54304.herokuapp.com/">
-                <h4>Rails</h4>
-                <h3>Sudoku Solver</h3>
-                <p>
-                  Single-page Rails-based web app that solves any valid sudoku puzzle. Team project; I wrote the recursive brute-force algorithm in Ruby, and all the JS and CSS on the front end.
-                </p>
-              </a>
-            </li>
-
-            <li class="project-block mobile-small project-gamelevel">
-              <a href="projects/timesprisoner/timesprisoner.html">
-                <h4>Game</h4>
-                <img src="imgs/tpscreenshot.jpg"/>
-                <h3>Game Level Prototype</h3>
-                <p>
-                  Early prototype level for a graphical adventure game. Currently for desktop only. (Turn on your sound.)
-                </p>
-              </a>
-            </li>
-           
-          </ul>
-
-          <p class = "breakout">
-            Got a project? <a href="mailto:clairemation@gmail.com">Hit me up!</a>
-          </p>
-
-        </section>
-
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-
-      <script>
-
-        function closeMenu(){
-          document.getElementById("mobilemenu-toggle").checked = false;
-          $("main, header > *:not(#mobile-popup)").removeClass("blur");
-        }
-
-        $("#mobilemenu-toggle").on("click", function(e){
-          if (this.checked){
-            $("main, header > *:not(#mobile-popup)").addClass("blur");
-          }
-          else {
-            $("main, header > *:not(#mobile-popup)").removeClass("blur");
-          }
-        });
-
-      </script>
-        
-      <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-97091336-1', 'auto');
-        ga('send', 'pageview');
-
-      </script>
+    <script src="bundle.js"></script>
 
   </body>
+
 </html>
