@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  </head>
+
+  <body scroll="no" style="background: #000; font-family: 'Press Start 2P';">&nbsp;
+
+    <div id="root" style="width: 640px; height: 480px; position: relative; overflow: hidden">
+
+      <div id="title-screen" style="width: 100%; height: 100%; position: absolute; display: flex; align-items: center; justify-content: center; color: #fff">
+        <img src="assets/titlescreen.png" style="width: 100%; height: 100%; image-rendering: pixelated; visibility: visible;" />
+      </div>
+
+      <div id="loading-screen" style="width: 100%; height: 100%; position: absolute; display: flex; align-items: center; justify-content: center; color: #fff; visibility: hidden;">
+        Loading...
+      </div>
+
+      <img id="bg1" src="assets/bgb.jpg" style="position: absolute; width: 1280; height: 480px; left: 0; top: 0; image-rendering: pixelated; visibility: hidden" />
+
+      <canvas width=320 height=240 id="canvas"
+        style="position: absolute; width: 640px; height: 480px; visibility: hidden;
+          image-rendering: optimizeSpeed;             /* Older versions of FF          */
+          image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+          image-rendering: -webkit-optimize-contrast; /* Safari                        */
+          image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+          image-rendering: pixelated;                 /* Awesome future-browsers       */
+          -ms-interpolation-mode: nearest-neighbor;   /* IE                            */">
+      </canvas>
+
+      <img id="fg1" src="assets/fg2b.png" style="position: absolute; left: 0; top: 0; width: 1280; height: 480px; image-rendering: pixelated; visibility: hidden"/>
+
+      <div id="scoreboard" style="position: absolute; left: 540px; top: 40px; width: 100px; height: 100px; color: #000; font-size: 16px; text-align: center; visibility: hidden">SCORE: 0</div>
+
+      <div id="message-wrapper" style="position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+
+        <div id="message" style="width: 90%; height: 90%; background: hsl(0, 0%, 0%); border: 3px solid #fff; visibility: hidden; display: flex; align-items: center; justify-content: center; color: #fff;">
+        </div>
+
+      </div>
+
+    </div>
+
+    <section style="font-family: Arial; color: #fff; width: 600px;">
+      <h1>Raptor Run</h1>
+      <p>
+        Press spacebar to flap. Stomp on anything you can to avoid falling into the tar pit.
+      </p>
+    </section>
+
+    <audio id="audio">
+      <source src="assets/caw.wav" />
+    </audio>
+
+    <button id="button">Click me</button>
+
+    <script>
+      document.getElementById("button").onclick = function(){document.getElementById("audio").play()}
+    </script>
+    <!-- <script src="src/index.js"></script> -->
+
+  </body>
+
+</html>
