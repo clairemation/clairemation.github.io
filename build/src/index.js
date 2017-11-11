@@ -1,19 +1,107 @@
 "use strict";
 
-// DOM resources ===================================
+// DOM links ===================================
 
 var canvas = document.getElementById("canvas")
 var ctx = canvas.getContext("2d")
+
+var bg1 = document.getElementById("bg1")
+var fg1 = document.getElementById("fg1")
+var scoreboard = document.getElementById("scoreboard")
+var titlescreenImg = document.getElementById("title-screen")
+var loadingScreen = document.getElementById("loading-screen")
+var messageWindow = document.getElementById("message")
+
+// =================================================
+
+// Assets ==========================================
+
+var assets = {
+    flapAudio: new Audio(),
+    crunchAudio: new Audio(),
+    crunch2Audio: new Audio(),
+    blopAudio: new Audio(),
+    screechAudio: new Audio(),
+    boingAudio: new Audio(),
+    cawAudio: new Audio(),
+    sprite: new Image()
+}
+
+var assetSrcs = {
+    sprite: "assets/spritesheets/sheet00.png",
+    flapAudio: "assets/flap.wav",
+    crunchAudio: "assets/crunch.wav",
+    crunch2Audio: "assets/crunch2.wav",
+    screechAudio: "assets/pusou.wav",
+    blopAudio: "assets/blop.wav",
+    boingAudio: "assets/boing.wav",
+    cawAudio: "assets/caw.wav"
+}
+
+
+function loadPromise(asset, src){
+    return new Promise((res, rej) => {
+        asset.onload = res
+        asset.onerror = res
+        asset.oncanplaythrough = res
+        asset.src = src
+        if (asset.play) {
+            asset.load()
+        }
+    })
+}
+
+var assetPromises = []
+
+function loadAssets(){
+    for (name in assets){
+        assetPromises.push(loadPromise(assets[name], assetSrcs[name]))
+    }
+
+    Promise.all(assetPromises).then(() => game.changeState(play))
+}
+
+// ==================================================
+
+// Settings ================================
 
 ctx.mozImageSmoothingEnabled = false;
 ctx.webkitImageSmoothingEnabled = false;
 ctx.msImageSmoothingEnabled = false;
 ctx.imageSmoothingEnabled = false;
 
-var bg1 = document.getElementById("bg1")
-var fg1 = document.getElementById("fg1")
-var scoreboard = document.getElementById("scoreboard")
-var messageWindow = document.getElementById("message")
+assets.flapAudio.playbackRate = 4
+assets.crunch2Audio.playbackRate = 2
+assets.blopAudio.playbackRate = 0.5
+
+// ==================================================
+
+// Audio setup ======================================
+
+// var audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+
+// var flapSrc = audioCtx.createMediaElementSource(assets.flapAudio)
+// flapSrc.connect(audioCtx.destination)
+
+// var crunchSrc = audioCtx.createMediaElementSource(assets.crunchAudio)
+// crunchSrc.connect(audioCtx.destination)
+
+// var crunch2Src = audioCtx.createMediaElementSource(assets.crunch2Audio)
+// crunch2Src.connect(audioCtx.destination)
+
+// var blopSrc = audioCtx.createMediaElementSource(assets.blopAudio)
+// blopSrc.connect(audioCtx.destination)
+
+// var screechSrc = audioCtx.createMediaElementSource(assets.screechAudio)
+// screechSrc.connect(audioCtx.destination)
+
+// var boingSrc = audioCtx.createMediaElementSource(assets.boingAudio)
+// boingSrc.connect(audioCtx.destination)
+
+// var cawSrc = audioCtx.createMediaElementSource(assets.cawAudio)
+// cawSrc.connect(audioCtx.destination)
+
+// ==================================================
 
 // Constants ========================================
 
@@ -27,14 +115,13 @@ const GROUND = 176
 // Globals =========================================
 
 var fgScrollSpeed = 0.12
-var obstacleFrequency = 0.2
-var spritesheetSrc = "assets/spritesheets/sheet00.png"
+var obstacleFrequency = 0.15
 var sprite = new Image()
 var loop
 var currentScore = 0
 var currentTime
 var lastTime = 0
-
+var nextScoreMilestone = 50
 
 // =================================================
 
@@ -68,22 +155,18 @@ class Control{
     }
 }
 
-var sharedStates = {
-    updateAllControls: new State({
-        update: function(dt){
-            for (var controlName in this.controls){
-                this.controls[controlName].update(dt)
-            }
-        }
-    })
-}
-
 class GameObject{
     constructor(args = {}){
         this.name = 'GameObject'
         this.controls = {}
         this.states = {
-            default: sharedStates.updateAllControls
+            default: new State({
+                update: function(dt){ //Update all controls
+                    for (var controlName in this.controls){
+                        this.controls[controlName].update(dt)
+                    }
+                }
+            })
         }
         this.currentState = this.states.default
         Object.assign(this, args)
@@ -123,9 +206,57 @@ game.controls.playControl = new Control({
 
 // Game object states ===========================
 
-var play = new State({
+var loading = new State({
+    enter: function(){
+        cancelAnimationFrame(loop)
+        bg1.style.visibility = "hidden"
+        fg1.style.visibility = "hidden"
+        scoreboard.style.visibility = "hidden"
+        canvas.style.visibility = "hidden"
+        titlescreenImg.style.visibility = "hidden"
+        loadingScreen.style.visibility = "visible"
+        loadAssets()
+    },
+})
+
+var titleScreen = new State({
+    enter: function(){
+        cancelAnimationFrame(loop)
+        bg1.style.visibility = "hidden"
+        fg1.style.visibility = "hidden"
+        scoreboard.style.visibility = "hidden"
+        canvas.style.visibility = "hidden"
+        titlescreenImg.style.visibility = "visible"
+        loadingScreen.style.visibility = "hidden"
+    },
     message: function(msg){
         switch(msg){
+            case ("keydown"):
+                this.changeState(loading)
+        }
+    }
+})
+
+var play = new State({
+    enter: function(){
+        canvas.style.visibility = "visible"
+        fg1.style.visibility = "visible"
+        bg1.style.visibility = "visible"
+        scoreboard.style.visibility = "visible"
+        titlescreenImg.style.visibility = "hidden"
+        loadingScreen.style.visibility = "hidden"
+        reset()
+        assets.cawAudio.play()
+        loop = requestAnimationFrame(tick)
+    },
+    message: function(msg){
+        switch(msg){
+            case ("keydown"):
+                player.message("jump")
+                break
+            case ("keyup"):
+                player.message("fall")
+                break
             case ("lose"):
                 setTimeout(() => {this.changeState(lose)}, 400)
         }
@@ -135,17 +266,17 @@ var play = new State({
     }
 })
 
-var pause = new State({
-    enter: function(){
-        cancelAnimationFrame(loop)
-    }
-})
-
 var lose = new State({
     enter: function(){
         cancelAnimationFrame(loop)
         messageWindow.style.visibility = "visible"
         messageWindow.innerHTML = `<p style='text-align: center; line-height: 30px'>Final score: ${Math.floor(currentScore)}<br/>SPACE to restart</p>`
+    },
+    message: function(msg){
+        switch(msg){
+            case ("keydown"):
+                this.changeState(play)
+        }
     }
 
 })
@@ -159,12 +290,116 @@ class GameplayObject extends GameObject{
     }
 }
 
+var gameEnginesObject = new GameplayObject({name: "GameEnginesObject"})
+
+// Game engine controls =============================
+
+// TODO: Optimize
+gameEnginesObject.controls.obstaclePoolEngine = new Control({
+    owner: gameEnginesObject,
+    nextObjectPlacementTime: 0,
+    activeComponents: [],
+    inactiveComponents: [],
+    returnToPool: function(obj){
+        this.activeComponents.splice(this.activeComponents.indexOf(obj), 1)
+        this.inactiveComponents.push(obj)
+    },
+    update: function(dt){
+        if (currentTime >= this.nextObjectPlacementTime){
+            var rand = Math.random()
+            if (rand < obstacleFrequency) {
+                var r = Math.floor(Math.random() * (this.inactiveComponents.length -1))
+                var obj = this.inactiveComponents.splice(r, 1)[0]
+                if (obj) {
+                    this.activeComponents.push(obj)
+                    obj.activate()
+                    this.nextObjectPlacementTime = currentTime + 300
+
+                }
+            }
+        }
+    }
+})
+
+gameEnginesObject.controls.spriteEngine = new Control({
+    owner: gameEnginesObject,
+    components: [],
+    update: function(dt){
+        ctx.clearRect(0, 0, 320, 240)
+        for (var i = 0; i < this.components.length; i++){
+            var position = this.components[i].owner.controls.transform.position
+            var frame = this.components[i].currentFrame
+            ctx.drawImage(assets.sprite, frame*SPRITE_WIDTH, 0, SPRITE_WIDTH, SPRITE_HEIGHT, position[0], position[1], SPRITE_WIDTH, SPRITE_HEIGHT)
+        }
+    }
+})
+
+function isColliding(a, b){
+
+    // If a is above b
+    if (a[3] < b[1]) {
+        return false
+    }
+
+    // If a is below b
+    if (a[1] > b[3]) {
+        return false
+    }
+
+    // If a is left of b
+    if (a[2] < b[0]) {
+        return false
+    }
+
+    // If a is right of b
+    if (a[0] > b[2]) {
+        return false
+    }
+
+    // Else collision
+    return true
+}
+
+gameEnginesObject.controls.collisionEngine = new Control({
+    owner: gameEnginesObject,
+    playerCollider: undefined,
+    components: [],
+    update: function(dt){
+        var playerBox
+        var otherBox
+        var playerPos
+        var otherPos
+        var playerBound = []
+        var otherBound = []
+        for (var i = 0; i < this.components.length; i++){
+            playerBox = this.playerCollider.hitBox
+            playerPos = this.playerCollider.owner.controls.transform.position
+            playerBound[0] = playerBox[0] + playerPos[0]
+            playerBound[2] = playerBox[2] + playerPos[0]
+            playerBound[1] = playerBox[1] + playerPos[1]
+            playerBound[3] = playerBox[3] + playerPos[1]
+
+            otherBox = this.components[i].hitBox
+            otherPos = this.components[i].owner.controls.transform.position
+            otherBound[0] = otherBox[0] + otherPos[0]
+            otherBound[2] = otherBox[2] + otherPos[0]
+            otherBound[1] = otherBox[1] + otherPos[1]
+            otherBound[3] = otherBox[3] + otherPos[1]
+
+            if (isColliding(playerBound, otherBound)){
+                player.controls.playerCollider.onHit(this.components[i])
+                this.components[i].onHit()
+            }
+        }
+    }
+})
+
 // GameplayObject Controls ==============================
 
 class Sprite extends Control{
     constructor(args = {}){
         super(args)
-        this.engine = gameEnginesObject.spriteEngine
+        gameEnginesObject.controls.spriteEngine.components.push(this)
         this.currentFrameNum = 0
         this.elapsedTime = 0
         this.looping = true
@@ -207,7 +442,7 @@ class Sprite extends Control{
 class Collider extends Control{
     constructor(args){
         super(args)
-        this.hitBox = this.hitBox || [20, 30, 33, 48]
+        gameEnginesObject.controls.collisionEngine.components.push(this)
     }
 
     onHit(other){
@@ -215,10 +450,10 @@ class Collider extends Control{
     }
 }
 
-class CollisionReceiver extends Control{
+class PlayerCollider extends Control{
     constructor(args){
         super(args)
-        this.engine = gameEnginesObject.collisionEngine
+        gameEnginesObject.controls.collisionEngine.playerCollider = this
     }
 
     onHit(other){
@@ -252,6 +487,7 @@ class Scroller extends Control{
 class ObstaclePooler extends Control{
     constructor(args){
         super(args)
+        gameEnginesObject.controls.obstaclePoolEngine.inactiveComponents.push(this)
     }
 
     activate(){
@@ -272,26 +508,9 @@ class ObstaclePooler extends Control{
 
 // =================================================
 
-// Game Object declarations ========================
-
-var player = new GameplayObject({name: "Player"})
-var gameEnginesObject = new GameplayObject({name: "GameEnginesObject"})
-var fern1 = new GameplayObject({name: "Fern1"})
-var fern2 = new GameplayObject({name: "Fern2"})
-var fern3 = new GameplayObject({name: "Fern3"})
-var fern4 = new GameplayObject({name: "Fern4"})
-var fern5 = new GameplayObject({name: "Fern5"})
-var proto1 = new GameplayObject({name: "Proto1"})
-var proto2 = new GameplayObject({name: "Proto2"})
-var proto3 = new GameplayObject({name: "Proto3"})
-var scoreCounter = new GameplayObject({name: "Score"})
-var message = new GameplayObject({name: "MessageWindow"})
-
-// =================================================
-
 // Score controls ===================================
 
-var nextScoreMilestone = 50
+var scoreCounter = new GameplayObject({name: "Score"})
 
 scoreCounter.controls.incrementControl = new Control({
     owner: scoreCounter,
@@ -299,82 +518,77 @@ scoreCounter.controls.incrementControl = new Control({
         currentScore += amt
         scoreboard.innerHTML = `SCORE:\n${Math.floor(currentScore)}`
         if (currentScore > nextScoreMilestone){
-            fgScrollSpeed += 0.02
-            obstacleFrequency = Math.max(obstacleFrequency - 0.02, 0.02)
+            fgScrollSpeed += 0.01
+            obstacleFrequency = Math.max(obstacleFrequency - 0.005, 0.06)
             nextScoreMilestone += 50
         }
+    },
+    update: function(dt){
+        this.increment(dt/30)
     }
 })
 
 // =================================================
 
+// PLAYER ============================
+
+var player = new GameplayObject({name: "Player"})
 
 // Player object controls ===========================
 
 player.controls.transform = new Transform({
     owner: player,
-    position: [100, 125]
+    position: [40, 125]
 })
 
 player.controls.sprite = new Sprite({
     owner: player,
     animations: {
-        stand: [6],
-        walk: [10, 11],
-        jump: [4],
-        fall: [5],
-        glide: [6, 7],
-        hurt: [8],
-        pounce: [9]
+        stand: [7],
+        walk: [11, 12],
+        jump: [5],
+        fall: [6],
+        glide: [7, 8],
+        hurt: [9],
+        pounce: [10]
     }
 })
 
-player.controls.collisionReceiver = new CollisionReceiver({
+player.controls.playerCollider = new PlayerCollider({
     owner: player,
     hitBox: [20, 26, 40, 40],
     onHit: function(other){
-        if (other.owner.controls.transform.position[1] > this.owner.controls.transform.position[1]){
-            this.owner.message("pounce", other)
-        } else {
-            this.owner.message("hurt", other)
-        }
+        this.owner.message("pounce", other)
     }
 })
 
 player.controls.altitude = new Control({
     owner: player,
     yAccel: 0,
-    gliding: false,
     startJump: function(){
         this.yAccel -= 9
         this.gliding = true
     },
     bounce: function(){
-        this.yAccel = -9
-        this.gliding = false
+        this.yAccel = -7
     },
     flap: function(){
-        this.yAccel -= 4
-        this.gliding = true
+        this.yAccel -= Math.max(0, this.yAccel * 0.9)
         this.owner.controls.sprite.setCurrentAnimation("jump")
+        assets.flapAudio.play()
     },
     fall: function(){
-        this.gliding = false
         this.owner.controls.sprite.setCurrentAnimation("fall")
+    },
+    sink: function(){
+        this.yAccel = 1.5
     },
     move: function(dt){
         this.yAccel = Math.max(this.yAccel, -9)
         this.owner.controls.transform.position[1] += this.yAccel * (dt / 30)
-        if (this.gliding && this.yAccel > 0){
-            this.owner.controls.sprite.setCurrentAnimation("glide")
-            this.yAccel = (dt / 30)
-        } else {
-            this.yAccel += 0.75 * (dt / 30)
-        }
-        if (this.owner.controls.transform.position[1] >= GROUND - SPRITE_HEIGHT){
-            this.owner.controls.sprite.setCurrentAnimation("hurt")
-            this.yAccel = 1.5
-            game.message("lose")
+        this.yAccel += 0.45 * (dt / 30)
+        if (this.owner.controls.transform.position[1] >= GROUND - SPRITE_HEIGHT / 2){
+            this.owner.changeState(sink)
         }
     }
 })
@@ -399,6 +613,15 @@ var walk = new State({
     },
     update: function(dt){
         this.controls.sprite.update(dt)
+    }
+})
+
+var sink = new State({
+    enter: function(){
+        this.controls.sprite.setCurrentAnimation("hurt")
+        this.controls.altitude.sink()
+        assets.blopAudio.play()
+        game.message("lose")
     }
 })
 
@@ -431,6 +654,7 @@ var jump = new State({
 
 var hurt = new State({
     enter: function(){
+        assets.screechAudio.play()
         this.controls.altitude.bounce()
         this.controls.sprite.setCurrentAnimation("hurt")
         game.message("lose")
@@ -445,127 +669,73 @@ var hurt = new State({
 
 // =================================================
 
-// Fern controls ====================================
+// FOOTHOLD OBJECTS ====================================
 
-// TODO: Make Fern class
-fern1.controls.sprite = new Sprite({
-    owner: fern1,
-    animations: {
-        default: [0]
-    }
-})
-fern1.controls.collider = new Collider({owner: fern1})
-fern1.controls.transform = new Transform({owner: fern1})
-fern1.controls.scroller = new Scroller({owner: fern1})
-fern1.controls.obstaclePooler = new ObstaclePooler({owner: fern1})
-
-fern2.controls.sprite = new Sprite({
-    owner: fern2,
-    animations: {
-        default: [0]
-    }
-})
-fern2.controls.collider = new Collider({owner: fern2})
-fern2.controls.transform = new Transform({owner: fern2})
-fern2.controls.scroller = new Scroller({owner: fern2})
-fern2.controls.obstaclePooler = new ObstaclePooler({owner: fern2})
-
-fern3.controls.sprite = new Sprite({
-    owner: fern3,
-    animations: {
-        default: [0]
-    }
-})
-fern3.controls.collider = new Collider({owner: fern3})
-fern3.controls.transform = new Transform({owner: fern3})
-fern3.controls.scroller = new Scroller({owner: fern3})
-fern3.controls.obstaclePooler = new ObstaclePooler({owner: fern3})
-
-fern4.controls.sprite = new Sprite({
-    owner: fern4,
-    animations: {
-        default: [0]
-    }
-})
-fern4.controls.collider = new Collider({owner: fern4})
-fern4.controls.transform = new Transform({owner: fern4})
-fern4.controls.scroller = new Scroller({owner: fern4})
-fern4.controls.obstaclePooler = new ObstaclePooler({owner: fern4})
-
-fern5.controls.sprite = new Sprite({
-    owner: fern5,
-    animations: {
-        default: [0]
-    }
-})
-fern5.controls.collider = new Collider({owner: fern5})
-fern5.controls.transform = new Transform({owner: fern5})
-fern5.controls.scroller = new Scroller({owner: fern5})
-fern5.controls.obstaclePooler = new ObstaclePooler({owner: fern5})
-
-// =================================================
-
-// Proto controls ===================================
-
-// TODO: Make protoceratops class
-
-function protoOnHit(){
-    if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]){
-            this.owner.changeState(deadEnemy)
+class Foothold extends GameplayObject{
+    constructor(args){
+        super(args)
+        this.controls = {
+            sprite: new Sprite({owner: this}),
+            collider: new Collider({owner: this}),
+            transform: new Transform({owner: this}),
+            scroller: new Scroller({owner: this}),
+            obstaclePooler: new ObstaclePooler({owner: this})
         }
+    }
 }
 
-proto1.controls.sprite = new Sprite({
-    owner: proto1,
-    animations: {
-        default: [3],
-        dead: [1,2]
+class Fern extends Foothold{
+    constructor(args){
+        super(args)
+        this.controls.sprite.animations = {
+            default: [1],
+            dead: [0]
+        }
+        this.controls.collider.hitBox = [20, 30, 33, 48]
+        this.controls.collider.onHit = function(){
+            if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]){
+                this.owner.changeState(deadEnemy)
+                assets.crunch2Audio.play()
+            }
+        }
     }
-})
-proto1.controls.collider = new Collider({
-    owner: proto1,
-    hitbox: [3, 31, 31, 48],
-    onHit: protoOnHit
-})
-proto1.controls.transform = new Transform({owner: proto1})
-proto1.controls.scroller = new Scroller({owner: proto1})
-proto1.controls.obstaclePooler = new ObstaclePooler({owner: proto1})
+}
 
-proto2.controls.sprite = new Sprite({
-    owner: proto2,
-    animations: {
-        default: [3],
-        dead: [1,2]
+class Protoceratops extends Foothold{
+    constructor(args){
+        super(args)
+        this.controls.sprite.animations = {
+            default: [4]
+        }
+        this.controls.collider.hitBox = [3, 31, 31, 48]
+        this.controls.collider.onHit = function(){
+            if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]){
+                assets.boingAudio.play()
+            }
+        }
     }
-})
-proto2.controls.collider = new Collider({
-    owner: proto2,
-    hitbox: [3, 31, 31, 48],
-    onHit: protoOnHit
-})
-proto2.controls.transform = new Transform({owner: proto2})
-proto2.controls.scroller = new Scroller({owner: proto2})
-proto2.controls.obstaclePooler = new ObstaclePooler({owner: proto2})
+}
 
-proto3.controls.sprite = new Sprite({
-    owner: proto3,
-    animations: {
-        default: [3],
-        dead: [1,2]
+class ProtoSkeleton extends Foothold{
+    constructor(args){
+        super(args)
+        this.controls.sprite.animations = {
+            default: [2],
+            dead: [3]
+        }
+        this.controls.collider.hitBox = [3, 31, 31, 48]
+        this.controls.collider.onHit = function(){
+            if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]){
+                this.owner.changeState(deadEnemy)
+                assets.crunchAudio.play()
+            }
+        }
     }
-})
-proto3.controls.collider = new Collider({
-    owner: proto3,
-    hitbox: [3, 31, 31, 48],
-    onHit: protoOnHit
-})
-proto3.controls.transform = new Transform({owner: proto3})
-proto3.controls.scroller = new Scroller({owner: proto3})
-proto3.controls.obstaclePooler = new ObstaclePooler({owner: proto3})
+}
 
-// =================================================
+// ==================================================
 
-// Fern states ==================================
+// Foothold states ==================================
 
 var activeObstacle = new State({
     enter: function(){
@@ -588,7 +758,6 @@ var inactiveObstacle = new State({
 var deadEnemy = new State({
     enter: function(){
         this.controls.sprite.setCurrentAnimation("dead", false)
-        scoreCounter.controls.incrementControl.increment(10)
     },
     update: function(dt){
         this.controls.scroller.update(dt)
@@ -598,166 +767,59 @@ var deadEnemy = new State({
 })
 // =================================================
 
-// Game engine controls =============================
+// Object instantiation ============================
 
-// TODO: Optimize
-gameEnginesObject.controls.obstaclePoolEngine = new Control({
-    owner: gameEnginesObject,
-    nextObjectPlacementTime: 0,
-    activeComponents: [],
-    inactiveComponents: [fern1.controls.obstaclePooler, fern2.controls.obstaclePooler, fern3.controls.obstaclePooler,fern4.controls.obstaclePooler, fern5.controls.obstaclePooler, proto1.controls.obstaclePooler, proto2.controls.obstaclePooler, proto3.controls.obstaclePooler],
-    returnToPool: function(obj){
-        this.activeComponents.splice(this.activeComponents.indexOf(obj), 1)
-        this.inactiveComponents.push(obj)
-    },
-    update: function(dt){
-        if (currentTime >= this.nextObjectPlacementTime){
-            var rand = Math.random()
-            if (rand < obstacleFrequency) {
-                var r = Math.floor(Math.random() * (this.inactiveComponents.length -1))
-                var obj = this.inactiveComponents.splice(r, 1)[0]
-                if (obj) {
-                    this.activeComponents.push(obj)
-                    obj.activate()
-                    this.nextObjectPlacementTime = currentTime + 300
-
-                }
-            }
-        }
-    }
-})
-
-gameEnginesObject.controls.spriteEngine = new Control({
-    owner: gameEnginesObject,
-    components: [player.controls.sprite, fern1.controls.sprite, fern2.controls.sprite, fern3.controls.sprite, fern4.controls.sprite, fern5.controls.sprite, proto1.controls.sprite, proto2.controls.sprite, proto3.controls.sprite],
-    update: function(dt){
-        ctx.clearRect(0, 0, 320, 240)
-        for (var i = 0; i < this.components.length; i++){
-            var position = this.components[i].owner.controls.transform.position
-            var frame = this.components[i].currentFrame
-            ctx.drawImage(sprite, frame*SPRITE_WIDTH, 0, SPRITE_WIDTH, SPRITE_HEIGHT, position[0], position[1], SPRITE_WIDTH, SPRITE_HEIGHT)
-        }
-    }
-})
-
-function isColliding(a, b){
-
-    // If a is above b
-    if (a[3] < b[1]) {
-        return false
-    }
-
-    // If a is below b
-    if (a[1] > b[3]) {
-        return false
-    }
-
-    // If a is left of b
-    if (a[2] < b[0]) {
-        return false
-    }
-
-    // If a is right of b
-    if (a[0] > b[2]) {
-        return false
-    }
-
-    // Else collision
-    return true
-}
-
-gameEnginesObject.controls.collisionEngine = new Control({
-    owner: gameEnginesObject,
-    playerCollider: player.controls.collisionReceiver,
-    components: [fern1.controls.collider, fern2.controls.collider, fern3.controls.collider, fern4.controls.collider, fern5.controls.collider, proto1.controls.collider, proto2.controls.collider, proto3.controls.collider],
-    update: function(dt){
-        var playerBox
-        var otherBox
-        var playerPos
-        var otherPos
-        var playerBound = []
-        var otherBound = []
-        for (var i = 0; i < this.components.length; i++){
-            playerBox = this.playerCollider.hitBox
-            playerPos = this.playerCollider.owner.controls.transform.position
-            playerBound[0] = playerBox[0] + playerPos[0]
-            playerBound[2] = playerBox[2] + playerPos[0]
-            playerBound[1] = playerBox[1] + playerPos[1]
-            playerBound[3] = playerBox[3] + playerPos[1]
-
-            otherBox = this.components[i].hitBox
-            otherPos = this.components[i].owner.controls.transform.position
-            otherBound[0] = otherBox[0] + otherPos[0]
-            otherBound[2] = otherBox[2] + otherPos[0]
-            otherBound[1] = otherBox[1] + otherPos[1]
-            otherBound[3] = otherBox[3] + otherPos[1]
-
-            if (isColliding(playerBound, otherBound)){
-                player.controls.collisionReceiver.onHit(this.components[i])
-                this.components[i].onHit()
-            }
-        }
-    }
-})
+var fern1 = new Fern({name: "Fern1"})
+var fern2 = new Fern({name: "Fern2"})
+var fern3 = new Fern({name: "Fern3"})
+var fern4 = new Fern({name: "Fern4"})
+var fern5 = new Fern({name: "Fern5"})
+var proto1 = new Protoceratops({name: "Proto1"})
+var protoSkel1 = new ProtoSkeleton({name: "ProtoSkel1"})
+var protoSkel2 = new ProtoSkeleton({name: "ProtoSkel2"})
 
 // =================================================
 
 // State assignments ============================
 
-game.changeState(play)
+game.changeState(titleScreen)
 player.changeState(jump)
-player.controls.altitude.gliding = false
 fern1.changeState(inactiveObstacle)
 fern2.changeState(inactiveObstacle)
 fern3.changeState(inactiveObstacle)
 fern4.changeState(inactiveObstacle)
 fern5.changeState(inactiveObstacle)
 proto1.changeState(inactiveObstacle)
-proto2.changeState(inactiveObstacle)
-proto3.changeState(inactiveObstacle)
-// scoreCounter.changeState(countUp)
+protoSkel1.changeState(inactiveObstacle)
+protoSkel2.changeState(inactiveObstacle)
 
 // =================================================
 
 
 // Key listeners ===================================
 
-var keyDown = false
-
 document.addEventListener("keydown", e => {
-    if (keyDown == false && e.keyCode == 32){
-        if (game.currentState == lose){
-            restart()
-        } else {
-            player.message("jump")
-            keyDown = true
-        }
+    if (e.keyCode == 32){
+        game.message("keydown")
+        e.preventDefault()
     }
 })
 
 document.addEventListener("keyup", e => {
-    if (keyDown == true && e.keyCode == 32){
-        player.message("fall")
-        keyDown = false
+    if (e.keyCode == 32){
+        game.message("keyup")
+        e.preventDefault()
     }
 })
 
 document.addEventListener("touchstart", e => {
-    if (keyDown == false){
-        if (game.currentState == lose){
-            restart()
-        } else {
-            player.message("jump")
-            keyDown = true
-        }
-    }
+    game.message("keydown")
+    e.preventDefault()
 })
 
 document.addEventListener("touchend", e => {
-    if (keyDown == true){
-        player.message("fall")
-        keyDown = false
-    }
+    game.message("keyup")
+    e.preventDefault()
 })
 
 // =================================================
@@ -777,47 +839,27 @@ function tick(timestamp){
     game.update(dt);
     lastTime = timestamp
     bgX = (bgX - 3 * (dt/30)) % 640
-    bg1.style.backgroundPosition = `${bgX}px 0px`
+    bg1.style.left = `${bgX}px`
     fgX = (fgX - fgScrollSpeed * dt * 2) % 640
-    fg1.style.backgroundPosition = `${fgX}px 0px`
+    fg1.style.left = `${fgX}px`
 
 }
 
-function restart(){
+function reset(){
     lastTime = null
     currentScore = 0
-    obstacleFrequency = 0.2
+    obstacleFrequency = 0.15
     fgScrollSpeed = 0.12
+    nextScoreMilestone = 50
     scoreboard.innerHTML = `SCORE: ${Math.floor(currentScore)}`
-    player.controls.transform.position = [100, 125]
-    game.changeState(play)
+    player.controls.transform.position = [40, 125]
     player.changeState(jump)
-    player.controls.altitude.gliding = false
-    // fern1.changeState(inactiveObstacle)
-    // fern2.changeState(inactiveObstacle)
-    // fern3.changeState(inactiveObstacle)
-    // fern4.changeState(inactiveObstacle)
-    // fern5.changeState(inactiveObstacle)
-    // proto1.changeState(inactiveObstacle)
-    // proto2.changeState(inactiveObstacle)
-    // proto3.changeState(inactiveObstacle)
     messageWindow.style.visibility = "hidden"
-    game.changeState(play)
-    loop = requestAnimationFrame(tick)
 
 }
-
-// =================================================
-
-// Start ============================================
-
-sprite.onload = () => {
-    loop = requestAnimationFrame(tick)
-}
-sprite.src = spritesheetSrc
 
 // =================================================
 
 // Export module ===================================
 
-// module.exports = {GameObject}
+module.exports = {GameObject}
