@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Fun with WebGL</title>
+    <style type="text/css">
+      h2 {
+        margin-bottom: 0;
+      }
+      form {
+        display: flex;
+        justify-content: center;
+      }
+      form div {
+        border-collapse: collapse;
+        display: flex;
+        flex: 1;
+        padding: 10px;
+      }
+      input[type=radio] {
+        height: 0;
+        visibility: hidden;
+        width: 0;
+      }
+      label {
+        background: hsla(0, 0%, 80%, .5);
+        cursor: pointer;
+        font-family: 'Avenir Next', Avenir, Helvetica, sans-serif;
+        font-size: 18px;
+        line-height: 16px;
+        padding: 10px;
+        width: 100%;
+        -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+      }
+      input[type=radio]:checked + label {
+        background: hsla(0, 0%, 30%, .5);
+        color: #ccc;
+      }
+
+    </style>
+  </head>
+
+  <body scroll="no" style="background: #000; background-repeat: no-repeat; text-align: center; vertical-align: center;">
+
+    <h2 style="color: #fff;">
+      Environment:
+    </h2>
+    <form id="enviroPicker" onchange="setEnvironment(this);">
+      <div>
+        <input id="enviro1" type="radio" name="enviroPicker" onclick="setEnvironment(0);" checked>
+        <label for="enviro1">None</label>
+      </div>
+      <div>
+        <input id="enviro2" type="radio" name="enviroPicker" onclick="setEnvironment(1);">
+        <label for="enviro2">Canyon shade</label>
+      </div>
+      <div>
+        <input id="enviro3" type="radio" name="enviroPicker" onclick="setEnvironment(2);">
+        <label for="enviro3">Purple clouds</label>
+      </div>
+      <div>
+        <input id="enviro4" type="radio" name="enviroPicker" onclick="setEnvironment(3);">
+        <label for="enviro4">Sunset shore</label>
+      </div>
+    </form>
+
+    <p style="text-align: center; width: 100%; color: #fff; position: absolute; bottom: 10px">Background photos are from the Internet and I don't have the rights to any of them</p>
+
+    <canvas id="canvas" width=640 height=480 style="width: 70%;"></canvas>
+
+    <script type="text/javascript" src="../libraries/arrayVec3D.js"></script>
+    <script type="text/javascript" src="../libraries/matrix.js"></script>
+
+      <!-- SHADERS -->
+
+      <script id="vertexShader" type="x-shader/x-vertex">
+        attribute vec3 aVertexCoords;
+        attribute vec3 aNormal;
+        attribute vec2 aTextureCoords;
+
+        uniform mat4 uMVMatrix;
+        uniform mat4 uNormalMatrix;
+        uniform mat4 uProjMatrix;
+        uniform lowp vec3 uAmbient;
+        uniform vec3 uLightColor;
+        uniform vec3 uLightPosition;
+
+        varying highp vec3 vLightMatrix;
+        varying highp vec2 vTextureCoords;
+
+        varying highp vec4 vPosition;
+        varying highp vec4 vNormal;
+        varying mediump vec3 vLightColor;
+        varying highp vec3 vLightPosition;
+        varying lowp vec3 vAmbient;
+
+        void main(void){
+          vTextureCoords = aTextureCoords;
+          vPosition =  uMVMatrix * vec4(aVertexCoords, 1.0);
+          gl_Position = uProjMatrix * vPosition;
+          vNormal = uNormalMatrix * vec4(aNormal, 1.0);
+          float light = (dot(uLightPosition, vNormal.xyz) + 1.0) * 0.5;
+          vLightMatrix = (uLightColor * light + uAmbient * (1.0 - light));
+
+          vLightColor = uLightColor;
+          vLightPosition = uLightPosition;
+          vAmbient = uAmbient;
+        }
+      </script>
+
+      <script id="fragmentShader" type="x-shader/x-fragment">
+        varying highp vec3 vLightMatrix;
+        varying highp vec2 vTextureCoords;
+        varying lowp vec3 vAmbient;
+
+        varying highp vec4 vPosition;
+        varying highp vec4 vNormal;
+        varying mediump vec3 vLightColor;
+        varying highp vec3 vLightPosition;
+
+        uniform sampler2D uSampler;
+        uniform int uPointLight;
+
+        void main(void){
+          uPointLight;
+          highp vec3 lightDirection = vLightPosition - vPosition.xyz;
+          highp float light = max(dot(normalize(lightDirection), normalize(vNormal.xyz)), 0.0);
+          lowp vec4 texColor = vec4(vec3(texture2D(uSampler, vec2(vTextureCoords.s, vTextureCoords.t))), 1.0);
+          lowp vec3 texLightColor = (vLightColor*light + vAmbient*(1.0 - light));
+          gl_FragColor = texColor * vec4(texLightColor, 1.0);
+
+          // gl_FragColor = vec4(vec3(texture2D(uSampler, vec2(vTextureCoords.s, vTextureCoords.t))) * vLightMatrix, 1.0);
+        }
+      </script>
+
+      <!-- END SHADERS -->
+
+
+      <script>
+        // DECLARE GLOBALS
+        var canvas = document.getElementById("canvas"),
+          gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl"),
+          lastMouseX,
+          lastMouseY,
+          mvMatrix = $M4([
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+            ]),
+          projectionMatrix = (function(fov, aspect, near, far){
+              // Convert field of view to radians
+              fov *= Math.PI / 180;
+              var f = 1.0 / Math.tan(fov / 2);
+              var rangeInverse = 1.0 / (near-far);
+              return new Float32Array([
+                f / aspect, 0, 0, 0,
+                0, f, 0, 0,
+                0, 0, (near+far) * rangeInverse, -1,
+                0, 0, near*far * rangeInverse * 2, 0
+              ]);
+            })(45, 640/480, 0.1, 100),
+          normalMatrix;
+            // (field of view in degrees, canvas width/height, near clipping plane, far clipping plane)
+
+
+
+        // -- OPENGL BOILERPLATE --
+
+          // -- COMPILE THE PROGRAM --
+
+          // -- Fetch the shader scripts and make them into a shader program --
+          function getShader(id, type){
+            var script = document.getElementById(id).text;
+            var shader = gl.createShader(type);
+            gl.shaderSource(shader, script);
+            gl.compileShader(shader);
+            return shader;
+          }
+          var shader = gl.createProgram();
+          gl.attachShader(shader, getShader("vertexShader", gl.VERTEX_SHADER));
+          gl.attachShader(shader, getShader("fragmentShader", gl.FRAGMENT_SHADER));
+          gl.linkProgram(shader);
+          gl.useProgram(shader);
+          gl.clearColor(0.0, 0.0, 0.0, 1.0);
+          gl.clearDepth(1.0);
+          gl.enable(gl.DEPTH_TEST);
+          gl.depthFunc(gl.LEQUAL);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.viewport(0,0, canvas.width, canvas.height);
+
+          // -- SET UP THE ATTRIBUTES --
+
+          // -- Get references to the shader's attributes (vertices and face colors) --
+          var aVertexCoords = gl.getAttribLocation(shader, "aVertexCoords");
+          var aNormal = gl.getAttribLocation(shader, "aNormal");
+          var aTextureCoords = gl.getAttribLocation(shader, "aTextureCoords");
+
+          // -- Enable the attributes --
+          gl.enableVertexAttribArray(aVertexCoords);
+          gl.enableVertexAttribArray(aNormal);
+          gl.enableVertexAttribArray(aTextureCoords);
+
+          // -- Get references to the shader uniforms
+          var uProjMatrix = gl.getUniformLocation(shader, "uProjMatrix");
+          var uMVMatrix = gl.getUniformLocation(shader, "uMVMatrix");
+          var uNormalMatrix = gl.getUniformLocation(shader, "uNormalMatrix");
+          var uAmbient = gl.getUniformLocation(shader, "uAmbient");
+          var uLightColor = gl.getUniformLocation(shader, "uLightColor");
+          var uLightPosition = gl.getUniformLocation(shader, "uLightPosition");
+          var uPointLight = gl.getUniformLocation(shader, "uPointLight");
+          var uSampler = gl.getUniformLocation(shader, "uSampler");
+
+          // -- Convert array of vertices into a GL array buffer and bind to the corresponding vertices attribute --
+
+          // Vertex coords buffer
+          // First create a GL buffer object
+          var bufVertexCoords = gl.createBuffer();
+          // Bind that buffer to GL's "current array buffer" reference to operate on
+          gl.bindBuffer(gl.ARRAY_BUFFER, bufVertexCoords);
+          // Enter data into the current array buffer
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            // Front face
+            -1.0, -1.0,  1.0,
+             1.0, -1.0,  1.0,
+             1.0,  1.0,  1.0,
+            -1.0,  1.0,  1.0,
+
+            // Back face
+            -1.0, -1.0, -1.0,
+            -1.0,  1.0, -1.0,
+             1.0,  1.0, -1.0,
+             1.0, -1.0, -1.0,
+
+            // Top face
+            -1.0,  1.0, -1.0,
+            -1.0,  1.0,  1.0,
+             1.0,  1.0,  1.0,
+             1.0,  1.0, -1.0,
+
+            // Bottom face
+            -1.0, -1.0, -1.0,
+             1.0, -1.0, -1.0,
+             1.0, -1.0,  1.0,
+            -1.0, -1.0,  1.0,
+
+            // Right face
+             1.0, -1.0, -1.0,
+             1.0,  1.0, -1.0,
+             1.0,  1.0,  1.0,
+             1.0, -1.0,  1.0,
+
+            // Left face
+            -1.0, -1.0, -1.0,
+            -1.0, -1.0,  1.0,
+            -1.0,  1.0,  1.0,
+            -1.0,  1.0, -1.0
+          ]), gl.STATIC_DRAW);
+          // -- Point the current array buffer at the shader's vertices attribute, --
+          // -- and tell it that it will be grabbing floating-point values 3 at a time --
+          gl.vertexAttribPointer(aVertexCoords, 3, gl.FLOAT, false, 0, 0);
+
+          // Same process for normals buffer
+          var bufNormals = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, bufNormals);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            // Front
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+             0.0,  0.0,  1.0,
+
+            // Back
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+             0.0,  0.0, -1.0,
+
+            // Top
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+             0.0,  1.0,  0.0,
+
+            // Bottom
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+             0.0, -1.0,  0.0,
+
+            // Right
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+
+            // Left
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0,
+            -1.0,  0.0,  0.0
+          ]), gl.STATIC_DRAW);
+          gl.vertexAttribPointer(aNormal, 3, gl.FLOAT, false, 0, 0);
+
+          // Texture coordinates
+          var bufTexCoords = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, bufTexCoords);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            // Front
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Back
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Top
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Bottom
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Right
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0,
+            // Left
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+            0.0,  0.0
+          ]), gl.STATIC_DRAW);
+          gl.vertexAttribPointer(aTextureCoords, 2, gl.FLOAT, false, 0, 0);
+
+          // Now bind a new buffer to GL's current element array buffer.
+          // This specifies which vertices make up each face.
+          // It does not get bound to any shader attribute.
+          // The drawElements call just automatically uses whatever is the current element array buffer.
+          var bufIndices = gl.createBuffer();
+          gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufIndices);
+          gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([
+            0,  1,  2,      0,  2,  3,    // front
+            4,  5,  6,      4,  6,  7,    // back
+            8,  9,  10,     8,  10, 11,   // top
+            12, 13, 14,     12, 14, 15,   // bottom
+            16, 17, 18,     16, 18, 19,   // right
+            20, 21, 22,     20, 22, 23    // left
+          ]), gl.STATIC_DRAW);
+
+        // Init transformation values
+        var rotationX = 0.0,
+          rotationY = 0.0,
+          rotationZ = 0.0,
+          translateX = 0.0,
+          translateY = 0.0,
+          translateZ = -6.0;
+
+        // Set inital position for the model
+        mvMatrix = mvMatrix.timesMat4(Mat4.Rotation(1, 1, 1)).timesMat4(Mat4.Translation(0,0,-3));
+
+        var texture = gl.createTexture();
+        var texImage = new Image(256, 256);
+        texImage.onload = function(){
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texImage);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+          gl.generateMipmap(gl.TEXTURE_2D);
+
+          gl.uniform1i(uSampler, 0);
+
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+
+          requestAnimationFrame(draw);
+        }
+        texImage.src = "rock3.jpg";
+
+        // -- END BOILERPLATE --
+
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        // Pass the projection and modelview matrices into the shader uniforms
+        gl.uniformMatrix4fv(uProjMatrix, false, projectionMatrix);
+        gl.uniformMatrix4fv(uMVMatrix, false, mvMatrix.toArray());
+        gl.uniform3f(uAmbient, 0.2, 0.2, 0.2);
+        gl.uniform3f(uLightColor, 0.8, 0.8, 0.8);
+        gl.uniform3f(uLightPosition, 0.0, 0.0, 0.0);
+        gl.uniform1i(uPointLight, 1.0);
+
+
+
+
+        function draw(){
+
+          // Convert "mouse-space" rotation to modelspace rotation
+          var rotMat = mvMatrix.timesMat4(Mat4.Rotation(-rotationX, rotationY, rotationZ));
+
+          // Neutralize translation that may have ended up in the rotation matrix
+          rotMat.elements[12] = 0.0;
+          rotMat.elements[13] = 0.0;
+          rotMat.elements[14] = 0.0;
+
+          // -- Rebuild model matrix and normal matrix from current transformations --
+          mvMatrix = rotMat.timesMat4(Mat4.Translation(translateX, translateY, translateZ));
+          normalMatrix = mvMatrix.inverse().transpose();
+
+          // Pass matrices to shader uniform
+          gl.uniformMatrix4fv(uMVMatrix, false, mvMatrix.toArray());
+          gl.uniformMatrix4fv(uNormalMatrix, false, normalMatrix.toArray());
+
+          // -- Draw --
+          // 36 vertices -> every 3 vertices become a triangle -> 12 triangles -> 6 squares/sides
+          gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+
+          // Rotation drops off due to inertia
+          rotationX /= 1.01;
+          rotationY /= 1.01;
+          rotationZ /= 1.01;
+          function snapToZero(x){
+            if (x < 0.001 && x > -0.001) {
+              return 0;
+            }
+            return x;
+          }
+          rotationX = snapToZero(rotationX);
+          rotationY = snapToZero(rotationY);
+          rotationZ = snapToZero(rotationZ);
+
+          // Loop
+          requestAnimationFrame(draw);
+        }
+
+        // -- Add canvas event listeners for mouse drag or touch slide --
+
+        canvas.onmousemove = function(e){
+          if (e.buttons == 0){return;}
+          if (lastMouseX){
+            rotationY += -(e.clientX - lastMouseX) / 3000;
+          }
+          if (lastMouseY){
+            rotationX += (e.clientY - lastMouseY) / 3000;
+          }
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+        }
+
+        canvas.addEventListener("touchmove", function(e){
+          e.preventDefault();
+          if (lastMouseX){
+            rotationY += -(e.touches[0].clientX - lastMouseX) / 3000;
+          }
+          if (lastMouseY){
+            rotationX += (e.touches[0].clientY - lastMouseY) / 3000;
+          }
+          lastMouseX = e.touches[0].clientX;
+          lastMouseY = e.touches[0].clientY;
+        }, false);
+
+        function resetMouse(e){
+          lastMouseX = false;
+          lastMouseY = false;
+        }
+
+        canvas.onmouseout = resetMouse;
+        canvas.onmouseup = resetMouse;
+        canvas.addEventListener("touchend", resetMouse);
+
+        function setEnvironment(index){
+          var environments = [
+          ["",
+              0.2, 0.2, 0.2, //ambient
+              0.8, 0.8, 0.8, //light
+              0.8, 0.8, 0.8, //position
+              ],
+          ["canyon.jpg",
+              0.3, 0.1, 0.0, //ambient
+              0.27, 0.4, 0.7, //light
+              0.0, 10.0, -0.5 //position
+              ],
+          ["purpleclouds.jpg",
+              0.37, 0.22, 0.29, //ambient
+              1.0, 0.7, 0.6, //light
+              -1.0, -0.5, -5.5 //position
+              ],
+          ["shore.jpg",
+              0.2, 0.3, 0.4, //ambient
+              1.2, 0.5, 0.3, //light
+              5.0, 0.5, -4.0 //position
+              ],
+
+          ];
+          var env = environments[index];
+          document.getElementsByTagName('body')[0].style.background = "url('" + env[0] + "') black no-repeat center center fixed";
+          document.getElementsByTagName('body')[0].style.backgroundSize = "cover";
+          gl.uniform3f(uAmbient, env[1], env[2], env[3]);
+          gl.uniform3f(uLightColor, env[4], env[5], env[6]);
+          gl.uniform3f(uLightPosition, env[7], env[8], env[9]);
+        }
+
+        // -- Start the draw loop! --
+        // requestAnimationFrame(draw);
+      </script>
+
+  </body>
+
+</html>

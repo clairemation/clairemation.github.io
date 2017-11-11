@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no" />
+  </head>
+
+  <body scroll="no" style="background: #0f0; overflow: auto;">
+    <div style="position: absolute; overflow: auto; left: 0; top: 0; margin: 0; padding: 0; height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;"><canvas width=512 height=512 id="canvas"></div>
+
+    <script src = "../libraries/arrayVec3D.js"></script>
+    <script src = "../libraries/webgl_utils.js"></script>
+    <script src = "../libraries/webgl-program.js"></script>
+
+    <script>
+      
+      var vertScriptUrl = "../systems/sprite/gl-sprite-vertex-shader.vert",
+        fragScriptUrl = "../systems/sprite/gl-sprite-fragment-shader.frag",
+        IMAGE_SRC = 'herocombi3.png',
+        canvas = document.getElementById("canvas"),
+        glProgram = null,
+        gl = null;
+
+      new WebGLProgram(canvas, vertScriptUrl, fragScriptUrl).then(function(results){
+        glProgram = results;
+        gl = glProgram.gl;
+        setup();
+      })
+
+      function setup(){
+        glProgram.use();
+        glProgram.bindDataToAttribute("aVertexCoords", [
+          -1.0, -1.0,  -3.0,
+           1.0, -1.0,  -3.0,
+           1.0,  1.0,  -3.0,
+          -1.0,  1.0,  -3.0,], 3);
+        glProgram.bindDataToAttribute("aTextureCoords", [
+          0.0,  1.0,
+          0.5,  1.0,
+          0.5,  0.0,
+          0.0,  0.0], 2);
+        glProgram.setUniform("uSampler", 0);
+        glProgram.setUniform("uLightPosition", [0.0, 0.0]);
+        glProgram.setUniform("uLightPosition", [0.0,0.0,0.0]);
+        glProgram.attachTexture(IMAGE_SRC).then(function(){
+          addEventListeners();
+          draw();
+        });
+      }
+
+      function draw(){
+        glProgram.gl.clear(glProgram.gl.COLOR_BUFFER_BIT | glProgram.gl.DEPTH_BUFFER_BIT);
+        glProgram.gl.drawArrays(glProgram.gl.TRIANGLE_FAN, 0, 4);
+        requestAnimationFrame(draw);
+      }
+
+      function setLight(x,y){
+        x -= 110; // fudge factor, tweaked from observation
+        y += 90;  // fudge factor
+        x -= canvas.offsetLeft;
+        y -= canvas.offsetTop;
+        x = (x / 512 * 2.0) - 1.0;
+        y = (y / 512 * 2.0) - 1.0;
+        z = -Math.max(1.0 - ArrayVec3D.length([x,y,0]), 0.3);
+        glProgram.setUniform("uLightPosition", [x,-y,z]);
+      }
+      
+      function addEventListeners(){
+       
+        window.addEventListener('mousemove', function(e){
+          setLight(e.clientX, e.clientY);
+        });
+               
+        window.ontouchstart = touchSet;
+        window.ontouchmove = touchSet;
+
+        function touchSet(e){
+          e.preventDefault();
+          if (e.touches.length == 1) {
+            setLight(e.touches.item(0).clientX, e.touches.item(0).clientY);
+          }
+        };
+        
+                function blankFunction(){};
+        
+        document.getElementsByTagName("body")[0].ontouchstart = blankFunction;
+        document.getElementsByTagName("body")[0].ontouchmove = blankFunction;
+        document.getElementsByTagName("body")[0].removeEventListener("touchstart", blankFunction);
+        document.getElementsByTagName("body")[0].removeEventListener("touchmove", blankFunction);
+
+        
+        
+      }
+    </script>
+
+
+  </body>
+
+</html>

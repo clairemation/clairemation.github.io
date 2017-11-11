@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+
+    <link type="text/css" rel="stylesheet" href="../../main.css">
+
+    <title>Claire's Projects: Time's Prisoner</title>
+
+    <style>
+    body {
+      text-align: center;
+    }
+
+    #maintitle {
+      padding: 0;
+    }
+
+    #maintitle h1 {
+      font-family: 'Avenir Next', Avenir, sans-serif;
+      /*font-weight: initial;*/
+      font-size: 1.5em;
+      margin: 10px;
+      padding: 0;
+      text-shadow: none;
+    }
+
+    h3 {
+      text-align: left;
+    }
+
+    main {
+      margin: auto;
+      text-align: center;
+    }
+
+    #tp-options {
+      display: flex;
+      flex-direction: row-reverse;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin: auto;
+      max-width: 70%;
+    }
+
+    p.info {
+      margin: 1em auto;
+      width: 70%;
+    }
+
+    p.note {
+      background: #fcf8e3;
+      border: 1px solid #faebcc;
+      border-radius: 5px;
+      color: #8a6d3b;
+      margin: 10px 0;
+      padding: 5px;
+      text-align: left;
+    }
+
+    p.note::before {
+      content: '\26a0';
+      padding-right: .5em;
+    }
+
+    main img {
+      width: 100%;
+    }
+
+    #tp-options > div {
+      flex: 1;
+      margin: 1em;
+      max-width: 500px;
+      min-width: 300px;
+    }
+
+    h2 {
+      font-size: .75em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    ul {
+      font-size: .8em;
+      text-align: center;
+    }
+
+    ul p {
+      text-align: center;
+      width: inherit;
+      font-weight: 600;
+    }
+
+    li {
+      background: #fdfdfd;
+      max-width: 100%;
+      list-style-type: none;
+      padding: .2em 0;
+      text-align: left;
+    }
+
+    li:nth-child(even) {
+      background: #f0f0f0;
+    }
+
+    footer {
+      position: absolute;
+      top: 5px;
+      right: 100px;
+    }
+
+    footer img {
+      width: 30px;
+      height: 30px;
+    }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <section id="main-pane">
+
+    <header>
+      <h3><a href="../../index.html">&laquo; Claire's Dev Site</a></h3>
+      <div id="maintitle">
+        <h1>&ldquo;Time's Prisoner&rdquo; Project</h1>
+      </div>
+    </header>
+
+    <main>
+
+      <p class="info"><strong>Time's Prisoner</strong> is a graphical adventure game project I'm working on, about a scientist thrown three billion years into the past in a time-traveling accident.</p>
+
+      <div id="tp-options">
+
+        <div id="spritebased">
+          <a href="../gamedemo/index.html">
+          <h2>New WIP sprite engine</h2>
+          <img src="../../imgs/spritescreenshot.jpg">
+          </a>
+          <ul>
+            <li>real-time lighting and shading</li>
+            <li>touch and keyboard controls</li>
+            <li>smooth, non-tile-based movement in 8 directions</li>
+            <li>subtle natural physics including inertia, collision, and wall "sliding"</li>
+            <li>parallax scrolling</li>
+            <li>atmospheric hand-drawn graphics (by me)</li>
+            <p class="note">Does not run on IE or older mobile browsers.</p>
+            <p><a href="http://github.com/clairemation/clairemation.github.io/tree/master/projects/tpv2">See the source on github</a></p>
+          </ul>
+
+        </div>
+
+
+        <div id="original">
+          <a href="timesprisoner.html">
+          <h2>Original level prototype</h2>
+          <img src="../../imgs/tpscreenshot.jpg">
+          </a>
+          <ul>
+            <li>tense, play-tested level design</li>
+            <li>awesome CC-licensed soundtrack courtesy of Kevin MacLeod</li>
+          <p class="note">Keyboard controls require a desktop browser</p>
+          <p><a href="http://github.com/clairemation/clairemation.github.io/tree/master/projects/timesprisoner">See the source on github</a></p>
+          </ul>
+        </div>
+
+      </div>
+
+    </main>
+
+    <footer>
+        <a href="mailto:clairemation@gmail.com"><img src="../../imgs/social/email.png" alt="Email"></a>
+        <a href="http://www.linkedin.com/in/clairemation"><img src="../../imgs/social/linkedin.png" alt="LinkedIn"></a>
+        <a href="http://github.com/clairemation"><img src="../../imgs/social/github.png" alt="GitHub"></a>
+      </footer>
+
+    </section>
+
+  </body>
+
+</html>

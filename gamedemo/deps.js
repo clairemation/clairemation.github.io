@@ -1,0 +1,32 @@
+deps = [
+    'src/gamedemo/globals.js',
+    'src/gamedemo/helpers/limit.js',
+    'src/gamedemo/libraries/vector.js',
+    'src/gamedemo/libraries/vector3d.js',
+    'src/gamedemo/libraries/arrayVec3D.js',
+    'src/gamedemo/systems/geometry/geometry.js',
+    'src/gamedemo/systems/graphics/dynamic-lighting/lighting-engine-component.js',
+    'src/gamedemo/systems/graphics/dynamic-lighting/point-light.js',
+    'src/gamedemo/systems/collision/collision-component.js',
+    'src/gamedemo/systems/collision/collision-engine.js',
+    'src/gamedemo/systems/impulse/impulse-component.js',
+    'src/gamedemo/systems/move/move-component.js',
+    'src/gamedemo/systems/movement/movement-component.js',
+    'src/gamedemo/systems/resistence/resistence-component.js',
+    'src/gamedemo/systems/sprite/sprite-component.js',
+    'src/gamedemo/systems/sprite/sprite-engine.js',
+    'src/gamedemo/systems/travel-map/travel-map-component.js',
+    'src/gamedemo/systems/viewport/viewport.js',
+    'src/gamedemo/systems/viewport/viewport.js',
+    'src/gamedemo/entities/physical-entity.js',
+    'src/gamedemo/entities/actor.js',
+    'src/gamedemo/entities/player.js',
+    'src/gamedemo/entities/fireball.js',
+    'src/gamedemo/weapons.js',
+    'src/gamedemo/states.js',
+    'src/gamedemo/initializer.js',
+    'src/gamedemo/view/keyhandlers.js',
+    'src/gamedemo/view/touchinput.js'
+];
+
+module.exports = deps;
