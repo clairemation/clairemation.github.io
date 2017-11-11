@@ -64,7 +64,7 @@ var App =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -74,29 +74,52 @@ var App =
 "use strict";
 
 
-// DOM links ===================================
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
+var State = function () {
+    function State() {
+        var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-var bg1 = document.getElementById("bg1");
-var fg1 = document.getElementById("fg1");
-var scoreboard = document.getElementById("scoreboard");
-var titlescreenImg = document.getElementById("title-screen");
-var loadingScreen = document.getElementById("loading-screen");
-var messageWindow = document.getElementById("message");
+        _classCallCheck(this, State);
 
-// =================================================
+        Object.assign(this, args);
+    }
 
-// Assets ==========================================
+    _createClass(State, [{
+        key: "enter",
+        value: function enter() {
+            //Override
+        }
+    }, {
+        key: "exit",
+        value: function exit() {
+            //Override
+        }
+    }, {
+        key: "message",
+        value: function message(msg) {
+            //Override
+        }
+    }, {
+        key: "update",
+        value: function update(deltaTime) {
+            //Override
+        }
+    }]);
+
+    return State;
+}();
+
+module.exports = State;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 var assets = {
     flapAudio: new Audio(),
@@ -134,115 +157,29 @@ function loadPromise(asset, src) {
 
 var assetPromises = [];
 
-function loadAssets() {
+function load() {
     for (name in assets) {
         assetPromises.push(loadPromise(assets[name], assetSrcs[name]));
     }
 
-    Promise.all(assetPromises).then(function () {
-        return game.changeState(play);
-    });
+    return Promise.all(assetPromises);
 }
 
-// ==================================================
+module.exports = {
+    assets: assets,
+    load: load
+};
 
-// Settings ================================
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
 
-ctx.mozImageSmoothingEnabled = false;
-ctx.webkitImageSmoothingEnabled = false;
-ctx.msImageSmoothingEnabled = false;
-ctx.imageSmoothingEnabled = false;
+"use strict";
 
-assets.flapAudio.playbackRate = 4;
-assets.crunch2Audio.playbackRate = 2;
-assets.blopAudio.playbackRate = 0.5;
 
-// ==================================================
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-// Audio setup ======================================
-
-// var audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-
-// var flapSrc = audioCtx.createMediaElementSource(assets.flapAudio)
-// flapSrc.connect(audioCtx.destination)
-
-// var crunchSrc = audioCtx.createMediaElementSource(assets.crunchAudio)
-// crunchSrc.connect(audioCtx.destination)
-
-// var crunch2Src = audioCtx.createMediaElementSource(assets.crunch2Audio)
-// crunch2Src.connect(audioCtx.destination)
-
-// var blopSrc = audioCtx.createMediaElementSource(assets.blopAudio)
-// blopSrc.connect(audioCtx.destination)
-
-// var screechSrc = audioCtx.createMediaElementSource(assets.screechAudio)
-// screechSrc.connect(audioCtx.destination)
-
-// var boingSrc = audioCtx.createMediaElementSource(assets.boingAudio)
-// boingSrc.connect(audioCtx.destination)
-
-// var cawSrc = audioCtx.createMediaElementSource(assets.cawAudio)
-// cawSrc.connect(audioCtx.destination)
-
-// ==================================================
-
-// Constants ========================================
-
-var ANIM_FRAMERATE = 200;
-var SPRITE_WIDTH = 48;
-var SPRITE_HEIGHT = 48;
-var GROUND = 176;
-
-// =================================================
-
-// Globals =========================================
-
-var fgScrollSpeed = 0.12;
-var obstacleFrequency = 0.15;
-var sprite = new Image();
-var loop;
-var currentScore = 0;
-var currentTime;
-var lastTime = 0;
-var nextScoreMilestone = 50;
-
-// =================================================
-
-// Base Classes =======================
-
-var State = function () {
-    function State() {
-        var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-        _classCallCheck(this, State);
-
-        Object.assign(this, args);
-    }
-
-    _createClass(State, [{
-        key: "enter",
-        value: function enter() {
-            //Override
-        }
-    }, {
-        key: "exit",
-        value: function exit() {
-            //Override
-        }
-    }, {
-        key: "message",
-        value: function message(msg) {
-            //Override
-        }
-    }, {
-        key: "update",
-        value: function update(deltaTime) {
-            //Override
-        }
-    }]);
-
-    return State;
-}();
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Control = function () {
     function Control() {
@@ -262,6 +199,21 @@ var Control = function () {
 
     return Control;
 }();
+
+module.exports = Control;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var State = __webpack_require__(0);
 
 var GameObject = function () {
     function GameObject() {
@@ -307,6 +259,107 @@ var GameObject = function () {
     return GameObject;
 }();
 
+module.exports = GameObject;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var State = __webpack_require__(0);
+var Control = __webpack_require__(2);
+var GameObject = __webpack_require__(3);
+var assetLoader = __webpack_require__(1);
+
+// DOM links ===================================
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+var bg1 = document.getElementById("bg1");
+var fg1 = document.getElementById("fg1");
+var scoreboard = document.getElementById("scoreboard");
+var titlescreenImg = document.getElementById("title-screen");
+var loadingScreen = document.getElementById("loading-screen");
+var messageWindow = document.getElementById("message");
+
+// =================================================
+
+// ==================================================
+
+// Settings ================================
+
+ctx.mozImageSmoothingEnabled = false;
+ctx.webkitImageSmoothingEnabled = false;
+ctx.msImageSmoothingEnabled = false;
+ctx.imageSmoothingEnabled = false;
+
+assetLoader.assets.flapAudio.playbackRate = 4;
+assetLoader.assets.crunch2Audio.playbackRate = 2;
+assetLoader.assets.blopAudio.playbackRate = 0.5;
+
+// ==================================================
+
+// Audio setup ======================================
+
+// var audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+
+// var flapSrc = audioCtx.createMediaElementSource(assetLoader.assets.flapAudio)
+// flapSrc.connect(audioCtx.destination)
+
+// var crunchSrc = audioCtx.createMediaElementSource(assetLoader.assets.crunchAudio)
+// crunchSrc.connect(audioCtx.destination)
+
+// var crunch2Src = audioCtx.createMediaElementSource(assetLoader.assets.crunch2Audio)
+// crunch2Src.connect(audioCtx.destination)
+
+// var blopSrc = audioCtx.createMediaElementSource(assetLoader.assets.blopAudio)
+// blopSrc.connect(audioCtx.destination)
+
+// var screechSrc = audioCtx.createMediaElementSource(assetLoader.assets.screechAudio)
+// screechSrc.connect(audioCtx.destination)
+
+// var boingSrc = audioCtx.createMediaElementSource(assetLoader.assets.boingAudio)
+// boingSrc.connect(audioCtx.destination)
+
+// var cawSrc = audioCtx.createMediaElementSource(assetLoader.assets.cawAudio)
+// cawSrc.connect(audioCtx.destination)
+
+// ==================================================
+
+// Constants ========================================
+
+var ANIM_FRAMERATE = 200;
+var SPRITE_WIDTH = 48;
+var SPRITE_HEIGHT = 48;
+var GROUND = 176;
+
+// =================================================
+
+// Globals =========================================
+
+var fgScrollSpeed = 0.12;
+var obstacleFrequency = 0.15;
+var sprite = new Image();
+var loop;
+var currentScore = 0;
+var currentTime;
+var lastTime = 0;
+var nextScoreMilestone = 50;
+
+// =================================================
+
+
 // GAME OBJECT ======================================
 
 var game = new GameObject({ name: "Game" });
@@ -328,6 +381,8 @@ game.controls.playControl = new Control({
 
 var loading = new State({
     enter: function enter() {
+        var _this = this;
+
         cancelAnimationFrame(loop);
         bg1.style.visibility = "hidden";
         fg1.style.visibility = "hidden";
@@ -335,7 +390,9 @@ var loading = new State({
         canvas.style.visibility = "hidden";
         titlescreenImg.style.visibility = "hidden";
         loadingScreen.style.visibility = "visible";
-        loadAssets();
+        assetLoader.load().then(function () {
+            return _this.changeState(play);
+        });
     }
 });
 
@@ -366,11 +423,11 @@ var play = new State({
         titlescreenImg.style.visibility = "hidden";
         loadingScreen.style.visibility = "hidden";
         reset();
-        assets.cawAudio.play();
+        assetLoader.assets.cawAudio.play();
         loop = requestAnimationFrame(tick);
     },
     message: function message(msg) {
-        var _this = this;
+        var _this2 = this;
 
         switch (msg) {
             case "keydown":
@@ -381,7 +438,7 @@ var play = new State({
                 break;
             case "lose":
                 setTimeout(function () {
-                    _this.changeState(lose);
+                    _this2.changeState(lose);
                 }, 400);
         }
     },
@@ -413,10 +470,10 @@ var GameplayObject = function (_GameObject) {
     function GameplayObject(args) {
         _classCallCheck(this, GameplayObject);
 
-        var _this2 = _possibleConstructorReturn(this, (GameplayObject.__proto__ || Object.getPrototypeOf(GameplayObject)).call(this, args));
+        var _this3 = _possibleConstructorReturn(this, (GameplayObject.__proto__ || Object.getPrototypeOf(GameplayObject)).call(this, args));
 
-        game.controls.playControl.components.push(_this2);
-        return _this2;
+        game.controls.playControl.components.push(_this3);
+        return _this3;
     }
 
     return GameplayObject;
@@ -460,7 +517,7 @@ gameEnginesObject.controls.spriteEngine = new Control({
         for (var i = 0; i < this.components.length; i++) {
             var position = this.components[i].owner.controls.transform.position;
             var frame = this.components[i].currentFrame;
-            ctx.drawImage(assets.sprite, frame * SPRITE_WIDTH, 0, SPRITE_WIDTH, SPRITE_HEIGHT, position[0], position[1], SPRITE_WIDTH, SPRITE_HEIGHT);
+            ctx.drawImage(assetLoader.assets.sprite, frame * SPRITE_WIDTH, 0, SPRITE_WIDTH, SPRITE_HEIGHT, position[0], position[1], SPRITE_WIDTH, SPRITE_HEIGHT);
         }
     }
 });
@@ -535,15 +592,15 @@ var Sprite = function (_Control) {
 
         _classCallCheck(this, Sprite);
 
-        var _this3 = _possibleConstructorReturn(this, (Sprite.__proto__ || Object.getPrototypeOf(Sprite)).call(this, args));
+        var _this4 = _possibleConstructorReturn(this, (Sprite.__proto__ || Object.getPrototypeOf(Sprite)).call(this, args));
 
-        gameEnginesObject.controls.spriteEngine.components.push(_this3);
-        _this3.currentFrameNum = 0;
-        _this3.elapsedTime = 0;
-        _this3.looping = true;
-        _this3.finished = false;
-        _this3.onFinished = function () {};
-        return _this3;
+        gameEnginesObject.controls.spriteEngine.components.push(_this4);
+        _this4.currentFrameNum = 0;
+        _this4.elapsedTime = 0;
+        _this4.looping = true;
+        _this4.finished = false;
+        _this4.onFinished = function () {};
+        return _this4;
     }
 
     _createClass(Sprite, [{
@@ -594,10 +651,10 @@ var Collider = function (_Control2) {
     function Collider(args) {
         _classCallCheck(this, Collider);
 
-        var _this4 = _possibleConstructorReturn(this, (Collider.__proto__ || Object.getPrototypeOf(Collider)).call(this, args));
+        var _this5 = _possibleConstructorReturn(this, (Collider.__proto__ || Object.getPrototypeOf(Collider)).call(this, args));
 
-        gameEnginesObject.controls.collisionEngine.components.push(_this4);
-        return _this4;
+        gameEnginesObject.controls.collisionEngine.components.push(_this5);
+        return _this5;
     }
 
     _createClass(Collider, [{
@@ -616,10 +673,10 @@ var PlayerCollider = function (_Control3) {
     function PlayerCollider(args) {
         _classCallCheck(this, PlayerCollider);
 
-        var _this5 = _possibleConstructorReturn(this, (PlayerCollider.__proto__ || Object.getPrototypeOf(PlayerCollider)).call(this, args));
+        var _this6 = _possibleConstructorReturn(this, (PlayerCollider.__proto__ || Object.getPrototypeOf(PlayerCollider)).call(this, args));
 
-        gameEnginesObject.controls.collisionEngine.playerCollider = _this5;
-        return _this5;
+        gameEnginesObject.controls.collisionEngine.playerCollider = _this6;
+        return _this6;
     }
 
     _createClass(PlayerCollider, [{
@@ -638,12 +695,12 @@ var Transform = function (_Control4) {
     function Transform(args) {
         _classCallCheck(this, Transform);
 
-        var _this6 = _possibleConstructorReturn(this, (Transform.__proto__ || Object.getPrototypeOf(Transform)).call(this, args));
+        var _this7 = _possibleConstructorReturn(this, (Transform.__proto__ || Object.getPrototypeOf(Transform)).call(this, args));
 
-        _this6.position = _this6.position || [0, GROUND - SPRITE_HEIGHT];
-        _this6.pivot = _this6.pivot || [SPRITE_WIDTH / 2, SPRITE_HEIGHT];
-        _this6.center = _this6.center || [SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2];
-        return _this6;
+        _this7.position = _this7.position || [0, GROUND - SPRITE_HEIGHT];
+        _this7.pivot = _this7.pivot || [SPRITE_WIDTH / 2, SPRITE_HEIGHT];
+        _this7.center = _this7.center || [SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2];
+        return _this7;
     }
 
     return Transform;
@@ -655,10 +712,10 @@ var Scroller = function (_Control5) {
     function Scroller(args) {
         _classCallCheck(this, Scroller);
 
-        var _this7 = _possibleConstructorReturn(this, (Scroller.__proto__ || Object.getPrototypeOf(Scroller)).call(this, args));
+        var _this8 = _possibleConstructorReturn(this, (Scroller.__proto__ || Object.getPrototypeOf(Scroller)).call(this, args));
 
-        _this7.reset();
-        return _this7;
+        _this8.reset();
+        return _this8;
     }
 
     _createClass(Scroller, [{
@@ -683,10 +740,10 @@ var ObstaclePooler = function (_Control6) {
     function ObstaclePooler(args) {
         _classCallCheck(this, ObstaclePooler);
 
-        var _this8 = _possibleConstructorReturn(this, (ObstaclePooler.__proto__ || Object.getPrototypeOf(ObstaclePooler)).call(this, args));
+        var _this9 = _possibleConstructorReturn(this, (ObstaclePooler.__proto__ || Object.getPrototypeOf(ObstaclePooler)).call(this, args));
 
-        gameEnginesObject.controls.obstaclePoolEngine.inactiveComponents.push(_this8);
-        return _this8;
+        gameEnginesObject.controls.obstaclePoolEngine.inactiveComponents.push(_this9);
+        return _this9;
     }
 
     _createClass(ObstaclePooler, [{
@@ -781,7 +838,7 @@ player.controls.altitude = new Control({
     flap: function flap() {
         this.yAccel -= Math.max(0, this.yAccel * 0.9);
         this.owner.controls.sprite.setCurrentAnimation("jump");
-        assets.flapAudio.play();
+        assetLoader.assets.flapAudio.play();
     },
     fall: function fall() {
         this.owner.controls.sprite.setCurrentAnimation("fall");
@@ -826,7 +883,7 @@ var sink = new State({
     enter: function enter() {
         this.controls.sprite.setCurrentAnimation("hurt");
         this.controls.altitude.sink();
-        assets.blopAudio.play();
+        assetLoader.assets.blopAudio.play();
         game.message("lose");
     }
 });
@@ -860,7 +917,7 @@ var jump = new State({
 
 var hurt = new State({
     enter: function enter() {
-        assets.screechAudio.play();
+        assetLoader.assets.screechAudio.play();
         this.controls.altitude.bounce();
         this.controls.sprite.setCurrentAnimation("hurt");
         game.message("lose");
@@ -882,16 +939,16 @@ var Foothold = function (_GameplayObject) {
     function Foothold(args) {
         _classCallCheck(this, Foothold);
 
-        var _this9 = _possibleConstructorReturn(this, (Foothold.__proto__ || Object.getPrototypeOf(Foothold)).call(this, args));
+        var _this10 = _possibleConstructorReturn(this, (Foothold.__proto__ || Object.getPrototypeOf(Foothold)).call(this, args));
 
-        _this9.controls = {
-            sprite: new Sprite({ owner: _this9 }),
-            collider: new Collider({ owner: _this9 }),
-            transform: new Transform({ owner: _this9 }),
-            scroller: new Scroller({ owner: _this9 }),
-            obstaclePooler: new ObstaclePooler({ owner: _this9 })
+        _this10.controls = {
+            sprite: new Sprite({ owner: _this10 }),
+            collider: new Collider({ owner: _this10 }),
+            transform: new Transform({ owner: _this10 }),
+            scroller: new Scroller({ owner: _this10 }),
+            obstaclePooler: new ObstaclePooler({ owner: _this10 })
         };
-        return _this9;
+        return _this10;
     }
 
     return Foothold;
@@ -903,20 +960,20 @@ var Fern = function (_Foothold) {
     function Fern(args) {
         _classCallCheck(this, Fern);
 
-        var _this10 = _possibleConstructorReturn(this, (Fern.__proto__ || Object.getPrototypeOf(Fern)).call(this, args));
+        var _this11 = _possibleConstructorReturn(this, (Fern.__proto__ || Object.getPrototypeOf(Fern)).call(this, args));
 
-        _this10.controls.sprite.animations = {
+        _this11.controls.sprite.animations = {
             default: [1],
             dead: [0]
         };
-        _this10.controls.collider.hitBox = [20, 30, 33, 48];
-        _this10.controls.collider.onHit = function () {
+        _this11.controls.collider.hitBox = [20, 30, 33, 48];
+        _this11.controls.collider.onHit = function () {
             if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]) {
                 this.owner.changeState(deadEnemy);
-                assets.crunch2Audio.play();
+                assetLoader.assets.crunch2Audio.play();
             }
         };
-        return _this10;
+        return _this11;
     }
 
     return Fern;
@@ -928,18 +985,18 @@ var Protoceratops = function (_Foothold2) {
     function Protoceratops(args) {
         _classCallCheck(this, Protoceratops);
 
-        var _this11 = _possibleConstructorReturn(this, (Protoceratops.__proto__ || Object.getPrototypeOf(Protoceratops)).call(this, args));
+        var _this12 = _possibleConstructorReturn(this, (Protoceratops.__proto__ || Object.getPrototypeOf(Protoceratops)).call(this, args));
 
-        _this11.controls.sprite.animations = {
+        _this12.controls.sprite.animations = {
             default: [4]
         };
-        _this11.controls.collider.hitBox = [3, 31, 31, 48];
-        _this11.controls.collider.onHit = function () {
+        _this12.controls.collider.hitBox = [3, 31, 31, 48];
+        _this12.controls.collider.onHit = function () {
             if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]) {
-                assets.boingAudio.play();
+                assetLoader.assets.boingAudio.play();
             }
         };
-        return _this11;
+        return _this12;
     }
 
     return Protoceratops;
@@ -951,20 +1008,20 @@ var ProtoSkeleton = function (_Foothold3) {
     function ProtoSkeleton(args) {
         _classCallCheck(this, ProtoSkeleton);
 
-        var _this12 = _possibleConstructorReturn(this, (ProtoSkeleton.__proto__ || Object.getPrototypeOf(ProtoSkeleton)).call(this, args));
+        var _this13 = _possibleConstructorReturn(this, (ProtoSkeleton.__proto__ || Object.getPrototypeOf(ProtoSkeleton)).call(this, args));
 
-        _this12.controls.sprite.animations = {
+        _this13.controls.sprite.animations = {
             default: [2],
             dead: [3]
         };
-        _this12.controls.collider.hitBox = [3, 31, 31, 48];
-        _this12.controls.collider.onHit = function () {
+        _this13.controls.collider.hitBox = [3, 31, 31, 48];
+        _this13.controls.collider.onHit = function () {
             if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]) {
                 this.owner.changeState(deadEnemy);
-                assets.crunchAudio.play();
+                assetLoader.assets.crunchAudio.play();
             }
         };
-        return _this12;
+        return _this13;
     }
 
     return ProtoSkeleton;
@@ -1035,17 +1092,21 @@ protoSkel2.changeState(inactiveObstacle);
 
 // Key listeners ===================================
 
+var keyDown = false;
+
 document.addEventListener("keydown", function (e) {
-    if (e.keyCode == 32) {
-        game.message("keydown");
+    if (keyDown == false && e.keyCode == 32) {
         e.preventDefault();
+        keyDown = true;
+        game.message("keydown");
     }
 });
 
 document.addEventListener("keyup", function (e) {
     if (e.keyCode == 32) {
-        game.message("keyup");
         e.preventDefault();
+        keyDown = false;
+        game.message("keyup");
     }
 });
 
