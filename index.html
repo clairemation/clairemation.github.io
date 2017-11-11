@@ -28,7 +28,7 @@
             <ul>
               <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
               <li><a href="#about" onclick="closeMenu()">About</a></li>
-              <li><a href="clairesamuelsresume_jan2017.pdf" onclick="closeMenu()">Resume</a></li>
+              <li><a href="http://eclair-voyant.blogspot.com">Art</a></li>
               <li><a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a></li>
               <li><a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a></li>
               <li><a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a></li>
@@ -36,12 +36,11 @@
           </nav>
         </section>
         <div id="maintitle">
-        <h2 id="intro">
-          Artful algorithms | algorithmic art
-        </h2>
           <h1>Claire's Dev Site</h1>
-          <p>Contact me about your project!</p>
         </div>
+        <h2 id="intro">
+          Artful algorithms, algorithmic art
+        </h2>
         <nav id="header-buttons">
           <!-- <ul>
             <li class="button">
@@ -61,25 +60,31 @@
 
       <main>
 
+        <a name = "about"></a>
+        <section id="about">
+          <p>
+            I'm a software engineer at Viacom, and on my own time I dabble in everything from games to independent comics. This page is my personal work. You can also see some of my art from (fizzled) indie comic projects here: <a href="http://eclair-voyant.blogspot.com">http://eclair-voyant.blogspot.com</a>.
+          </p>
+        </section>
+
         <section id="projects">
 
          <a name = "projects"></a>
-            
+          
           <ul class="projects-ul">
-
-
-            <li class="project-block mobile-small desktop-med tablet-big project-raptorrun">
-              <a href="build/index.html">
-                <h4>Game</h4>
-                <img src="imgs/rr-screenshot.png"/>
-                <h3>Raptor Run</h3>
+        
+            <li class="project-block mobile-big desktop-med project-normals">
+              <a href="projects/tpv2/tests/normals/hills.html">
+                <h4>etc.</h4>
+                <img src="imgs/hills-screenshot.jpg"/>
+                <h3>2.5D terrain</h3>
                 <p>
-                  A simple little JavaScript infinite runner, written from scratch.
+                  An experiment in creating a 3D-feeling game field using only flat 2D assets. The environment is hand-painted, but affects your movement as if it were 3D.
                 </p>
               </a>
             </li>
-
-            <li class="project-block project-coolgebra">
+            
+            <li class="project-block mobile-small project-coolgebra">
               <a href="http://github.com/clairemation/coolgebra-js">
                 <h4>Math</h4>
                 <h3>Coolgebra</h3>
@@ -88,41 +93,41 @@
                 </p>
               </a>
             </li>
-
+            
             <li class="project-block mobile-small project-particles">
-              <a href="gamedemo/tests/particles.html">
+              <a href="projects/tpv2/tests/particles.html">
                 <h4>WebGL</h4>
-                <h3>Particles!</h3>
+                <h3>Particle effects</h3>
                 <p>
-                  More fun with WebGL. Make it snow with math!
+                  More experiments with WebGL. Generate cartoon-style flame, liquid, and smoke. I came up with a way to make the particles as state-free as possible and do all position calculations on the GPU for optimal performance.
                 </p>
               </a>
             </li>
 
             <li class="project-block mobile-small project-lightingtest">
-              <a href="gamedemo/tests/gl-lighting.html">
+              <a href="projects/tpv2/tests/lightingtest/index.html">
                 <h4>WebGL</h4>
                 <img src="imgs/gl-lighting2.jpg"/>
                 <h3>Dynamic sprite lighting</h3>
                 <p>
-                  Rewriting my game engine's normal-mapping engine in buttery-smooth WebGL. Move the mouse or tap and drag a finger to set and move the light.
+                  Rewriting my game engine's normal-mapping engine in buttery-smooth WebGL. The light follows your mouse or touch.
                 </p>
               </a>
             </li>
 
-            <li class="project-block mobile-big tablet-big desktop-med project-webgl">
-              <a href="gamedemo/tests/webgltest.html">
+            <li class="project-block mobile-small project-webgl">
+              <a href="http://clairemation.github.io/projects/tpv2/tests/webgltest.html">
                 <h4>3D</h4>
                 <img src="imgs/ss-cube.jpg"/>
                 <h3>Fun with WebGL</h3>
                 <p>
-                  Testing different lighting conditions on a spinnable textured cube. Uses no existing libraries, just pure WebGL and math.
+                  Beginner dabbling with WebGL. Playing around with lighting conditions on a basic model. Uses no existing libraries, just pure WebGL and math.
                 </p>
               </a>
             </li>
 
-            <li class="project-block mobile-big project-spritedemo">
-              <a href="timesprisoner/index.html">
+            <li class="project-block mobile-big desktop-med project-spritedemo">
+              <a href="projects/timesprisoner">
                 <h4>Canvas</h4>
                 <img src="imgs/ss-sprite-engine2.jpg"/>
                 <h3>Sprite Engine Demo</h3>
@@ -132,7 +137,7 @@
               </a>
             </li>
 
-            <li class="project-block mobile-small mobile-no-pic desktop-med project-walkabout">
+            <li class="project-block mobile-big desktop-med project-walkabout">
               <a href="http://github.com/clairemation/Walkabout">
                 <h4>React Native</h4>
                 <img src="imgs/ss-walkabout-cropped.png"/>
@@ -154,7 +159,7 @@
             </li>
 
             <li class="project-block mobile-small project-gamelevel">
-              <a href="timesprisoner/timesprisoner.html">
+              <a href="projects/timesprisoner/timesprisoner.html">
                 <h4>Game</h4>
                 <img src="imgs/tpscreenshot.jpg"/>
                 <h3>Game Level Prototype</h3>
@@ -163,6 +168,7 @@
                 </p>
               </a>
             </li>
+           
           </ul>
 
           <p class = "breakout">
@@ -170,14 +176,6 @@
           </p>
 
         </section>
-
-        <a name = "about"></a>
-        <section id="about">
-          <p>
-            I'm a creative full-stack engineer with experience crafting worlds in everything from cel animation to C++.
-          </p>
-        </section>
-
 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
@@ -196,6 +194,17 @@
             $("main, header > *:not(#mobile-popup)").removeClass("blur");
           }
         });
+
+      </script>
+        
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-97091336-1', 'auto');
+        ga('send', 'pageview');
 
       </script>
 
