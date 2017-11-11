@@ -121,38 +121,68 @@ module.exports = State;
 "use strict";
 
 
+var IMG_REGEX = /.*\.(jpg|png|gif)/;
+var AUDIO_REGEX = /.*\.(wav|mp3)/;
+
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioCtx = new AudioContext();
+
 var assets = {
-    flapAudio: new Audio(),
-    crunchAudio: new Audio(),
-    crunch2Audio: new Audio(),
-    blopAudio: new Audio(),
-    screechAudio: new Audio(),
-    boingAudio: new Audio(),
-    cawAudio: new Audio(),
-    sprite: new Image()
+    sprite: new Image(),
+    boing: { buffer: null },
+    caw: { buffer: null },
+    crunch: { buffer: null },
+    crunch2: { buffer: null },
+    flap: { buffer: null },
+    screech: { buffer: null },
+    slime: { buffer: null }
 };
 
 var assetSrcs = {
     sprite: "assets/spritesheets/sheet00.png",
-    flapAudio: "assets/flap.wav",
-    crunchAudio: "assets/crunch.wav",
-    crunch2Audio: "assets/crunch2.wav",
-    screechAudio: "assets/pusou.wav",
-    blopAudio: "assets/blop.wav",
-    boingAudio: "assets/boing.wav",
-    cawAudio: "assets/caw.wav"
+    boing: "assets/boing.wav",
+    caw: "assets/caw.wav",
+    crunch: "assets/crunch.wav",
+    crunch2: "assets/crunch2.wav",
+    flap: "assets/flap.wav",
+    screech: "assets/pusou.wav",
+    slime: "assets/blop.wav"
 };
+
+function play(audioBuffer) {
+    var src = audioCtx.createBufferSource();
+    src.buffer = audioBuffer.buffer;
+    src.connect(audioCtx.destination);
+    src.start(0);
+}
 
 function loadPromise(asset, src) {
     return new Promise(function (res, rej) {
-        asset.onload = res;
-        asset.onerror = res;
-        asset.oncanplaythrough = res;
-        asset.src = src;
-        if (asset.play) {
-            asset.load();
+        if (src.match(IMG_REGEX)) {
+            loadImg(asset, src, res, rej);
+        } else if (src.match(AUDIO_REGEX)) {
+            loadAudio(asset, src, res, rej);
         }
     });
+}
+
+function loadImg(img, src, resolve, reject) {
+    img.onload = resolve;
+    img.onerror = resolve;
+    img.src = src;
+}
+
+function loadAudio(audio, src, resolve, reject) {
+    var req = new XMLHttpRequest();
+    req.open('GET', src, true);
+    req.responseType = 'arraybuffer';
+    req.onload = function () {
+        audioCtx.decodeAudioData(req.response, function (buffer) {
+            audio.buffer = buffer;
+            resolve();
+        });
+    };
+    req.send();
 }
 
 var assetPromises = [];
@@ -167,7 +197,8 @@ function load() {
 
 module.exports = {
     assets: assets,
-    load: load
+    load: load,
+    play: play
 };
 
 /***/ }),
@@ -304,36 +335,9 @@ ctx.webkitImageSmoothingEnabled = false;
 ctx.msImageSmoothingEnabled = false;
 ctx.imageSmoothingEnabled = false;
 
-assetLoader.assets.flapAudio.playbackRate = 4;
-assetLoader.assets.crunch2Audio.playbackRate = 2;
-assetLoader.assets.blopAudio.playbackRate = 0.5;
-
-// ==================================================
-
-// Audio setup ======================================
-
-// var audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-
-// var flapSrc = audioCtx.createMediaElementSource(assetLoader.assets.flapAudio)
-// flapSrc.connect(audioCtx.destination)
-
-// var crunchSrc = audioCtx.createMediaElementSource(assetLoader.assets.crunchAudio)
-// crunchSrc.connect(audioCtx.destination)
-
-// var crunch2Src = audioCtx.createMediaElementSource(assetLoader.assets.crunch2Audio)
-// crunch2Src.connect(audioCtx.destination)
-
-// var blopSrc = audioCtx.createMediaElementSource(assetLoader.assets.blopAudio)
-// blopSrc.connect(audioCtx.destination)
-
-// var screechSrc = audioCtx.createMediaElementSource(assetLoader.assets.screechAudio)
-// screechSrc.connect(audioCtx.destination)
-
-// var boingSrc = audioCtx.createMediaElementSource(assetLoader.assets.boingAudio)
-// boingSrc.connect(audioCtx.destination)
-
-// var cawSrc = audioCtx.createMediaElementSource(assetLoader.assets.cawAudio)
-// cawSrc.connect(audioCtx.destination)
+// assetLoader.assets.flapAudio.playbackRate = 4
+// assetLoader.assets.crunch2Audio.playbackRate = 2
+// assetLoader.assets.blopAudio.playbackRate = 0.5
 
 // ==================================================
 
@@ -359,6 +363,10 @@ var nextScoreMilestone = 50;
 
 // =================================================
 
+
+function playSound(sound) {
+    assetLoader.play(sound);
+}
 
 // GAME OBJECT ======================================
 
@@ -423,7 +431,8 @@ var play = new State({
         titlescreenImg.style.visibility = "hidden";
         loadingScreen.style.visibility = "hidden";
         reset();
-        assetLoader.assets.cawAudio.play();
+        console.log(assetLoader.assets.caw);
+        playSound(assetLoader.assets.caw);
         loop = requestAnimationFrame(tick);
     },
     message: function message(msg) {
@@ -838,7 +847,7 @@ player.controls.altitude = new Control({
     flap: function flap() {
         this.yAccel -= Math.max(0, this.yAccel * 0.9);
         this.owner.controls.sprite.setCurrentAnimation("jump");
-        assetLoader.assets.flapAudio.play();
+        playSound(assetLoader.assets.flap);
     },
     fall: function fall() {
         this.owner.controls.sprite.setCurrentAnimation("fall");
@@ -883,7 +892,7 @@ var sink = new State({
     enter: function enter() {
         this.controls.sprite.setCurrentAnimation("hurt");
         this.controls.altitude.sink();
-        assetLoader.assets.blopAudio.play();
+        playSound(assetLoader.assets.slime);
         game.message("lose");
     }
 });
@@ -917,7 +926,7 @@ var jump = new State({
 
 var hurt = new State({
     enter: function enter() {
-        assetLoader.assets.screechAudio.play();
+        playSound(assetLoader.assets.screech);
         this.controls.altitude.bounce();
         this.controls.sprite.setCurrentAnimation("hurt");
         game.message("lose");
@@ -970,7 +979,7 @@ var Fern = function (_Foothold) {
         _this11.controls.collider.onHit = function () {
             if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]) {
                 this.owner.changeState(deadEnemy);
-                assetLoader.assets.crunch2Audio.play();
+                playSound(assetLoader.assets.crunch2);
             }
         };
         return _this11;
@@ -993,7 +1002,7 @@ var Protoceratops = function (_Foothold2) {
         _this12.controls.collider.hitBox = [3, 31, 31, 48];
         _this12.controls.collider.onHit = function () {
             if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]) {
-                assetLoader.assets.boingAudio.play();
+                playSound(assetLoader.assets.boing);
             }
         };
         return _this12;
@@ -1018,7 +1027,7 @@ var ProtoSkeleton = function (_Foothold3) {
         _this13.controls.collider.onHit = function () {
             if (player.currentState == jump && player.controls.transform.position[1] < this.owner.controls.transform.position[1]) {
                 this.owner.changeState(deadEnemy);
-                assetLoader.assets.crunchAudio.play();
+                playSound(assetLoader.assets.crunch);
             }
         };
         return _this13;
