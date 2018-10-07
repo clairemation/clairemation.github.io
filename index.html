@@ -26,8 +26,6 @@
           <nav id="mobilemenu">
             <label for="mobilemenu-toggle" class="close">&times;</label>
             <ul>
-              <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
-              <li><a href="#about" onclick="closeMenu()">About</a></li>
               <li><a href="http://eclair-voyant.blogspot.com">Art</a></li>
               <li><a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a></li>
               <li><a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a></li>
@@ -41,21 +39,6 @@
         <h2 id="intro">
           Artful algorithms, algorithmic art
         </h2>
-        <nav id="header-buttons">
-          <!-- <ul>
-            <li class="button">
-              <label for="contact-toggle"> -->
-                <a href="mailto:clairemation@gmail.com"><button class="contact-button">Contact</button></a>
-              <!-- </label>
-            </li>
-          </ul>
-          <input type="checkbox" id="contact-toggle"/>
-          <div class="contact-badges">
-            <a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a>
-            <a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a>
-            <a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a>
-          </div> -->
-        </nav>
       </header>
 
       <main>
@@ -63,7 +46,7 @@
         <a name = "about"></a>
         <section id="about">
           <p>
-            I'm a software engineer at Viacom, on the Nickelodeon games team. This page is my personal work, mostly HTML5 games and graphics demos. You can also see some of my art from (fizzled) indie comic projects here: <a href="http://eclair-voyant.blogspot.com">http://eclair-voyant.blogspot.com</a>.
+            I'm a software engineer at Viacom, on the games engineering team. This page is my personal work, mostly HTML5 games and graphics demos. You can also see some of my art from (fizzled) indie comic projects here: <a href="http://eclair-voyant.blogspot.com">http://eclair-voyant.blogspot.com</a>.
           </p>
         </section>
 
@@ -73,6 +56,17 @@
           
           <ul class="projects-ul">
         
+            <li class="project-block mobile-big desktop-med project-raptorquest">
+              <a href="raptorquest/index.html">
+                <h4>Game</h4>
+                <img src="imgs/ss-raptorquest.png"/>
+                <h3>Raptor Quest (WIP demo)</h3>
+                <p>
+                  The successor to Raptor Run. This is a demo of the current state of the engine, which I'm writing from scratch in vanilla ES6 and includes a flexible component-based architecture, support for multiple scenes, realistic physics, tile-map levels, and specially scripted dino tail motion.
+                </p>
+              </a>
+            </li>
+            
             <li class="project-block mobile-big desktop-med project-raptorrun">
               <a href="build/index.html">
                 <h4>Game</h4>
