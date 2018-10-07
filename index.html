@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
 
-    <title>Claire's Dev Site</title>
+    <title>Claire's Game Dev Site</title>
   </head>
 
   <body>
@@ -27,6 +27,7 @@
             <label for="mobilemenu-toggle" class="close">&times;</label>
             <ul>
               <li><a href="http://eclair-voyant.blogspot.com">Art</a></li>
+              <li><a href="https://www.tumblr.com/blog/clairemation"><img src="tumblr.png" alt="tumblr"></a></li>
               <li><a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="Email"></a></li>
               <li><a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a></li>
               <li><a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a></li>
@@ -34,11 +35,8 @@
           </nav>
         </section>
         <div id="maintitle">
-          <h1>Claire's Dev Site</h1>
+          <h1>Claire's Game Dev Site</h1>
         </div>
-        <h2 id="intro">
-          Artful algorithms, algorithmic art
-        </h2>
       </header>
 
       <main>
@@ -46,30 +44,28 @@
         <a name = "about"></a>
         <section id="about">
           <p>
-            I'm a software engineer at Viacom, on the games engineering team. This page is my personal work, mostly HTML5 games and graphics demos. You can also see some of my art from (fizzled) indie comic projects here: <a href="http://eclair-voyant.blogspot.com">http://eclair-voyant.blogspot.com</a>.
+            I'm a software engineer on a games engineering team at a media company. This page is my personal work, mostly HTML5 games and graphics demos. You can also see some of my art from (fizzled) indie comic projects here: <a href="http://eclair-voyant.blogspot.com">http://eclair-voyant.blogspot.com</a>.
           </p>
         </section>
 
-        <section id="projects">
+        <section class="projects games">
 
-         <a name = "projects"></a>
-          
+          <h2>Games</h2>
+
           <ul class="projects-ul">
-        
-            <li class="project-block mobile-big desktop-med project-raptorquest">
+
+            <li class="project-block mobile-big project-raptorquest">
               <a href="raptorquest/index.html">
-                <h4>Game</h4>
                 <img src="imgs/ss-raptorquest.png"/>
                 <h3>Raptor Quest (WIP demo)</h3>
                 <p>
-                  The successor to Raptor Run. This is a demo of the current state of the engine, which I'm writing from scratch in vanilla ES6 and includes a flexible component-based architecture, support for multiple scenes, momenutum-based physics (try ski-jumping off the last couple of hills), tile-map levels, and specially scripted dino tail motion.
+                  The successor to Raptor Run. This is a demo of the current state of the engine, which I'm writing from scratch in vanilla ES6. It includes a flexible component-based architecture, support for multiple scenes, tile-map levels, and momenutum-based physics. (Updated 10/7/18)
                 </p>
               </a>
             </li>
-            
-            <li class="project-block mobile-big desktop-med project-raptorrun">
+
+            <li class="project-block mobile-big project-raptorrun">
               <a href="build/index.html">
-                <h4>Game</h4>
                 <img src="imgs/rr-screenshot.png"/>
                 <h3>Raptor Run</h3>
                 <p>
@@ -77,8 +73,42 @@
                 </p>
               </a>
             </li>
-            
-            <li class="project-block mobile-big desktop-med project-normals">
+
+            <li class="project-block mobile-big project-spritedemo">
+              <a href="projects/timesprisoner">
+                <img src="imgs/ss-sprite-engine2.jpg"/>
+                <h3>Top-Down Adventure Game (WIP Demo)</h3>
+                <p>
+                  Early attempts to translate Time's Prisoner into a full-fledged overhead adventure game. Written from scratch in vanilla ES6 with no outside engines. I may revisit this game concept sometime.
+                </p>
+              </a>
+            </li>
+
+            <li class="project-block mobile-small project-gamelevel">
+              <a href="projects/timesprisoner/timesprisoner.html">
+                <img src="imgs/tpscreenshot.jpg"/>
+                <h3>Game Level Prototype</h3>
+                <p>
+                  Babby's first HTML5 game. I think it has a certain naive charm. Desktop only.
+                </p>
+              </a>
+            </li>
+
+          </ul>
+
+        </section>
+
+        <br />
+
+        <section class="projects">
+
+         <h2>Experiments</h2>
+
+         <a name = "projects"></a>
+
+          <ul class="projects-ul">
+
+            <li class="project-block mobile-small project-normals">
               <a href="projects/tpv2/tests/normals/hills.html">
                 <h4>etc.</h4>
                 <img src="imgs/hills-screenshot.jpg"/>
@@ -88,7 +118,7 @@
                 </p>
               </a>
             </li>
-            
+
             <li class="project-block mobile-small project-coolgebra">
               <a href="http://github.com/clairemation/coolgebra-js">
                 <h4>Math</h4>
@@ -98,7 +128,7 @@
                 </p>
               </a>
             </li>
-            
+
             <li class="project-block mobile-small project-particles">
               <a href="projects/tpv2/tests/particles.html">
                 <h4>WebGL</h4>
@@ -131,28 +161,8 @@
               </a>
             </li>
 
-            <li class="project-block mobile-big desktop-med project-spritedemo">
-              <a href="projects/timesprisoner">
-                <h4>Canvas</h4>
-                <img src="imgs/ss-sprite-engine2.jpg"/>
-                <h3>Top-Down Adventure Game (WIP Demo)</h3>
-                <p>
-                  Early attempts to translate Time's Prisoner into a full-fledged overhead adventure game. Written from scratch in vanilla ES6 with no outside engines. I may revisit this game concept sometime.
-                </p>
-              </a>
-            </li>
 
-            <li class="project-block mobile-small project-gamelevel">
-              <a href="projects/timesprisoner/timesprisoner.html">
-                <h4>Game</h4>
-                <img src="imgs/tpscreenshot.jpg"/>
-                <h3>Game Level Prototype</h3>
-                <p>
-                  Babby's first HTML5 game. I think it has a certain naive charm. Desktop only.
-                </p>
-              </a>
-            </li>
-           
+
           </ul>
 
         </section>
@@ -176,7 +186,7 @@
         });
 
       </script>
-        
+
       <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
