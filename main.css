@@ -26,6 +26,9 @@ p, h3 {
   -webkit-filter: blur(3px);
           filter: blur(3px); }
 
+#about p {
+  padding-bottom: 1em; }
+
 /*-- NAV MENU CHANGES AT 700 PX --*/
 @media screen and (max-width: 700px) {
   header {
