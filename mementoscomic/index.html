@@ -48,36 +48,40 @@
 
   <body style = "text-align: center; background-color: #000; color: #fff; font-face: sans-serif;">
 
-  	<div id = "page-container" style = "display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%;">
+    <div id="pageHolder" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; flex-direction: column; ">
 
-  		<div id = "page-holder" style = "display: flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%;">
+      <!-- <div id = "menu"style = "width: 50px; text-align: center; background-color: #000; color: #fff; font-face: sans-serif;">&#9776;</div> -->
+
+  		<div id = "page-holder" style = "position: relative; display: flex; flex-direction: row; align-content: center; align-items: center; justify-content: center; text-align: center; height: 100%; flex-shrink: 1;">
+
+        <div id="nav-links" style="position: absolute; width: 100%; height: 100%;">
+          <a id="prev-link"><div style="position: absolute; left: 0; top: 0; width: 50%; height: 100%;"> </div></a>
+          <a id="next-link"><div style="position: absolute: right: 0; top: 0; width: 50%; height: 100%;"> </div></a>
+        </div>
+
   		</div>
 
-  		<div id = "nav-button-holder" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; width: 100%; height: 50px;">
-  			<a id="prev"><button>&lt; Prev</button></a>
-  			<a id="next"><button>Next &gt;</button></a>
-  		</div>
-  		<div id="slidecontainer" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; width: 70%; height: 50px;">
-  			<span id ="slider-output" style = "width: 10%; font-size: 1.25em; font-face: sans-serif;">1</span>
-			<input id="slider" type="range" min="1" max="40" value="1" class="slider" style= "-webkit-appearance: none; appearance: none; background: #fff; width: 90%;">
-		</div>
-  		<div id = "displaybutton-holder" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; width: 100%; height: 50px;">
-  			<a id="display-button-anchor"><button id="display-button"></button></a>
-  		</div>
+    		<div id="slidecontainer" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100px;">
+    		  <span id ="slider-output" style = "width: 10%; font-size: 1.25em; font-face: sans-serif;">1</span>
+  		    <input id="slider" type="range" min="1" max="40" value="1" class="slider" style= "-webkit-appearance: none; appearance: none; background: #fff; width: 80%;">
+      		<div id = "displaybutton-holder" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; height: 50px; width: 10%;">
+      			<a id="display-button-anchor"><button id="display-button"></button></a>
+      		</div>
+    		</div>
 
-  	</div>
+    </div>
 
 
   	<script>
 
-  		const ButtonHeight = 150
+      const PageHolder = document.getElementById("page-holder")
+
   		const PageMin = 1, PageMax = 40
   		const PageRatio = 1350 / 1800
   		const SpreadRatio = 1350 * 2 / 1800
-  		const WindowInnerHeight = window.innerHeight - ButtonHeight
-  		const WindowRatio = window.innerWidth / WindowInnerHeight
+  		const WindowRatio = PageHolder.clientWidth / PageHolder.clientHeight
 
-		const shouldBaseSingleOnHeight = WindowRatio >= PageRatio
+  		const shouldBaseSingleOnHeight = WindowRatio >= PageRatio
   		const shouldBaseSpreadOnHeight = WindowRatio >= SpreadRatio
 
   		const Params = new URLSearchParams(window.location.search)
@@ -96,6 +100,9 @@
   			IsSpread = shouldBaseSpreadOnHeight
   		}
 
+      var shouldBaseOnHeight =
+        (IsSpread && shouldBaseSpreadOnHeight) || (!IsSpread && shouldBaseSingleOnHeight)
+
   		document.getElementById("display-button-anchor").href = "?page=" + BasePageNum + "&spread=" + (!IsSpread).toString()
   		document.getElementById("display-button").innerHTML = IsSpread ? "Display: single page" : "Display: spread"
 
@@ -109,11 +116,11 @@
   		{
   			if (shouldBaseSpreadOnHeight)
   			{
-  				pageHeight = WindowInnerHeight
-  				pageWidth = WindowInnerHeight * PageRatio
+  				pageHeight = PageHolder.clientHeight
+  				pageWidth = pageHeight * PageRatio
   			}
   			else {
-  				pageWidth = window.innerWidth / 2
+  				pageWidth = PageHolder.clientWidth / 2
   				pageHeight = pageWidth / PageRatio
   			}
   			if (BasePageNum % 2 == 0)
@@ -129,25 +136,21 @@
   		else {
   			if (shouldBaseSingleOnHeight)
   			{
-  				if (shouldBaseSingleOnHeight)
-	  			{
-	  				pageHeight = WindowInnerHeight
-	  				pageWidth = WindowInnerHeight * PageRatio
-	  			}
-	  			else {
-	  				pageWidth = window.innerWidth
-	  				pageHeight = pageWidth / PageRatio
-	  			}
+	  				pageHeight = PageHolder.clientHeight
+	  				pageWidth = pageHeight * PageRatio
+  			} else {
+  				pageWidth = window.innerWidth
+  				pageHeight = pageWidth / PageRatio
+  			}
 	  			pageStart = pageEnd = BasePageNum
-	  		}
   		}
 
 
-  		var container = document.getElementById("page-holder")
+  		var pageHolder = document.getElementById("page-holder")
 
   		for (var i = pageStart; i <= pageEnd; i++)
   		{
-  			container.appendChild(createPage(i, pageWidth, pageHeight))
+  			pageHolder.appendChild(createPage(i, pageWidth, pageHeight))
   		}
   	
 
@@ -208,13 +211,16 @@
 
   		var increment = IsSpread ? 2 : 1
 
-  		document.getElementById("prev").href = "?page=" + Math.max((BasePageNum - increment), PageMin) + "&spread=" + IsSpread
-  		document.getElementById("next").href = "?page=" + Math.min((BasePageNum + increment), PageMax) + "&spread=" + IsSpread
+  		var prevUrl = "?page=" + Math.max((BasePageNum - increment), PageMin) + "&spread=" + IsSpread
+  		var nextUrl = "?page=" + Math.min((BasePageNum + increment), PageMax) + "&spread=" + IsSpread
+
+      document.getElementById("prev-link").href = prevUrl
+      document.getElementById("next-link").href = nextUrl
 
   		function createPage(index, width, height)
   		{
 	  		var div = document.createElement("div")
-	  		div.style = "height: " + height + "px; width: " + width + "px; padding: 0px; margin: 0px;"
+	  		div.style = "height: 100%; width: 100%;"
 
 	  		if (index < PageMin || index > PageMax)
 	  		{
@@ -230,9 +236,10 @@
   			var src = "jpg/" + index.toString().padStart(2, "0") + ".jpg"
 	  		var img = document.createElement("img")
 	  		img.src = src
-	  		img.style = "height: " + height + "px; width: " + width + "px"
+        var width = IsSpread ? "50" : "100"
+	  		img.style = shouldBaseOnHeight ? "height: 100%; width: auto;" : "width: " + width + "%; flex: 1; height: auto;"
 	  		div.appendChild(img)
-
+        return img
 	  		return div
   		}
 
