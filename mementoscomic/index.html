@@ -13,13 +13,16 @@
         font-family: sans-serif;
       }
 
+      .page{
+        flex: 0;
+      }
+
       #page-holder.scale-to-height .page{
         height: 100%;
         width: auto;
       }
 
       #page-holder.scale-to-width .page{
-        flex: 1;
         height: auto;
       }
        
@@ -41,7 +44,6 @@
         height: 10px;
         background: #fff;
         outline: none;
-        /*border-radius: 15%;*/
       }
 
       #slider:hover {
@@ -70,7 +72,7 @@
 
   <body style = "text-align: center; background-color: #000; color: #fff; font-face: sans-serif;">
 
-    <div id="container" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; flex-direction: column; ">
+    <div id="container" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; flex-direction: column;">
 
   		<div id = "page-holder" style = "position: relative; display: flex; flex-direction: row; align-content: center; align-items: center; justify-content: center; text-align: center; height: 100%; flex-shrink: 1;">
 
@@ -81,62 +83,102 @@
 
   		</div>
 
-    		<div id="slidecontainer" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100px;">
-    		  <span id ="slider-output" style = "width: 10%; font-size: 1.25em; font-face: sans-serif;">1</span>
-  		    <input id="slider" type="range" min="1" max="40" value="1" class="slider" style= "-webkit-appearance: none; appearance: none; background: #fff; width: 80%;">
-      		<div id = "displaybutton-holder" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; height: 50px; width: 10%;">
-      			<a id="display-button-anchor"><button id="display-button"></button></a>
-      		</div>
+  		<div id="slidecontainer" style = "display:flex; flex-direction: row; align-items: center; align-content: center; justify-content: center; text-align: center; width: 100%;">
+    		<div id = "displaybutton-holder" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; height: 50px; width: 10%;">
+    			<a id="display-button-anchor"><button id="display-button"></button></a>
     		</div>
+        <input id="slider" type="range" min="1" max="40" value="1" class="html.slider" style= "-webkit-appearance: none; appearance: none; background: #fff; width: 80%;">
+  		  <span id ="slider-output" style = "width: 10%; font-size: 1.25em; font-face: sans-serif; text-align: left;">1</span>
+  		</div>
 
     </div>
 
 
   	<script>
+      const meta = {
+        title: "Mementos: A Star Wars Fancomic",
+        pageWidth: 1350,
+        pageHeight: 1800,
+        pageMin: 0,
+        pageMax: 41,
+        complete: false,
+        getImgUrl: index => `jpg/${index.toString().padStart(2, "0")}.jpg`,
+        rawNumToDisplayNum: num => num <= 4 ? (["", "i", "ii", "cover", "note"])[num] : (num - 4).toString()
+      }
 
-      const pageHolder = document.getElementById("page-holder")
-      const slider = document.getElementById("slider")
-      const sliderOutput = document.getElementById("slider-output")
-      const goPageButton = document.getElementById("go-page-button")
+      const html = {
+        pageHolder: document.getElementById("page-holder"),
+        slider: document.getElementById("slider"),
+        sliderOutput: document.getElementById("slider-output"),
+      }
 
   		const params = new URLSearchParams(window.location.search)
   		const basePageNum = parseInt(params.get("page")) || 1
 
-  		const pageMin = 1, PageMax = 40
-  		const pageRatio = 1350 / 1800
-  		const spreadRatio = 1350 * 2 / 1800
 
-  		function windowRatio()
-      {
-        return pageHolder.clientWidth / pageHolder.clientHeight
-      }
+      const display = (function() {
+        var pageWidth = meta.pageWidth,
+          pageHeight = meta.pageHeight
+    		var pageAspect = () => pageWidth / pageHeight
+    		var spreadAspect = () => pageWidth * 2 / pageHeight
 
-  		function windowIsWiderThanSinglePage()
-      {
-        return windowRatio() >= pageRatio
-      }
-  		
-      function windowIsWiderThanSpread()
-      {
-        return windowRatio() >= spreadRatio
-      }
+    		function windowRatio()
+        {
+          return html.pageHolder.clientWidth / html.pageHolder.clientHeight
+        }
 
-  		const BUTTON_HEIGHT = 100
+    		function windowIsWiderThanSinglePage()
+        {
+          return windowRatio() >= pageAspect()
+        }
+    		
+        function windowIsWiderThanSpread()
+        {
+          return windowRatio() >= spreadAspect()
+        }
 
-  		var isSpread, pageStart, pageEnd
+        function setPageDimensions(xyArray)
+        {
+          pageWidth = xyArray[0]
+          pageHeight = xyArray[1]
+        }
+
+        return {
+          windowIsWiderThanSinglePage,
+          windowIsWiderThanSpread,
+          setPageDimensions
+        }
+      })()
+
+  		var isSpread
 
       init()
       initNavButtons()
-      initDisplayButton()
-      createPages()
+      initDisplayToggle()
       initSlider()
+      generatePageHTML()
       setPageHolderClass()
 
-      var resizeTimeout
-      window.onresize = () => {
-        clearTimeout(resizeTimeout)
-        resizeTimeout = setTimeout(setPageHolderClass, 100)
+
+      var util = {
+        throttleAndDebounceFunction: function(func, throttleDelay = 200, debounceDelay = 200)
+        {
+          var throttled = false
+          var timeout
+          return function(){
+            if (!throttled)
+            {
+              setPageHolderClass()
+              throttled = true
+              setTimeout(() => {throttled = false}, throttleDelay)
+            }
+            clearTimeout(timeout)
+            timeout = setTimeout(func, debounceDelay)
+          }      
+        }
       }
+      
+      window.onresize = window.onorientationchange = util.throttleAndDebounceFunction(setPageHolderClass)
 
       function init()
       {
@@ -145,11 +187,11 @@
      			isSpread = params.get("spread") == "true" || false
     		}
     		else {
-    			isSpread = windowIsWiderThanSpread()
+    			isSpread = display.windowIsWiderThanSpread()
     		}
       }
 
-      function initDisplayButton()
+      function initDisplayToggle()
       {
         document.getElementById("display-button-anchor").href = createParamString(getParams({isSpread: !isSpread}))
         document.getElementById("display-button").innerHTML = isSpread ? "Display: single page" : "Display: spread"
@@ -157,78 +199,80 @@
 
       function windowIsWiderThanLayout()
       {
-        return (isSpread && (windowIsWiderThanSpread())) || (!isSpread && windowIsWiderThanSinglePage())
+        return (isSpread && (display.windowIsWiderThanSpread())) || (!isSpread && display.windowIsWiderThanSinglePage())
       }
 
-      function createPages()
+      var pageNums
+      function getSpreadPageNums(baseIndex)
       {
-    		if (isSpread)
-    		{
-    			if (basePageNum % 2 == 0)
-    			{
-    				pageStart = basePageNum
-    				pageEnd = basePageNum + 1
-    			}
-    			else {
-    				pageStart = basePageNum - 1
-    				pageEnd = basePageNum
-    			}
-    		}
-    		else {
-    			pageStart = pageEnd = basePageNum
-    		}
+        // even on left, odd on right
+        // return function(baseIndex)
+        //   {
+            if (pageNums == undefined)
+            {
+              var offsetFromLeft = baseIndex % 2 == 0
+              pageNums = [baseIndex - (1 - offsetFromLeft), baseIndex + offsetFromLeft]
+            }
+            return pageNums
+          }
+      // })()
 
-    		for (var i = pageStart; i <= pageEnd; i++)
-    		{
-    			pageHolder.appendChild(createPage(i))
-    		}
+      function generatePageHTML(){
+        var pageNums = isSpread ? getSpreadPageNums(basePageNum) : [basePageNum]
+        for (var i = 0; i < pageNums.length; i++)
+        {
+          html.pageHolder.appendChild(createPage(pageNums[i]))
+        }
       }
 
       function initSlider()
       {
     		if (isSpread)
     		{
-    			slider.min = 0
-    			slider.max = PageMax / 2
-    			slider.value = pageStart / 2
-    			if (slider.value == 0)
+          var pageStart = getSpreadPageNums(basePageNum)[0]
+          var pageEnd = getSpreadPageNums(basePageNum)[1]
+    			html.slider.min = 0
+    			html.slider.max = meta.pageMax / 2
+    			html.slider.value = pageStart / 2
+    			if (html.slider.value == 0)
     			{
-    				sliderOutput.innerHTML = getPageDisplayNum(pageEnd)
+    				html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(pageEnd)
     			} else {
-  	  			sliderOutput.innerHTML = getPageDisplayNum(pageStart) + "-" + getPageDisplayNum(pageEnd)
+  	  			html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(pageStart) + "-" + meta.rawNumToDisplayNum(pageEnd)
   	  		}
     		}
     		else {
-    			slider.min = 1
-    			slider.max = PageMax
-    			slider.value = basePageNum
-    			sliderOutput.innerHTML = getPageDisplayNum(basePageNum)
+    			html.slider.min = 1
+    			html.slider.max = meta.pageMax
+    			html.slider.value = basePageNum
+    			html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(basePageNum)
     		}
 
-        slider.oninput = isSpread ? updateSliderValueSpread : updateSliderValueSinglePage
-        slider.onmouseup = (() => {
-          var pageNum = isSpread ? slider.value * 2 : slider.value
+        html.slider.oninput = isSpread ? updateSliderValueSpread : updateSliderValueSinglePage
+        html.slider.onmouseup = (() => {
+          var pageNum = isSpread ? html.slider.value * 2 : html.slider.value
           window.location.href = createParamString(getParams({setPage: pageNum}))
         })
       }
 
   		function updateSliderValueSpread()
   		{
-  			var value = slider.value * 2
+  			var value = html.slider.value * 2
   			if (value == 0){
-  				sliderOutput.innerHTML = getPageDisplayNum(value + 1)
+  				html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(value + 1)
   			} else {
-  			sliderOutput.innerHTML = getPageDisplayNum(value) + "-" + getPageDisplayNum(value + 1)
+  			html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(value) + "-" + meta.rawNumToDisplayNum(value + 1)
 	  		}
+        console.log(value)
   		}
 
   		function updateSliderValueSinglePage()
   		{
-  			var value = slider.value
-  			sliderOutput.innerHTML = getPageDisplayNum(value)
+  			var value = html.slider.value
+  			html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(value)
   		}
 
-  		function getPageDisplayNum(num)
+  		function rawNumToDisplayNum(num)
   		{
   			if (num <=4)
   			{
@@ -242,12 +286,8 @@
       function initNavButtons()
       {
     		var increment = isSpread ? 2 : 1
-
         var prevUrl = createParamString(getParams({addPages: -increment}))
         var nextUrl = createParamString(getParams({addPages: increment}))
-    		// var prevUrl = "?page=" + Math.max((basePageNum - increment), pageMin) + "&spread=" + isSpread
-    		// var nextUrl = "?page=" + Math.min((basePageNum + increment), PageMax) + "&spread=" + isSpread
-
         document.getElementById("prev-link").href = prevUrl
         document.getElementById("next-link").href = nextUrl
       }
@@ -262,7 +302,7 @@
 
       function getParams(changes = {})
       {
-        var page = changes.setPage || addPages(changes.addPages || 0);
+        var page = changes.setPage == undefined ? addPagesClamped(changes.addPages || 0) : changes.setPage;
         var spread = changes.isSpread == undefined ? isSpread : changes.isSpread
         
         return {
@@ -271,44 +311,34 @@
         }
       }
 
-      function addPages(increment)
+      function addPagesClamped(increment)
       {
-        return Math.min(Math.max(basePageNum + increment, 0), PageMax);
+        return Math.min(Math.max(basePageNum + increment, meta.pageMin), meta.pageMax);
       }
 
   		function createPage(index)
   		{
-	  		var div = document.createElement("div")
-	  		div.style = "height: 100%; width: 100%; display: flex; align-items: center; align-content: center; justify-content: center;"
 
-	  		if (index < pageMin || index > PageMax)
-	  		{
-	  			return div
-	  		}
-
-	  		if (index == 4)
-	  		{
-	  			div.innerHTML = "<p>After the defeat of Emperor Palpatine and before Rey's trip to Tatooine...</p>"
-	  			return div
-	  		}
-
-  			var src = "jpg/" + index.toString().padStart(2, "0") + ".jpg"
-	  		var img = document.createElement("img")
-	  		img.src = src
-	  		img.setAttribute("class", "page")
-	  		div.appendChild(img)
-        return img
-	  		return div
+        return createPageImage(index)
   		}
 
-      function getClassString()
+      function createPageImage(index)
+      {
+        var src = meta.getImgUrl(index)
+        var img = document.createElement("img")
+        img.src = src
+        img.setAttribute("class", "page")
+        return img
+      }
+
+      function getPageHolderClassString()
       {
         return `${isSpread ? "spread" : "single-page"} ${windowIsWiderThanLayout() ? "scale-to-height" : "scale-to-width"}`
       }
 
       function setPageHolderClass()
       {
-        pageHolder.setAttribute("class", getClassString())
+        html.pageHolder.setAttribute("class", getPageHolderClassString())
       }
 
 
