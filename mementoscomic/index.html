@@ -185,6 +185,15 @@
         font-family: sans-serif;
       }
 
+      #fullscreen-button {
+        background-color: #fff;
+        background-image: url("fullscreen.png")
+        background-position: center;
+        background-size: contain;
+        width: 50px;
+        height: 50px;
+      }
+
     </style>
 
   </head>
@@ -210,6 +219,7 @@
     		</div>
         <input id="slider" type="range" min="1" max="40" value="1" class="slider" style= "background: #fff; width: 80%;">
   		  <span id ="slider-output" style = "width: 10%; font-size: 1.25em; font-face: sans-serif; text-align: left;">1</span>
+        <!-- <button id="fullscreen-button"> </button> -->
         <button id="show-instructions">?</button>
   		</div>
 
@@ -360,14 +370,6 @@
           }
       // })()
 
-      function generatePageHTML(){
-        var pageNums = isSpread ? getSpreadPageNums(basePageNum) : [basePageNum]
-        for (var i = 0; i < pageNums.length; i++)
-        {
-          html.pageHolder.appendChild(createPage(pageNums[i]))
-        }
-      }
-
       function initSlider()
       {
     		if (isSpread)
@@ -461,19 +463,35 @@
         return Math.min(Math.max(basePageNum + increment, meta.pageMin), meta.pageMax);
       }
 
-  		function createPage(index)
-  		{
+      function generatePageHTML(){
+        var imageLoadPromises = []
+        var pageNums = isSpread ? getSpreadPageNums(basePageNum) : [basePageNum]
+        for (var i = 0; i < pageNums.length; i++)
+        {
+          imageLoadPromises.push(createPageImage(pageNums[i]))
+          // html.pageHolder.appendChild(createPage(pageNums[i]))
+        }
+        Promise.all(imageLoadPromises).then(values => {
+          var sortedImages = values.sort((a, b) => a.index > b.index)
+          sortedImages.forEach(e => html.pageHolder.appendChild(e.img))
+        })
+      }
 
-        return createPageImage(index)
-  		}
+  		// function createPage(index)
+  		// {
+
+    //     return createPageImage(index)
+  		// }
 
       function createPageImage(index)
       {
-        var src = meta.getImgUrl(index)
-        var img = document.createElement("img")
-        img.src = src
-        img.setAttribute("class", "page")
-        return img
+        return new Promise(resolve => {
+          var src = meta.getImgUrl(index)
+          var img = document.createElement("img")
+          img.setAttribute("class", "page")
+          img.addEventListener("load", () => resolve({index: index, img: img}))
+          img.src = src
+        })
       }
 
       function getPageHolderClassString()
