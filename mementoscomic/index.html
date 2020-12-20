@@ -54,14 +54,14 @@
         left: 0;
       }
 
-      /*.ftue #nav-links #instructions {
+      .ftue #instructions {
         visibility: visible;
         animation-name: fadeOut;
         animation-duration: 1s;
-        animation-delay: 2s;
+        animation-delay: 4s;
         animation-iteration-count: 1;
         animation-fill-mode: forwards;
-      }*/
+      }
 
       @keyframes fadeOut {
         from {opacity: 1; visibility: visible;}
@@ -289,9 +289,11 @@
 
       function toggleInstructionsVisibility()
       {
-        html.instructions.style.visibility == "visible" ? html.instructions.style.visibility = "hidden" : html.instructions.style.visibility = "visible"
+        // html.instructions.style.animationPlayState = "paused"
         html.instructions.style.animationFillMode = "none"
-        html.instructions.style.animationPlayState = "paused"
+        html.instructions.style.visibility = html.instructions.style.visibility == "hidden" ? "visible" : "hidden"
+        isFtue = false
+        setPageHolderClass()
       }
 
       var util = {
