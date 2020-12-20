@@ -23,7 +23,7 @@
         flex-direction: column;
       }
 
-      #page-holder {
+      #display-container {
         position: relative;
         display: flex;
         flex-direction: row;
@@ -37,6 +37,22 @@
         animation-timing-function: ease-in;
         animation-iteration-count: 1;
         animation-fill-mode: forwards;
+      }
+
+      #page-holder {
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: 100%;
+        /*flex-shrink: 1;*/
+        /*animation-duration: 0.25s;
+        animation-timing-function: ease-in;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;*/
       }
 
       @keyframes fade-in {
@@ -90,6 +106,7 @@
         top: 0;
         width: 50%;
         height: 100%;
+        cursor: pointer;
       }
 
       #prev-link div {
@@ -167,7 +184,7 @@
 
       #slider-holder {
         flex: 1;
-        flex-shrink: none;
+        /*flex-shrink: none;*/
       }
 
       #slider {
@@ -230,8 +247,9 @@
 
     <div id="container">
 
-  		<div id = "page-holder">
+  		<div id = "display-container">
 
+        <div id="page-holder"></div>
         <div id="nav-links">
           <a id="prev-link"><div style="position: absolute; left: 0; top: 0; width: 50%; height: 100%;"> </div></a>
           <a id="next-link"><div style="position: absolute: right: 0; top: 0; width: 50%; height: 100%;"> </div></a>
@@ -267,6 +285,7 @@
 
       const html = {
         container: document.getElementById("container"),
+        displayContainer: document.getElementById("display-container"),
         pageHolder: document.getElementById("page-holder"),
         slider: document.getElementById("slider"),
         sliderOutput: document.getElementById("slider-output"),
@@ -286,7 +305,7 @@
 
     		function windowRatio()
         {
-          return html.pageHolder.clientWidth / html.pageHolder.clientHeight
+          return html.displayContainer.clientWidth / html.displayContainer.clientHeight
         }
 
     		function windowIsWiderThanSinglePage()
@@ -431,7 +450,7 @@
       function fadeToNewUrl(url)
       {
         setTimeout(() => window.location.href = url, 250)
-        html.pageHolder.style.animationName = "fadeOut"
+        html.displayContainer.style.animationName = "fadeOut"
       }
 
   		function updateSliderValueSpread()
@@ -502,12 +521,12 @@
         for (var i = 0; i < pageNums.length; i++)
         {
           imageLoadPromises.push(createPageImage(pageNums[i]))
-          // html.pageHolder.appendChild(createPage(pageNums[i]))
+          // html.displayContainer.appendChild(createPage(pageNums[i]))
         }
         Promise.all(imageLoadPromises).then(values => {
           var sortedImages = values.sort((a, b) => a.index > b.index)
           sortedImages.forEach(e => html.pageHolder.appendChild(e.img))
-          html.pageHolder.style.animationName = "fade-in"
+          html.displayContainer.style.animationName = "fade-in"
         })
       }
 
