@@ -13,25 +13,134 @@
         font-family: sans-serif;
       }
 
+      #container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #page-holder {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: 100%;
+        flex-shrink: 1;
+      }
+
+      #nav-links {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      #nav-links #instructions {
+        background-color: #fff;
+        visibility: hidden;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      .ftue #nav-links #instructions {
+        visibility: visible;
+        animation-name: fadeOut;
+        animation-duration: 1s;
+        animation-delay: 2s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+      }
+
+      @keyframes fadeOut {
+        from {opacity: 1; visibility: visible;}
+        to {opacity: 0; visibility: hidden;}
+      }
+
+      .spread #nav-links #instructions {
+        background-image: url('ui/instructions-spread.jpg');
+      }
+
+      .single-page #nav-links #instructions {
+        background-image: url('ui/instructions-single.jpg');
+      }
+
+      #nav-links div {
+        position: absolute;
+        top: 0;
+        width: 50%;
+        height: 100%;
+      }
+
+      #prev-link div {
+        left: 0;
+      }
+
+      #next-link div {
+        right: 0;
+      }
+
       .page{
         flex: 0;
       }
 
-      #page-holder.scale-to-height .page{
+      .scale-to-height .page{
         height: 100%;
         width: auto;
       }
 
-      #page-holder.scale-to-width .page{
+      .scale-to-width .page{
         height: auto;
       }
        
-      #page-holder.scale-to-width.spread .page {
+      .scale-to-width.spread .page {
         width: 50%;
       }
 
-      #page-holder.scale-to-width.single-page .page{
+      .scale-to-width.single-page .page{
         width: 100%;
+      }
+
+      #single-page-button, #spread-button{
+        height: 50px;
+        width: 50px;
+        border: 2px solid #333;
+        background-position: center;
+        background-size: contain;
+        border: 2px solid #333;
+      }
+
+      #single-page-button {
+        background-image: url("ui/single-page-view.png");
+        border-right-width: 1px;
+        border-top-left-radius: 25%;
+        border-bottom-left-radius: 25%;
+      }
+
+      #spread-button {
+        background-image: url("ui/double-page-view.png");
+        border-left-width: 1px;
+        border-top-right-radius: 25%;
+        border-bottom-right-radius: 25%;
+      }
+
+      .spread #spread-button {
+        background-color: #777;
+      }
+
+      .single-page #single-page-button {
+        background-color: #777;
       }
 
       #slidecontainer {
@@ -40,7 +149,7 @@
 
       #slider {
         -webkit-appearance: none;
-        width: 100%;
+        /*width: 60%;*/
         height: 10px;
         background: #fff;
         outline: none;
@@ -66,29 +175,36 @@
         background: #4CAF50;
       }
 
+      #slider-output {
+        font-family: sans-serif;
+      }
+
     </style>
 
   </head>
 
   <body style = "text-align: center; background-color: #000; color: #fff; font-face: sans-serif;">
 
-    <div id="container" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; flex-direction: column;">
+    <div id="container">
 
-  		<div id = "page-holder" style = "position: relative; display: flex; flex-direction: row; align-content: center; align-items: center; justify-content: center; text-align: center; height: 100%; flex-shrink: 1;">
+  		<div id = "page-holder">
 
-        <div id="nav-links" style="position: absolute; width: 100%; height: 100%;">
+        <div id="nav-links">
           <a id="prev-link"><div style="position: absolute; left: 0; top: 0; width: 50%; height: 100%;"> </div></a>
           <a id="next-link"><div style="position: absolute: right: 0; top: 0; width: 50%; height: 100%;"> </div></a>
+          <div id="instructions"></div>
         </div>
 
   		</div>
 
-  		<div id="slidecontainer" style = "display:flex; flex-direction: row; align-items: center; align-content: center; justify-content: center; text-align: center; width: 100%;">
-    		<div id = "displaybutton-holder" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center; height: 50px; width: 10%;">
-    			<a id="display-button-anchor"><button id="display-button"></button></a>
+  		<div id="slidecontainer" style = "display:flex; flex-direction: row; align-items: center; align-content: center; justify-content: center; text-align: center; width: 100%; height: 70px;">
+    		<div id = "displaybutton-holder" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center;">
+    			<a id="single-page-button-anchor"><button id="single-page-button"></button></a>
+          <a id="spread-button-anchor"><button id="spread-button"></button></a>
     		</div>
-        <input id="slider" type="range" min="1" max="40" value="1" class="html.slider" style= "-webkit-appearance: none; appearance: none; background: #fff; width: 80%;">
+        <input id="slider" type="range" min="1" max="40" value="1" class="slider" style= "-webkit-appearance: none; appearance: none; background: #fff; width: 80%;">
   		  <span id ="slider-output" style = "width: 10%; font-size: 1.25em; font-face: sans-serif; text-align: left;">1</span>
+        <button id="show-instructions">?</button>
   		</div>
 
     </div>
@@ -107,9 +223,12 @@
       }
 
       const html = {
+        container: document.getElementById("container"),
         pageHolder: document.getElementById("page-holder"),
         slider: document.getElementById("slider"),
         sliderOutput: document.getElementById("slider-output"),
+        showInstructionsButton : document.getElementById("show-instructions"),
+        instructions: document.getElementById("instructions")
       }
 
   		const params = new URLSearchParams(window.location.search)
@@ -151,6 +270,7 @@
       })()
 
   		var isSpread
+      var isFtue = false
 
       init()
       initNavButtons()
@@ -159,6 +279,14 @@
       generatePageHTML()
       setPageHolderClass()
 
+      html.showInstructionsButton.onclick = html.instructions.onclick = toggleInstructionsVisibility
+
+      function toggleInstructionsVisibility()
+      {
+        html.instructions.style.visibility == "visible" ? html.instructions.style.visibility = "hidden" : html.instructions.style.visibility = "visible"
+        html.instructions.style.animationFillMode = "none"
+        html.instructions.style.animationPlayState = "paused"
+      }
 
       var util = {
         throttleAndDebounceFunction: function(func, throttleDelay = 200, debounceDelay = 200)
@@ -184,17 +312,24 @@
       {
     		if (params.has("spread"))
     		{
-     			isSpread = params.get("spread") == "true" || false
+     			isSpread = params.get("spread") == "true"
     		}
     		else {
     			isSpread = display.windowIsWiderThanSpread()
     		}
+
+        if (params.has("ftue"))
+        {
+          isFtue = params.get("ftue") == "true"
+        } else {
+          isFtue = true
+        }
       }
 
       function initDisplayToggle()
       {
-        document.getElementById("display-button-anchor").href = createParamString(getParams({isSpread: !isSpread}))
-        document.getElementById("display-button").innerHTML = isSpread ? "Display: single page" : "Display: spread"
+        document.getElementById("single-page-button-anchor").href = createParamString(getParams({isSpread: false, isFtue: true}))
+        document.getElementById("spread-button-anchor").href = createParamString(getParams({isSpread: true, isFtue: true}))
       }
 
       function windowIsWiderThanLayout()
@@ -304,10 +439,12 @@
       {
         var page = changes.setPage == undefined ? addPagesClamped(changes.addPages || 0) : changes.setPage;
         var spread = changes.isSpread == undefined ? isSpread : changes.isSpread
+        var ftue = changes.isFtue == undefined ? false : changes.isFtue
         
         return {
           page,
-          spread
+          spread,
+          ftue
         }
       }
 
@@ -333,12 +470,12 @@
 
       function getPageHolderClassString()
       {
-        return `${isSpread ? "spread" : "single-page"} ${windowIsWiderThanLayout() ? "scale-to-height" : "scale-to-width"}`
+        return `${isSpread ? "spread" : "single-page"} ${windowIsWiderThanLayout() ? "scale-to-height" : "scale-to-width"} ${isFtue ? "ftue" : ""}`
       }
 
       function setPageHolderClass()
       {
-        html.pageHolder.setAttribute("class", getPageHolderClassString())
+        html.container.setAttribute("class", getPageHolderClassString())
       }
 
 
