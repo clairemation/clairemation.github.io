@@ -33,6 +33,16 @@
         text-align: center;
         height: 100%;
         flex-shrink: 1;
+        animation-name: fade-in;
+        animation-duration: 0.25s;
+        animation-timing-function: ease-in;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+      }
+
+      @keyframes fade-in {
+        from {opacity: 0;}
+        to {opacity: 1;}
       }
 
       #nav-links {
@@ -346,8 +356,8 @@
 
       function initDisplayToggle()
       {
-        document.getElementById("single-page-button-anchor").href = createParamString(getParams({isSpread: false, isFtue: true}))
-        document.getElementById("spread-button-anchor").href = createParamString(getParams({isSpread: true, isFtue: true}))
+        document.getElementById("single-page-button-anchor").onclick = () => fadeToNewUrl(createParamString(getParams({isSpread: false, isFtue: true})))
+        document.getElementById("spread-button-anchor").onclick = () => fadeToNewUrl(createParamString(getParams({isSpread: true, isFtue: true})))
       }
 
       function windowIsWiderThanLayout()
@@ -396,9 +406,15 @@
         html.slider.oninput = isSpread ? updateSliderValueSpread : updateSliderValueSinglePage
         html.slider.onmouseup = (() => {
           var pageNum = isSpread ? html.slider.value * 2 : html.slider.value
-          window.location.href = createParamString(getParams({setPage: pageNum}))
+          fadeToNewUrl(createParamString(getParams({setPage: pageNum})))
         })
         html.slider.ontouchstart = () => window.ontouchend = html.slider.onmouseup
+      }
+
+      function fadeToNewUrl(url)
+      {
+        setTimeout(() => window.location.href = url, 250)
+        html.pageHolder.style.animationName = "fadeOut"
       }
 
   		function updateSliderValueSpread()
@@ -433,8 +449,8 @@
     		var increment = isSpread ? 2 : 1
         var prevUrl = createParamString(getParams({addPages: -increment}))
         var nextUrl = createParamString(getParams({addPages: increment}))
-        document.getElementById("prev-link").href = prevUrl
-        document.getElementById("next-link").href = nextUrl
+        document.getElementById("prev-link").onclick = () => fadeToNewUrl(prevUrl)
+        document.getElementById("next-link").onclick = () => fadeToNewUrl(nextUrl)
       }
 
       function createParamString(params = {})
