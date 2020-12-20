@@ -33,7 +33,6 @@
         text-align: center;
         height: 100%;
         flex-shrink: 1;
-        /*animation-name: fade-in;*/
         animation-duration: 0.25s;
         animation-timing-function: ease-in;
         animation-iteration-count: 1;
@@ -122,6 +121,10 @@
         width: 100%;
       }
 
+      #displaybutton-holder {
+        flex: 0;
+      }
+
       #single-page-button, #spread-button{
         height: 50px;
         width: 50px;
@@ -158,10 +161,19 @@
         width: 100%;
       }
 
+      #slidecontainer > * {
+        padding: 1em;
+      }
+
+      #slider-holder {
+        flex: 1;
+        flex-shrink: none;
+      }
+
       #slider {
         -webkit-appearance: none;
-        /*width: 60%;*/
         height: 10px;
+        width: 100%;
         background: #fff;
         outline: none;
       }
@@ -186,13 +198,19 @@
         background: #4CAF50;
       }
 
-      #slider-output {
+      #slider-output-holder {
         font-family: sans-serif;
+        width: 4em;
+      }
+
+      #slider-output {
+        /*width: 10em;*/
       }
 
       #show-instructions {
         font-size: 1.5em;
         font-family: sans-serif;
+        flex: 0;
       }
 
       #fullscreen-button {
@@ -227,10 +245,9 @@
     			<a id="single-page-button-anchor"><button id="single-page-button"></button></a>
           <a id="spread-button-anchor"><button id="spread-button"></button></a>
     		</div>
-        <input id="slider" type="range" min="1" max="40" value="1" class="slider" style= "background: #fff; width: 80%;">
-  		  <span id ="slider-output" style = "width: 10%; font-size: 1.25em; font-face: sans-serif; text-align: left;">1</span>
-        <!-- <button id="fullscreen-button"> </button> -->
-        <button id="show-instructions">?</button>
+        <div id="slider-holder"><input id="slider" type="range" min="1" max="40" value="1" class="slider" style= "background: #fff;"></div>
+  		  <div id="slider-output-holder"><span id ="slider-output" style = "font-size: 1.25em; font-face: sans-serif; text-align: left;">1</span></div>
+        <div id="help-button-holder"><button id="show-instructions">?</button></div>
   		</div>
 
     </div>
