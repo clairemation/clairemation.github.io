@@ -8,12 +8,16 @@
 
     <style>
 
+      * {
+        font-family: sans-serif;
+      }
+
       p {
         font-size: 1.25em;
         font-family: sans-serif;
       }
 
-      #container {
+      #app {
         position: absolute;
         left: 0;
         top: 0;
@@ -21,6 +25,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        background-color: #444;
       }
 
       #display-container {
@@ -32,11 +37,8 @@
         justify-content: center;
         text-align: center;
         height: 100%;
+        margin: 10px 10px 20px 10px;
         flex-shrink: 1;
-        animation-duration: 0.25s;
-        animation-timing-function: ease-in;
-        animation-iteration-count: 1;
-        animation-fill-mode: forwards;
       }
 
       #page-holder {
@@ -48,11 +50,18 @@
         justify-content: center;
         text-align: center;
         height: 100%;
-        /*flex-shrink: 1;*/
-        /*animation-duration: 0.25s;
+      }
+
+      #page-holder.scale-to-width {
+        height: unset;
+      }
+
+      .fade-in {
+        animation-name: fade-in;
+        animation-duration: 0.25s;
         animation-timing-function: ease-in;
         animation-iteration-count: 1;
-        animation-fill-mode: forwards;*/
+        animation-fill-mode: forwards;
       }
 
       @keyframes fade-in {
@@ -60,45 +69,22 @@
         to {opacity: 1;}
       }
 
-      #nav-links {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-
-      #instructions {
-        background-color: #fff;
-        visibility: hidden;
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-      }
-
-      .ftue #instructions {
-        visibility: visible;
-        animation-name: fadeOut;
-        animation-duration: 1s;
-        animation-delay: 4s;
+      .fade-out {
+        animation-name: fade-out;
+        animation-duration: 0.25s;
         animation-iteration-count: 1;
         animation-fill-mode: forwards;
       }
 
-      @keyframes fadeOut {
+      @keyframes fade-out {
         from {opacity: 1; visibility: visible;}
         to {opacity: 0; visibility: hidden;}
       }
 
-      .spread #instructions {
-        background-image: url('instructions-spread.jpg');
-      }
-
-      .single-page  #instructions {
-        background-image: url('instructions-single.jpg');
+      #nav-links {
+        position: absolute;
+        width: 100%;
+        height: 100%;
       }
 
       #nav-links div {
@@ -110,36 +96,86 @@
       }
 
       #prev-link div {
+        position: absolute;
         left: 0;
+        top: 0;
+        width: 50%;
+        height: 100%;
       }
 
       #next-link div {
+        position: absolute;
         right: 0;
+        top: 0;
+        width: 50%;
+        height: 100%;
       }
 
-      .page{
-        flex: 0;
+      #page-holder div.page {
+        box-shadow: 10px 10px 30px 0px #000;
+      }
+
+      #page-holder div.page:after {
+        content: " ";
+        mix-blend-mode: darken;
+        position: absolute;
+        display: block;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #page-holder div.page:only-child:after {
+        background: linear-gradient(90deg,
+          rgba(0,0,0,25%) 0%,
+          rgba(0, 0, 0, 0) 4%,
+          
+          rgba(0,0,0,0) 96%,
+          rgba(0,0,0,25%) 100%
+          )
+      }
+
+      #page-holder div.page:not(:only-child):after {
+        background: linear-gradient(90deg,
+          rgba(0,0,0,25%) 0%,
+          rgba(0, 0, 0, 0) 8%,
+          rgba(0, 0, 0, 0) 96%,
+          rgba(0, 0, 0, 15%) 98%,
+          rgba(0,0,0,55%) 100%
+          )
+      }
+
+      #page-holder div.page:nth-child(2):after {
+        background: linear-gradient(270deg,
+          rgba(0,0,0,25%) 0%,
+          rgba(0, 0, 0, 0) 8%,
+          rgba(0, 0, 0, 0) 96%,
+          rgba(0, 0, 0, 15%) 98%,
+          rgba(0,0,0,55%) 100%
+          )
+      }
+
+      #page-holder div.page:nth-child(2) {
+       border-left: 1px solid #666;
+      }
+
+      .page {
+        display: block;
+        position: relative;
+        width: 100%;
       }
 
       .scale-to-height .page{
         height: 100%;
         width: auto;
+        display: block;
       }
 
       .scale-to-width .page{
         height: auto;
-      }
-       
-      .scale-to-width.spread .page {
-        width: 50%;
-      }
-
-      .scale-to-width.single-page .page{
+        display: block;
         width: 100%;
-      }
-
-      #displaybutton-holder {
-        flex: 0;
       }
 
       #single-page-button, #spread-button{
@@ -166,25 +202,30 @@
         border-bottom-right-radius: 25%;
       }
 
-      .spread #spread-button {
-        background-color: #555;
+      .disabled {
+        background-color: #555 !important;
       }
 
-      .single-page #single-page-button {
-        background-color: #555;
-      }
-
-      #slidecontainer {
+      #ui-container {
         width: 100%;
+        background-color: #000;
       }
 
-      #slidecontainer > * {
+
+      #show-help {
+        font-size: 1.5em;
+        font-family: sans-serif;
+        flex: 0;
+      }
+
+
+      #ui-container > * {
         padding: 1em;
       }
 
       #slider-holder {
         flex: 1;
-        /*flex-shrink: none;*/
+        position: relative;
       }
 
       #slider {
@@ -221,23 +262,189 @@
       }
 
       #slider-output {
-        /*width: 10em;*/
+        font-size: 1.25em;
+        font-face: sans-serif;
+        text-align: left;
       }
 
-      #show-instructions {
-        font-size: 1.5em;
-        font-family: sans-serif;
-        flex: 0;
+      #help-button-holder {
+        position: relative;
       }
 
       #fullscreen-button {
         background-color: #fff;
-        background-image: url("fullscreen.png")
+        background-image: url("../fullscreen.png")
         background-position: center;
         background-size: contain;
         width: 50px;
         height: 50px;
       }
+
+      .tooltip {
+        visibility: hidden;
+        position: absolute;
+        width: 200px;
+        
+        z-index: 6;
+        top: -140%;
+        
+        filter: drop-shadow(2px 4px 6px black);
+      }
+
+      .show-help .tooltip {
+        visibility: visible;
+        animation-duration: 0.25s;
+        animation-name: fade-in;
+      }
+
+      .tooltip p {
+        position: relative;
+        left: 0;
+        top: 0;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 15px;
+        font-size: 1.1em;
+        border: 2px solid white;
+      }
+
+      .tooltip.v-middle {
+        top: 50%;
+        transform: translateY(-70%);
+      }
+
+      .tooltip.left {
+        left: 10px;
+      } 
+
+      .tooltip.middle {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .tooltip.right {
+        right: 10px;
+      }
+
+      .tooltip p:before {
+        content: "";
+        position: absolute;
+        border-width: 17px;
+        border-style: solid;
+        margin-left: -2px;
+        border-color: white transparent transparent transparent;
+      }
+
+      .tooltip p:after {
+        content: "";
+        position: absolute;
+        border-width: 15px;
+        border-style: solid;
+        border-color: black transparent transparent transparent;
+      }
+
+      .tooltip.bottom p:before {
+        top: 100%;
+      }
+
+      .tooltip.bottom p:after {
+        top: 100%;
+      }
+
+      .tooltip.bottom.left p:before {
+        left: 20px;
+      }
+
+      .tooltip.bottom.left p:after {
+        left: 20px;
+      }
+
+      .tooltip.bottom.middle p:before {
+        left: 87px;
+      }
+
+      .tooltip.bottom.middle p:after {
+        left: 87px;
+      }
+
+      .tooltip.bottom.right p:before {
+        margin-right: -2px;
+        right: 20px;
+      }
+
+      .tooltip.bottom.right p:after {
+        right: 20px;
+      }
+
+      .tooltip.v-middle p:before {
+        border: none;
+      }
+
+      .tooltip.v-middle p:after {
+        border: none;
+      }
+
+      #modal-overlay {
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,40%);
+        z-index: 2;
+      }
+
+      .show-help #modal-overlay {
+        visibility: visible;
+        animation-duration: 0.25s;
+        animation-name: fade-in;
+      }
+
+      .fade-help .tooltip, .fade-help #modal-overlay{
+        animation-name: fade-out;
+        animation-duration: 0.25s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+      }
+
+      #ui-container {
+        display:flex;
+        flex-direction: row;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 70px;
+      }
+
+      #open-ui-button {
+        display: none;
+        /*width: 100%;
+        background-color: #000;
+        color: #fff;
+        border-bottom: 1px solid #333;
+        font-size: 1.25em;
+        font-face: sans-serif;*/
+      }
+
+      #displaybutton-holder {
+        flex: 0;
+        position: relative;
+        display:flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      /*#ui-panel {
+        margin-top: -100%;
+        transform: translateY(100%);
+      }*/
 
     </style>
 
@@ -245,320 +452,45 @@
 
   <body style = "text-align: center; background-color: #000; color: #fff; font-face: sans-serif;">
 
-    <div id="container">
+    <div id="app" data-reader-app-object-name="appContainer">
 
-  		<div id = "display-container">
+      <div class="tooltip v-middle left"><p>Click left side to page back</p></div>
+      <div class="tooltip v-middle right"><p>Click right side to page forward</p></div>
 
-        <div id="page-holder"></div>
+      <div id = "display-container" data-reader-app-object-name="displayContainer">
+        <div id="page-holder" data-reader-app-object-name="pageContainer" class></div>
         <div id="nav-links">
-          <a id="prev-link"><div style="position: absolute; left: 0; top: 0; width: 50%; height: 100%;"> </div></a>
-          <a id="next-link"><div style="position: absolute: right: 0; top: 0; width: 50%; height: 100%;"> </div></a>
+          <a id="prev-link"><div data-reader-app-object-name="prevButton"> </div></a>
+          <a id="next-link"><div data-reader-app-object-name="nextButton"> </div></a>
         </div>
-        <div id="instructions"></div>
+      </div>
 
-  		</div>
+      <div id="ui-panel">
+        <div id="open-ui-button">^</div>
+        <div id="ui-container">
+          <div id = "displaybutton-holder">
+            <div class="tooltip bottom left"><p>Choose single page or full-spread view</p></div>
+            <a id="single-page-button-anchor"><button id="single-page-button" data-reader-app-object-name="singlePageButton"></button></a>
+            <a id="spread-button-anchor"><button id="spread-button" data-reader-app-object-name="spreadButton"></button></a>
+          </div>
+          <div id="slider-holder">
+            <div class="tooltip bottom middle"><p>Drag slider to go to a specific page</p></div>
+            <input id="slider" data-reader-app-object-name="slider" type="range" min="1" max="40" value="1" class="slider" style= "background: #fff;">
+            <label for="slider" id ="slider-output" data-reader-app-object-name="sliderOutput">1</label>
+          </div>
+          <div id="help-button-holder">
+            <div class="tooltip bottom right"><p>View/hide help</p></div>
+            <button name="help-button" id="show-help" data-reader-app-object-name="helpButton">?</button>
+          </div>
+        </div>
+      </div>
 
-  		<div id="slidecontainer" style = "display:flex; flex-direction: row; align-items: center; align-content: center; justify-content: center; text-align: center; width: 100%; height: 70px;">
-    		<div id = "displaybutton-holder" style = "display:flex; flex-direction: row; align-items: center; justify-content: center; text-align: center;">
-    			<a id="single-page-button-anchor"><button id="single-page-button"></button></a>
-          <a id="spread-button-anchor"><button id="spread-button"></button></a>
-    		</div>
-        <div id="slider-holder"><input id="slider" type="range" min="1" max="40" value="1" class="slider" style= "background: #fff;"></div>
-  		  <div id="slider-output-holder"><span id ="slider-output" style = "font-size: 1.25em; font-face: sans-serif; text-align: left;">1</span></div>
-        <div id="help-button-holder"><button id="show-instructions">?</button></div>
-  		</div>
-
+      <div id = "modal-overlay"></div>
     </div>
 
 
-  	<script>
-      const meta = {
-        title: "Mementos: A Star Wars Fancomic",
-        pageWidth: 1350,
-        pageHeight: 1800,
-        pageMin: 0,
-        pageMax: 41,
-        complete: false,
-        getImgUrl: index => `jpg/${index.toString().padStart(2, "0")}.jpg`,
-        rawNumToDisplayNum: num => num <= 4 ? (["", "i", "ii", "cover", "note"])[num] : (num - 4).toString()
-      }
+    <script src = "main.js"></script>
 
-      const html = {
-        container: document.getElementById("container"),
-        displayContainer: document.getElementById("display-container"),
-        pageHolder: document.getElementById("page-holder"),
-        slider: document.getElementById("slider"),
-        sliderOutput: document.getElementById("slider-output"),
-        showInstructionsButton : document.getElementById("show-instructions"),
-        instructions: document.getElementById("instructions")
-      }
-
-  		const params = new URLSearchParams(window.location.search)
-  		const basePageNum = parseInt(params.get("page")) || 1
-
-
-      const display = (function() {
-        var pageWidth = meta.pageWidth,
-          pageHeight = meta.pageHeight
-    		var pageAspect = () => pageWidth / pageHeight
-    		var spreadAspect = () => pageWidth * 2 / pageHeight
-
-    		function windowRatio()
-        {
-          return html.displayContainer.clientWidth / html.displayContainer.clientHeight
-        }
-
-    		function windowIsWiderThanSinglePage()
-        {
-          return windowRatio() >= pageAspect()
-        }
-    		
-        function windowIsWiderThanSpread()
-        {
-          return windowRatio() >= spreadAspect()
-        }
-
-        function setPageDimensions(xyArray)
-        {
-          pageWidth = xyArray[0]
-          pageHeight = xyArray[1]
-        }
-
-        return {
-          windowIsWiderThanSinglePage,
-          windowIsWiderThanSpread,
-          setPageDimensions
-        }
-      })()
-
-  		var isSpread
-      var isFtue = false
-
-      init()
-      initNavButtons()
-      initDisplayToggle()
-      initSlider()
-      generatePageHTML()
-      setPageHolderClass()
-
-      html.showInstructionsButton.onclick = html.instructions.onclick = toggleInstructionsVisibility
-
-      function toggleInstructionsVisibility()
-      {
-        // html.instructions.style.animationPlayState = "paused"
-        html.instructions.style.animationFillMode = "none"
-        html.instructions.style.visibility = html.instructions.style.visibility == "hidden" ? "visible" : "hidden"
-        isFtue = false
-        setPageHolderClass()
-      }
-
-      var util = {
-        throttleAndDebounceFunction: function(func, throttleDelay = 200, debounceDelay = 200)
-        {
-          var throttled = false
-          var timeout
-          return function(){
-            if (!throttled)
-            {
-              setPageHolderClass()
-              throttled = true
-              setTimeout(() => {throttled = false}, throttleDelay)
-            }
-            clearTimeout(timeout)
-            timeout = setTimeout(func, debounceDelay)
-          }      
-        }
-      }
-      
-      window.onresize = window.onorientationchange = util.throttleAndDebounceFunction(setPageHolderClass)
-
-      function init()
-      {
-    		if (params.has("spread"))
-    		{
-     			isSpread = params.get("spread") == "true"
-    		}
-    		else {
-    			isSpread = display.windowIsWiderThanSpread()
-    		}
-
-        if (params.has("ftue"))
-        {
-          isFtue = params.get("ftue") == "true"
-        } else {
-          isFtue = true
-        }
-      }
-
-      function initDisplayToggle()
-      {
-        document.getElementById("single-page-button-anchor").onclick = () => fadeToNewUrl(createParamString(getParams({isSpread: false, isFtue: true})))
-        document.getElementById("spread-button-anchor").onclick = () => fadeToNewUrl(createParamString(getParams({isSpread: true, isFtue: true})))
-      }
-
-      function windowIsWiderThanLayout()
-      {
-        return (isSpread && (display.windowIsWiderThanSpread())) || (!isSpread && display.windowIsWiderThanSinglePage())
-      }
-
-      var pageNums
-      function getSpreadPageNums(baseIndex)
-      {
-        // even on left, odd on right
-        // return function(baseIndex)
-        //   {
-            if (pageNums == undefined)
-            {
-              var offsetFromLeft = baseIndex % 2 == 0
-              pageNums = [baseIndex - (1 - offsetFromLeft), baseIndex + offsetFromLeft]
-            }
-            return pageNums
-          }
-      // })()
-
-      function initSlider()
-      {
-    		if (isSpread)
-    		{
-          var pageStart = getSpreadPageNums(basePageNum)[0]
-          var pageEnd = getSpreadPageNums(basePageNum)[1]
-    			html.slider.min = 0
-    			html.slider.max = meta.pageMax / 2
-    			html.slider.value = pageStart / 2
-    			if (html.slider.value == 0)
-    			{
-    				html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(pageEnd)
-    			} else {
-  	  			html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(pageStart) + "-" + meta.rawNumToDisplayNum(pageEnd)
-  	  		}
-    		}
-    		else {
-    			html.slider.min = 1
-    			html.slider.max = meta.pageMax
-    			html.slider.value = basePageNum
-    			html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(basePageNum)
-    		}
-
-        html.slider.oninput = isSpread ? updateSliderValueSpread : updateSliderValueSinglePage
-        html.slider.onmouseup = (() => {
-          var pageNum = isSpread ? html.slider.value * 2 : html.slider.value
-          fadeToNewUrl(createParamString(getParams({setPage: pageNum})))
-        })
-        html.slider.ontouchstart = () => window.ontouchend = html.slider.onmouseup
-      }
-
-      function fadeToNewUrl(url)
-      {
-        setTimeout(() => window.location.href = url, 250)
-        html.displayContainer.style.animationName = "fadeOut"
-      }
-
-  		function updateSliderValueSpread()
-  		{
-  			var value = html.slider.value * 2
-  			if (value == 0){
-  				html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(value + 1)
-  			} else {
-  			html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(value) + "-" + meta.rawNumToDisplayNum(value + 1)
-	  		}
-  		}
-
-  		function updateSliderValueSinglePage()
-  		{
-  			var value = html.slider.value
-  			html.sliderOutput.innerHTML = meta.rawNumToDisplayNum(value)
-  		}
-
-  		function rawNumToDisplayNum(num)
-  		{
-  			if (num <=4)
-  			{
-  				return (["", "i", "ii", "cover", "note"])[num]
-  			}
-  			else {
-  				return (num - 4).toString()
-  			}
-  		}
-
-      function initNavButtons()
-      {
-    		var increment = isSpread ? 2 : 1
-        var prevUrl = createParamString(getParams({addPages: -increment}))
-        var nextUrl = createParamString(getParams({addPages: increment}))
-        document.getElementById("prev-link").onclick = () => fadeToNewUrl(prevUrl)
-        document.getElementById("next-link").onclick = () => fadeToNewUrl(nextUrl)
-      }
-
-      function createParamString(params = {})
-      {
-        var paramString = Object.keys(params).reduce((acc, key) => {
-          return acc + `&${key}=${params[key]}`
-        }, "?")
-        return paramString
-      }
-
-      function getParams(changes = {})
-      {
-        var page = changes.setPage == undefined ? addPagesClamped(changes.addPages || 0) : changes.setPage;
-        var spread = changes.isSpread == undefined ? isSpread : changes.isSpread
-        var ftue = changes.isFtue == undefined ? false : changes.isFtue
-        
-        return {
-          page,
-          spread,
-          ftue
-        }
-      }
-
-      function addPagesClamped(increment)
-      {
-        return Math.min(Math.max(basePageNum + increment, meta.pageMin), meta.pageMax);
-      }
-
-      function generatePageHTML(){
-        var imageLoadPromises = []
-        var pageNums = isSpread ? getSpreadPageNums(basePageNum) : [basePageNum]
-        for (var i = 0; i < pageNums.length; i++)
-        {
-          imageLoadPromises.push(createPageImage(pageNums[i]))
-          // html.displayContainer.appendChild(createPage(pageNums[i]))
-        }
-        Promise.all(imageLoadPromises).then(values => {
-          var sortedImages = values.sort((a, b) => a.index > b.index)
-          sortedImages.forEach(e => html.pageHolder.appendChild(e.img))
-          html.displayContainer.style.animationName = "fade-in"
-        })
-      }
-
-  		// function createPage(index)
-  		// {
-
-    //     return createPageImage(index)
-  		// }
-
-      function createPageImage(index)
-      {
-        return new Promise(resolve => {
-          var src = meta.getImgUrl(index)
-          var img = document.createElement("img")
-          img.setAttribute("class", "page")
-          img.addEventListener("load", () => resolve({index: index, img: img}))
-          img.src = src
-        })
-      }
-
-      function getPageHolderClassString()
-      {
-        return `${isSpread ? "spread" : "single-page"} ${windowIsWiderThanLayout() ? "scale-to-height" : "scale-to-width"} ${isFtue ? "ftue" : ""}`
-      }
-
-      function setPageHolderClass()
-      {
-        html.container.setAttribute("class", getPageHolderClassString())
-      }
-
-
-  	</script>
 
   </body>
 
