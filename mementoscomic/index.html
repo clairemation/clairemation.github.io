@@ -202,13 +202,18 @@
         border-bottom-right-radius: 25%;
       }
 
-      .disabled {
+      .disabled-button {
         background-color: #555 !important;
+      }
+
+      .enabled-button {
+        background-color: #fff;
       }
 
       #ui-container {
         width: 100%;
         background-color: #000;
+        overflow: hidden;
       }
 
 
@@ -216,11 +221,19 @@
         font-size: 1.5em;
         font-family: sans-serif;
         flex: 0;
+        padding: 0;
+        margin: 0;
+      }
+
+      #show-help label {
+        width: 100%;
+        height: 100%;
+        padding: 10px;
       }
 
 
       #ui-container > * {
-        padding: 1em;
+        padding: 0.5em;
       }
 
       #slider-holder {
@@ -281,7 +294,6 @@
       }
 
       .tooltip {
-        visibility: hidden;
         position: absolute;
         width: 200px;
         
@@ -291,10 +303,20 @@
         filter: drop-shadow(2px 4px 6px black);
       }
 
-      .show-help .tooltip {
+      #show-help-input:checked ~ * #ui-container {
+        overflow: visible;
+      }
+
+      #show-help-input:not(:checked) ~ .tooltip, #show-help-input:not(:checked) ~ * .tooltip {
+        visibility: hidden;
+        opacity: 0%;
+        transition: visibility 0.5s, opacity 0.5s;
+      }
+
+      #show-help-input:checked ~ .tooltip, #show-help-input:checked ~ * .tooltip {
         visibility: visible;
-        animation-duration: 0.25s;
-        animation-name: fade-in;
+        opacity: 100%;
+        transition: visibility 0.5s, opacity 0.5s;
       }
 
       .tooltip p {
@@ -387,34 +409,70 @@
       }
 
       #modal-overlay {
-        visibility: hidden;
+        /*visibility: hidden;*/
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255,255,255,40%);
+        background: rgba(255,255,255,65%);
         z-index: 2;
+        /*transition: background 0.5s;*/
+      }
+
+      .close-button {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        font-size: 2em;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #000;
+        cursor: pointer;
+      }
+
+      .close-button:active {
+        color: #fff;
       }
 
       .show-help #modal-overlay {
         visibility: visible;
-        animation-duration: 0.25s;
-        animation-name: fade-in;
       }
 
-      .fade-help .tooltip, .fade-help #modal-overlay{
+      #show-help-input:checked ~ #modal-overlay {
+        visibility: visible;
+        /*background: rgba(255,255,255,65%);*/
+        opacity: 100%;
+        transition: opacity 0.5s;
+      }
+
+      #show-help-input:not(:checked) ~ #modal-overlay {
+        visibility: hidden;
+        opacity: 0%;
+        transition: opacity 0.5s, visibility 0.5s;
+      }
+
+      .fade-in-help #modal-overlay, .fade-in-help .tooltip {
+        visibility: visible;
+        animation-name: fade-in;
+        animation-duration: 0.5s
+      }
+
+      .hide-help .tooltip {
+        visibility: hidden;
+      }
+
+      .fade-out-help .tooltip, .fade-out-help #modal-overlay{
+        visibility: visible;
         animation-name: fade-out;
-        animation-duration: 0.25s;
-        animation-iteration-count: 1;
-        animation-fill-mode: forwards;
+        animation-duration: 0.5s;
       }
 
       #ui-container {
         display:flex;
         flex-direction: row;
-        align-items: center;
-        align-content: center;
+        align-items: start;
         justify-content: center;
         text-align: center;
         width: 100%;
@@ -422,13 +480,39 @@
       }
 
       #open-ui-button {
-        display: none;
-        /*width: 100%;
+        display: block;
+        width: 100%;
         background-color: #000;
-        color: #fff;
+        /*color: #fff;*/
         border-bottom: 1px solid #333;
         font-size: 1.25em;
-        font-face: sans-serif;*/
+        font-face: sans-serif;
+        overflow: hidden;
+      }
+
+      #open-ui-button p {
+        transform: scaleX(1.5) rotate(270deg);
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        transition: transform 0.5s;
+      }
+
+      #open-ui-button:active {
+        background-color: #333;
+      }
+
+      #open-ui-button:active p{
+        color: #000;
+      }
+
+      #open-ui-input:checked ~ label p{
+        transform: scaleX(1.5) rotate(450deg);
+        transition: transform 0.5s;
+      }
+
+      input[type=checkbox]#open-ui-input {
+        display: none;
       }
 
       #displaybutton-holder {
@@ -441,10 +525,34 @@
         text-align: center;
       }
 
-      /*#ui-panel {
-        margin-top: -100%;
-        transform: translateY(100%);
-      }*/
+      input[type="checkbox"]#open-ui-input:not(:checked) ~ #ui-container {
+        height: 0;
+        transition: all 0.5s ease;
+      }
+
+      input[type="checkbox"]#open-ui-input:checked ~ #ui-container {
+        height: 70px;
+        overflow: visible;
+        transition: all 0.5s ease;
+      }
+
+      #show-help-input {
+        /*position: absolute;*/
+        display: none;
+      }
+
+      #show-help-input:checked + #clickable-overlay {
+        display: block;
+      }
+
+      #clickable-overlay {
+        display: none;
+        z-index: 10;
+        position: absolute;
+        width: 100%;
+        background-color: rgba(0,0,0,0%);
+        height: 100%;
+      }
 
     </style>
 
@@ -452,42 +560,71 @@
 
   <body style = "text-align: center; background-color: #000; color: #fff; font-face: sans-serif;">
 
-    <div id="app" data-reader-app-object-name="appContainer">
+    <div id="app" data-reader-app-element="appContainer" class="hide-help">
+
+      <input name="show-help-input" id="show-help-input" type="checkbox">
+      <label for="show-help-input" id="clickable-overlay"></label>
 
       <div class="tooltip v-middle left"><p>Click left side to page back</p></div>
       <div class="tooltip v-middle right"><p>Click right side to page forward</p></div>
 
-      <div id = "display-container" data-reader-app-object-name="displayContainer">
-        <div id="page-holder" data-reader-app-object-name="pageContainer" class></div>
+      <div id = "display-container" data-reader-app-element="displayContainer">
+        <div id="page-holder" data-reader-app-element="pageContainer" class></div>
         <div id="nav-links">
-          <a id="prev-link"><div data-reader-app-object-name="prevButton"> </div></a>
-          <a id="next-link"><div data-reader-app-object-name="nextButton"> </div></a>
+          <a id="prev-link"><div data-reader-app-element="prevButton"> </div></a>
+          <a id="next-link"><div data-reader-app-element="nextButton"> </div></a>
         </div>
       </div>
 
       <div id="ui-panel">
-        <div id="open-ui-button">^</div>
-        <div id="ui-container">
+        <input id="open-ui-input" name="open-ui-input" type="checkbox" onchange="sessionStorage.setItem('menuIsOpen', this.checked)">
+        <script>
+          document.querySelector("#open-ui-input").checked = sessionStorage["menuIsOpen"] == "true"
+        </script>
+        <label id="open-ui-button" for="open-ui-input" data-reader-app-element="menuButton"><p>&gt;</p></label>
+        <div id="ui-container" data-reader-app-element="menu">
           <div id = "displaybutton-holder">
             <div class="tooltip bottom left"><p>Choose single page or full-spread view</p></div>
-            <a id="single-page-button-anchor"><button id="single-page-button" data-reader-app-object-name="singlePageButton"></button></a>
-            <a id="spread-button-anchor"><button id="spread-button" data-reader-app-object-name="spreadButton"></button></a>
+            <a id="single-page-button-anchor"><button id="single-page-button" data-reader-app-element="singlePageButton"></button></a>
+            <a id="spread-button-anchor"><button id="spread-button" data-reader-app-element="spreadButton"></button></a>
           </div>
           <div id="slider-holder">
             <div class="tooltip bottom middle"><p>Drag slider to go to a specific page</p></div>
-            <input id="slider" data-reader-app-object-name="slider" type="range" min="1" max="40" value="1" class="slider" style= "background: #fff;">
-            <label for="slider" id ="slider-output" data-reader-app-object-name="sliderOutput">1</label>
+            <input id="slider" data-reader-app-element="slider" type="range" min="1" max="40" value="1" class="slider" style= "background: #fff;">
+            <label for="slider" id ="slider-output" data-reader-app-element="sliderOutput">1</label>
           </div>
           <div id="help-button-holder">
             <div class="tooltip bottom right"><p>View/hide help</p></div>
-            <button name="help-button" id="show-help" data-reader-app-object-name="helpButton">?</button>
+            <button name="help-button" id="show-help" data-reader-app-element="helpButton"><label for="show-help-input">?</label></button>
           </div>
         </div>
       </div>
 
-      <div id = "modal-overlay"></div>
+      <div id = "modal-overlay"><p class="close-button">&times;</div>
     </div>
 
+    <script>
+      const appContainer = document.querySelector("#app")
+      const menuOpenButton = document.querySelector("#open-ui-button")
+      const uiContainer = document.querySelector("#ui-container")
+
+      const resizeAppEvent = new CustomEvent("resizeapp", {bubbles: true})
+      const triggerResizeAppEvent = () => appContainer.dispatchEvent(resizeAppEvent)
+
+      window.addEventListener("resize", triggerResizeAppEvent)
+      window.addEventListener("orientationchange", triggerResizeAppEvent)
+
+      var triggerRaf
+      function triggerResizeAppEventEveryFrame()
+      {
+        triggerRaf = requestAnimationFrame(triggerResizeAppEventEveryFrame)
+        triggerResizeAppEvent()
+      }
+
+      uiContainer.addEventListener("transitionend", e => cancelAnimationFrame(triggerRaf))
+      menuOpenButton.addEventListener("click", e => triggerRaf = requestAnimationFrame(triggerResizeAppEventEveryFrame))
+    </script>
+   
 
     <script src = "main.js"></script>
 
