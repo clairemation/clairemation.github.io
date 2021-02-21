@@ -158,7 +158,7 @@ function getBookData()
 	  pageHeight: 1800,
 	  isComplete: false,
 	  pageOneIsOnRightSide: true,
-	  convertIndexToImgUrl: index => `../jpg/${index.toString().padStart(2, "0")}.jpg`,
+	  convertIndexToImgUrl: index => `./jpg/${index.toString().padStart(2, "0")}.jpg`,
 	  convertIndexToDisplayedPageNumber: num => num <= 4 ? (["", "i", "ii", "cover", "note"])[num] : (num - 4).toString()
 	}
 }
