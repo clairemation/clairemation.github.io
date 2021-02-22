@@ -2,7 +2,7 @@ startUp()
 
 function startUp()
 {
-  var inject = createLazyDependencyInject(getDependencyList())
+  var inject = createLazyDependencyInject(getDependencyGetterList())
   var {controller} = inject("controller")
   controller.start()
 }
@@ -219,17 +219,6 @@ function getDisplayHelpers(inject)
       html.innerHTML = text
     },
 
-    animateClassTransition: (html, states) =>
-    {
-      html.classList.remove(states.from)
-      return displayHelpers.startAnimationPromise(html, states.interim).then(() =>
-      {
-        html.classList.remove(states.interim)
-        html.classList.add(states.to)
-        return Promise.resolve()
-      })
-    },
-
     getAspectRatio: html =>
     {
       return html.clientWidth / html.clientHeight
@@ -238,10 +227,7 @@ function getDisplayHelpers(inject)
     startAnimationPromise: (html, className) =>
     {
       return new Promise(resolve => {
-        eventFunctions.setOneTimeEventCallback(html, "animationend", () => 
-        {
-          resolve(html)
-        })
+        eventFunctions.setOneTimeEventCallback(html, "animationend", () => resolve(html))
         html.classList.add(className)
       })
     },
@@ -254,13 +240,13 @@ function getDisplayHelpers(inject)
 
     loadElements: (html, urls, createElementPromise) =>
     {
-      var loadPromises = urls.map(url => createElementPromise(url))
+      var loadElementPromises = urls.map(url => createElementPromise(url))
       return new Promise(resolve => 
       {
-        Promise.all(loadPromises).then(children =>
+        Promise.all(loadElementPromises).then(elements =>
         {
-          children.forEach(child => html.appendChild(child))
-          resolve(children)
+          elements.forEach(element => html.appendChild(element))
+          resolve(elements)
         })
       })
     },
@@ -361,8 +347,8 @@ function getPageDisplayLogic(inject)
 		getPageSpreadContentAspectRatio: pages => {
 			const images = pages.reduce((arr, page) => arr.concat(Array.from(page.getElementsByTagName("img"))), [])
 			const totalWidth = images.reduce((totalWidth, img) => totalWidth + img.naturalWidth, 0)
-			const height = images.reduce((maxImgHeight, img) => img.naturalHeight > maxImgHeight ? img.naturalHeight : maxImgHeight, 0)
-			return totalWidth / height
+			const totalHeight = images.reduce((maxImgHeight, img) => img.naturalHeight > maxImgHeight ? img.naturalHeight : maxImgHeight, 0)
+			return totalWidth / totalHeight
 		},
 
 		createOptimizedAutoscalePageContainerCallback: (html, contentAspectRatio) =>
@@ -370,24 +356,9 @@ function getPageDisplayLogic(inject)
 			const isContainerWiderThanContent = () => displayHelpers.getAspectRatio(html) >= contentAspectRatio
 			const setScalingType = containerIsWiderThanContent => displayHelpers.setOneOfTwoClasses(html, containerIsWiderThanContent, "scale-to-height", "scale-to-width")
 			const updateScalingIfRatiosHaveChanged = eventFunctions.makeFunctionThatExecutesOnConditionChange(setScalingType, isContainerWiderThanContent)
-			const optimizedUpdateScaling = eventFunctions.makeThrottledAndDebouncedPromiseFunction(updateScalingIfRatiosHaveChanged)
-			return optimizedUpdateScaling	
-		},
-
-		updatePageContainerScaling: (html, contentAspectRatio) =>
-		{
-			const containerIsWiderThanContent = displayHelpers.getAspectRatio(html) >= contentAspectRatio
-			displayHelpers.setOneOfTwoClasses(html, containerIsWiderThanContent, "scale-to-height", "scale-to-width")
-		},
-
-		autoscalePageContainer: (html, contentAspectRatio) =>
-		{
-			const isContainerWiderThanContent = () => displayHelpers.getAspectRatio(html) >= contentAspectRatio
-			const setScalingType = containerIsWiderThanContent => displayHelpers.setOneOfTwoClasses(html, containerIsWiderThanContent, "scale-to-height", "scale-to-width")
-			const updateScalingIfRatiosHaveChanged = eventFunctions.makeFunctionThatExecutesOnConditionChange(setScalingType, isContainerWiderThanContent)
-			const optimizedUpdateScaling = eventFunctions.makeThrottledAndDebouncedPromiseFunction(updateScalingIfRatiosHaveChanged)
-			window.onresize = window.onorientationchange = optimizedUpdateScaling
-		},
+			const optimizedUpdateScalingFunc = eventFunctions.makeThrottledAndDebouncedPromiseFunction(updateScalingIfRatiosHaveChanged)
+			return optimizedUpdateScalingFunc	
+		}
 	}
 
 	return pageDisplayFunctions
@@ -396,14 +367,14 @@ function getPageDisplayLogic(inject)
 
 function createLazyDependencyInject(getters)
 {
-  var instances = {}
+  var readyInstances = {}
   var pendingInstances = new Stack()
 
-  function getInstance(name)
+  function getDependency(name)
   {
-    if (instances[name])
+    if (readyInstances[name])
     {
-      return instances[name]
+      return readyInstances[name]
     }
     if (!getters.hasOwnProperty(name))
     {
@@ -414,18 +385,19 @@ function createLazyDependencyInject(getters)
       throw new Error(`Circular dependency getter: ${name}.\nGetter stack:\n${pendingInstances.plus(name).toString("\n")}`)
     }
     pendingInstances.push(name)
-    instances[name] = getters[name](inject)
+    const getInstance = getters[name]
+    readyInstances[name] = getInstance(inject)
     pendingInstances.pop()
-    return instances[name]
+    return readyInstances[name]
   }
 
-  var inject = (...nameList) => nameList.reduce((nameDic, name) => Object.defineProperty(nameDic, name, {value: getInstance(name)}), {})
+  var inject = (...dependencyNames) => dependencyNames.reduce((obj, name) => (obj[name] = getDependency(name), obj), {})
 
   return inject
 }
 
 
-function getDependencyList()
+function getDependencyGetterList()
 {
   return {
     appDisplayLogic: getAppDisplayLogic,
@@ -453,64 +425,50 @@ function getEventFunctions()
     {
       function onEvent()
       {
-        html.removeEventListener("eventName", onEvent)
+        html.removeEventListener(eventName, onEvent)
         callback()
       }
       html.addEventListener(eventName, onEvent)
     },
 
-    // Default behavior: calls func if current condition != last condition.
-    // Optional conditionChangePassesThreshold callback lets you supply a
-    // custom comparator. The saveAlternativeValue function passed into it
-    // lets you cache a custom value to be compared against on the next call.
-    makeFunctionThatExecutesOnConditionChange: (func, evaluateCondition, conditionChangePassesThreshold = (newResult, lastResult, saveAlternativeValue) => newResult != lastResult) =>
+    // Known issue: won't fire until condition != undefined
+    makeFunctionThatExecutesOnConditionChange: (func, evaluateCondition) =>
     {
       var lastResult
-      var shouldSaveAlternativeValue
-      var alternativeValueToSave
-      
-      function saveAlternativeValue (value) 
-      {
-        shouldSaveAlternativeValue = true
-        alternativeValueToSave = value
-      }
-
       return function run()
       {
-        shouldSaveAlternativeValue = false
         var result = evaluateCondition()
-        if (conditionChangePassesThreshold(result, lastResult, saveAlternativeValue))
+        if (result != lastResult)
         {
           func(result)
         }
-        lastResult = shouldSaveAlternativeValue ? alternativeValueToSave : result
+        lastResult = result
       }
     },
 
     // Optimizes a function that may be called many times in quick succession,
-    // like by an onresize or onscroll event. Throttles execution with a debounce
-    // to catch the final update even during a throttle period.
-    makeThrottledAndDebouncedPromiseFunction: (func, throttleDelay = 50, debounceDelay = 30) =>
+    // like by an onresize or onscroll event. Throttles execution & debounces
+    // the final call in case it occurs during a throttled period.
+    makeThrottledAndDebouncedPromiseFunction: (func, throttleDelay = 50, debounceDelay = 50) =>
     {
       var throttled = false
       var timeout
       
-      var resolveWithFunctionResults = (resolve, func, input) => resolve(func(input))
-
-      // Option to pass a value to func, or a function to get the up-to-date
-      // value in case it might change during debounce period
-      return function(funcArgumentOnPromiseCreation, getCurrentFuncArgument = () => funcArgumentOnPromiseCreation)
+      return function()
       {
         return new Promise(resolve => 
         {
-          if (!throttled)
+          clearTimeout(timeout)
+          if (throttled)
           {
-            resolveWithFunctionResults(resolve, func, getCurrentFuncArgument())
+            timeout = setTimeout(() => resolve(func()), debounceDelay)
+          }
+          else
+          {
+            resolve(func())
             throttled = true
             setTimeout(() => {throttled = false}, throttleDelay)
           }
-          clearTimeout(timeout)
-          timeout = setTimeout(() => resolveWithFunctionResults(resolve, func, getCurrentFuncArgument()), debounceDelay)
         })
       }      
     }
