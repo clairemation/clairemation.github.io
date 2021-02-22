@@ -135,7 +135,10 @@ function getRestartFunc()
 
 function getUrlParams()
 {
-  return Object.fromEntries(new URLSearchParams(window.location.search))
+	var params = {}
+	var urlParams = new URLSearchParams(window.location.search)
+	urlParams.forEach((v, k) => params[k] = v)
+	return params
 }
 
 
@@ -203,8 +206,10 @@ function getDisplayHelpers(inject)
     getAppElements: datasetName => 
     {
       const datatag = "data-" + datasetName.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
-      var elementKeyValuePairs = Array.from(document.querySelectorAll(`[${datatag}]`)).map(e => [e.dataset[datasetName], e])
-      return Object.fromEntries(elementKeyValuePairs)
+      var htmlElements = document.querySelectorAll(`[${datatag}]`)
+      var htmlElementsArray = Array.from(htmlElements)
+      var elementsObj = htmlElementsArray.reduce((obj, e) => (obj[e.dataset[datasetName]] = e, obj), {})
+      return elementsObj
     },
 
     setValues: Object.assign,
@@ -354,10 +359,10 @@ function getPageDisplayLogic(inject)
 		},
 
 		getPageSpreadContentAspectRatio: pages => {
-		  const images = pages.flatMap(page => Array.from(page.getElementsByTagName("img")).flat())
-		  const totalWidth = images.reduce((totalWidth, img) => totalWidth + img.naturalWidth, 0)
-		  const height = images.reduce((maxImgHeight, img) => img.naturalHeight > maxImgHeight ? img.naturalHeight : maxImgHeight, 0)
-		  return totalWidth / height
+			const images = pages.reduce((arr, page) => arr.concat(Array.from(page.getElementsByTagName("img"))), [])
+			const totalWidth = images.reduce((totalWidth, img) => totalWidth + img.naturalWidth, 0)
+			const height = images.reduce((maxImgHeight, img) => img.naturalHeight > maxImgHeight ? img.naturalHeight : maxImgHeight, 0)
+			return totalWidth / height
 		},
 
 		createOptimizedAutoscalePageContainerCallback: (html, contentAspectRatio) =>
@@ -371,17 +376,17 @@ function getPageDisplayLogic(inject)
 
 		updatePageContainerScaling: (html, contentAspectRatio) =>
 		{
-		  const containerIsWiderThanContent = displayHelpers.getAspectRatio(html) >= contentAspectRatio
-		  displayHelpers.setOneOfTwoClasses(html, containerIsWiderThanContent, "scale-to-height", "scale-to-width")
+			const containerIsWiderThanContent = displayHelpers.getAspectRatio(html) >= contentAspectRatio
+			displayHelpers.setOneOfTwoClasses(html, containerIsWiderThanContent, "scale-to-height", "scale-to-width")
 		},
 
 		autoscalePageContainer: (html, contentAspectRatio) =>
 		{
-		  const isContainerWiderThanContent = () => displayHelpers.getAspectRatio(html) >= contentAspectRatio
-		  const setScalingType = containerIsWiderThanContent => displayHelpers.setOneOfTwoClasses(html, containerIsWiderThanContent, "scale-to-height", "scale-to-width")
-		  const updateScalingIfRatiosHaveChanged = eventFunctions.makeFunctionThatExecutesOnConditionChange(setScalingType, isContainerWiderThanContent)
-		  const optimizedUpdateScaling = eventFunctions.makeThrottledAndDebouncedPromiseFunction(updateScalingIfRatiosHaveChanged)
-		  window.onresize = window.onorientationchange = optimizedUpdateScaling
+			const isContainerWiderThanContent = () => displayHelpers.getAspectRatio(html) >= contentAspectRatio
+			const setScalingType = containerIsWiderThanContent => displayHelpers.setOneOfTwoClasses(html, containerIsWiderThanContent, "scale-to-height", "scale-to-width")
+			const updateScalingIfRatiosHaveChanged = eventFunctions.makeFunctionThatExecutesOnConditionChange(setScalingType, isContainerWiderThanContent)
+			const optimizedUpdateScaling = eventFunctions.makeThrottledAndDebouncedPromiseFunction(updateScalingIfRatiosHaveChanged)
+			window.onresize = window.onorientationchange = optimizedUpdateScaling
 		},
 	}
 
@@ -414,7 +419,7 @@ function createLazyDependencyInject(getters)
     return instances[name]
   }
 
-  var inject = (...nameList) => Object.fromEntries(nameList.map(name => [name, getInstance(name)]))
+  var inject = (...nameList) => nameList.reduce((nameDic, name) => Object.defineProperty(nameDic, name, {value: getInstance(name)}), {})
 
   return inject
 }
