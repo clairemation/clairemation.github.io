@@ -4,14 +4,16 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   border: 0;
   outline: 0;
   vertical-align: text-top;
-  background: transparent; }
+  background: transparent;
+}
 
 body {
   font-family: 'Avenir Next', Avenir, sans-serif;
   text-align: center;
-  background: #fff;
+  overflow: hidden;
   background-size: 100%;
-  background-attachment: fixed; }
+  background: #fff fixed;
+}
 
 a, a:visited {
   color: initial;
@@ -22,105 +24,64 @@ a, a:visited {
 p, h3 {
   text-align: left; }
 
-.blur {
-  -webkit-filter: blur(3px);
-          filter: blur(3px); }
-
-#about p {
-  padding-bottom: 1em; }
-
-/*-- NAV MENU CHANGES AT 700 PX --*/
+/*-- HAMBURGER MENU BELOW 700 PX --*/
 @media screen and (max-width: 700px) {
   header {
     padding-bottom: 20px;
     position: absolute; }
-  header label[for="mobilemenu-toggle"] {
-    background: #fff;
-    cursor: pointer;
-    display: block;
-    font-family: 'Special Elite';
-    font-size: 2.5em;
-    font-weight: lighter;
-    padding-left: 10px;
-    padding-right: 10px;
+
+  #menu {
     text-align: left;
-    top: 0;
-    z-index: 1; }
-    header label[for="mobilemenu-toggle"].close {
-      display: none; }
-  #mobile-popup {
-    background: #fff;
-    position: fixed;
+  }
+
+  #menu-toggle-button {
+    transform: scale(0.7);
+  }
+
+  #menu-contents {
     text-align: left;
     width: 100%;
-    z-index: 100; }
-    #mobile-popup label#whole-page-button {
-      background: rgba(102, 102, 102, 0.5);
-      height: 100%;
-      position: fixed;
-      width: 100%;
-      z-index: 1; }
-  header #mobilemenu {
+    z-index: 100;
     display: none;
-    margin: 0; }
-    header #mobilemenu ul {
-      -webkit-box-align: center;
-          -ms-flex-align: center;
-              align-items: center;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-left: 0;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-          -ms-flex-direction: column;
-              flex-direction: column;
-      font-size: .7em;
-      left: 0;
-      padding-bottom: 1em;
-      padding-top: 1em;
-      position: absolute;
-      z-index: 1; }
-    header #mobilemenu li {
-      font-size: 2em;
-      font-weight: lighter;
-      padding: 20px 70px; }
-      header #mobilemenu li img {
-        height: 1.5em;
-        width: 1.5em; }
-  #mobilemenu-toggle:checked ~ #mobilemenu {
-    display: block;
-    left: 0;
-    position: absolute;
-    top: 0; }
-  #hamburger {
-    background: transparent;
-    display: inline; }
-  header #mobilemenu-toggle ~ label[for="mobilemenu-toggle"] {
-    border: 0;
-    box-shadow: none;
-    z-index: 2; }
-  header #mobilemenu-toggle:checked ~ label[for="mobilemenu-toggle"] {
-    color: lightcoral; }
-    header #mobilemenu-toggle:checked ~ label[for="mobilemenu-toggle"].close {
-      background: transparent;
-      display: block;
-      position: absolute;
-      z-index: 100; }
-  header h1#maintitle {
-    padding-top: 1.2em; }
-  nav#header-buttons ul {
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    margin: 0;
+    border-left: 0;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between; }
-  #header-buttons li {
-    margin-top: 20px; } }
+    -ms-flex-direction: column;
+    flex-direction: column;
+    font-size: .7em;
+    left: 0;
+  }
+
+  #menu.is-active #menu-contents{
+    display: block;
+  }
+  #modal-overlay {
+    background: rgba(102, 102, 102, 0.5);
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    z-index: 1; }
+
+  #menu li {
+    font-size: 2em;
+    font-weight: lighter;
+    padding: 20px 70px; }
+  header #menu li img {
+    height: 1.5em;
+    width: 1.5em; }
+  #menu.is-active {
+    display: block;
+  }
+}
+
+/*-- HIDE HAMBURGER MENU ABOVE 700 PX --*/
+@media screen and (min-width: 701px) {
+  #menu-toggle-button {
+    display: none;
+  }
+
+}
 
 /*-- PROJECTS LAYOUT CHANGES AT 600 PX --*/
 @media screen and (max-width: 600px) {
@@ -198,10 +159,6 @@ p, h3 {
     max-width: 100%;
     width: 100%; }
 
-  .projects.games ul {
-    columns: 1;
-  }
-
   .project-block {
     /*background: #fff;*/
     /*border: 1px solid dodgerblue;*/
@@ -230,49 +187,32 @@ p, h3 {
     width: 100%; }
 }
 
-@media screen and (min-width: 950px) {
-  section.projects ul {
-    columns: 1;
-    -webkit-column-count: 1; }
-
-  .projects.games ul{
-    columns: 1;
-    -webkit-column-count: 1; }
-  }
-
   .project-block.desktop-med img {
     float: none;
     margin-left: 0;
     width: 100%; }
-   } }
 
-h1 {
-  font-family: 'Alfa Slab One';
-  font-weight: lighter; }
 
 strong {
   font-weight: 600; }
 
 #main-pane {
   position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
   width: 100%;
-  margin: auto;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   background-color: white; }
 
 header {
   text-align: center;
   padding-bottom: 1em;
   position: relative; }
-
-/*header::before {
-  content: "";
-  display: block;
-  width: 200%;
-  height: 200%;
-  background: blue; }*/
-
-header input, header label[for="mobilemenu-toggle"] {
-  display: none; }
 
 header img {
   width: 30px;
@@ -285,7 +225,7 @@ header p {
 h1 {
   font-size: 2em; }
 
-header nav {
+#menu-contents {
   margin: 10px;
   font-weight: 700; }
 
@@ -297,29 +237,32 @@ nav ul {
   display: -ms-flexbox;
   display: flex; }
 
-#mobile-popup {
-  background: #fff;
-  border-bottom: 1px solid #ccc;
+#menu {
+  background: #f1f1f1 linear-gradient(0deg, #d1d1d1 0%, transparent 50%);
+  border-bottom: 2px solid #c1c1c1;
   position: fixed;
   width: 100%;
-  z-index: 100; }
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
 
-#mobile-popup nav ul li {
+#menu ul li {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1; }
 
-nav ul li a, nav ul li a:visited, nav ul li a:hover {
+#menu ul li a, nav ul li a:visited, nav ul li a:hover {
   text-decoration: none; }
 
 #maintitle {
-  padding-top: 3.5em; }
+  padding-top: 2.5em; }
 
 header h1, header #intro {
   padding-left: 20px;
   padding-right: 20px; }
 
-section:not(#mobile-popup, #main-pane) {
+#menu-popup-controls {
   text-align: left;
   display: inline-block;
   margin: 1em 0 1em 0; }
@@ -446,3 +389,10 @@ main {
 
 .breakout a {
   text-decoration: underline; }
+
+/* FROSTED MENU EFFECT */
+@supports (backdrop-filter: blur(10px)) {
+  #menu {
+    background: rgba(241, 241, 241, 0.3) linear-gradient(0deg, #d1d1d1 0%, transparent 50%, transparent 90%, #d1d1d1 120%);
+  }
+}

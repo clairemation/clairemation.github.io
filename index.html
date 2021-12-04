@@ -4,14 +4,16 @@
 
   <head>
 
-    <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One|Special+Elite" rel="stylesheet">
+<!--    <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One|Special+Elite" rel="stylesheet">-->
 
     <link type="text/css" rel="stylesheet" href="main.css">
+    <link type="text/css" rel="stylesheet" href="hamburgers.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
 
     <title>Claire's Game Dev Site</title>
+
   </head>
 
   <body>
@@ -19,23 +21,20 @@
     <section id="main-pane">
 
       <header>
-        <section id="mobile-popup">
-          <input type="checkbox" id="mobilemenu-toggle"/>
-          <label for="mobilemenu-toggle" id="hamburger">&equiv;</label>
-          <label for="mobilemenu-toggle" id="whole-page-button" class="close">&nbsp;</label>
-          <nav id="mobilemenu">
-            <label for="mobilemenu-toggle" class="close">&times;</label>
-            <ul>
-              <li><a href="https://clairemationstlsv.wixsite.com/clairemation">Art</a></li>
-              <li><a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="email"></a></li>
-              <li><a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a></li>
-              <li><a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a></li>
-            </ul>
-          </nav>
-        </section>
-        <div id="maintitle">
-          <h1>Claire's Game Dev Site</h1>
-        </div>
+        <nav id="menu">
+          <button id = "menu-toggle-button" class="hamburger hamburger--squeeze" type="button" aria-label="Menu" aria-controls="navigation">
+            <span class="hamburger-box">
+              <span class="hamburger-inner"></span>
+            </span>
+          </button>
+          <ul id="menu-contents">
+            <li><a href="https://clairemationstlsv.wixsite.com/clairemation">Art</a></li>
+            <li><a href="mailto:clairemation@gmail.com"><img src="imgs/social/email.png" alt="email"></a></li>
+            <li><a href="http://www.linkedin.com/in/clairemation"><img src="imgs/social/linkedin.png" alt="LinkedIn"></a></li>
+            <li><a href="http://github.com/clairemation"><img src="imgs/social/github.png" alt="GitHub"></a></li>
+          </ul>
+        </nav>
+        <h1 id="maintitle">Claire's Game Dev Site</h1>
       </header>
 
       <main>
@@ -173,37 +172,36 @@
         </section>
 
       </main>
+    </section>
 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script>
 
-      <script>
+      const ACTIVE_CLASS_NAME = "is-active"
 
-        function closeMenu(){
-          document.getElementById("mobilemenu-toggle").checked = false;
-          $("main, header > *:not(#mobile-popup)").removeClass("blur");
-        }
+      const menuToggleButton = document.getElementById("menu-toggle-button")
+      const menu = document.getElementById("menu")
 
-        $("#mobilemenu-toggle").on("click", function(e){
-          if (this.checked){
-            $("main, header > *:not(#mobile-popup)").addClass("blur");
-          }
-          else {
-            $("main, header > *:not(#mobile-popup)").removeClass("blur");
-          }
-        });
+      const itemsToToggle = [menuToggleButton, menu]
 
-      </script>
+      menuToggleButton.addEventListener("click", toggleMenu)
 
-      <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      function toggleMenu()
+      {
+        itemsToToggle.forEach(item => item.classList.toggle(ACTIVE_CLASS_NAME))
+      }
 
-        ga('create', 'UA-97091336-1', 'auto');
-        ga('send', 'pageview');
+    </script>
 
-      </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-97091336-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
 
   </body>
 </html>
