@@ -69,12 +69,9 @@ p {
     z-index: 1; }
 
   #menu li {
-    /*font-size: 2em;*/
+    text-align: center;
     font-weight: lighter;
     padding: 20px 70px; }
-  header #menu li img {
-    height: 1.5em;
-    width: 1.5em; }
   #menu.is-active {
     display: block;
   }
@@ -89,8 +86,6 @@ p {
 
 /*-- SINGLE COLUMN AT LOW RESOLUTIONS --*/
 @media screen and (max-width: 750px) {
-  /*body {
-    font-size: 1.25em; }*/
   #projects ul {
     columns: 1;
     display: block;
@@ -159,21 +154,15 @@ p {
   }
 
   #projects ul {
-    /*background: #eceff2;*/
-    border-top: 1px solid hsl(210,80%,75%);
-    /*border-bottom: 1px solid hsl(210,80%,75%);*/
+    border-top: 1px solid #7c7c7c;
     columns: 2;
     max-width: 100%;
     width: 100%; }
 
   .project-block {
-    /*background: #fff;*/
-    /*border: 1px solid dodgerblue;*/
     border-top: 0;
-    /*border-radius: 25px;*/
     box-sizing: border-box;
     display: inline-block;
-    /*font-size: .5em;*/
     margin: 2% 0;
     max-width: 100%;
     overflow: hidden;
@@ -181,8 +170,6 @@ p {
     width: 100%; }
 
   .project-block h4 {
-    /*background: dodgerblue;*/
-    /*color: #fff !important;*/
     left: 0;
     padding: 2px 30px;
     position: absolute;
@@ -219,9 +206,27 @@ header {
   padding-bottom: 1em;
   position: relative; }
 
-header img {
-  width: 30px;
-  height: 30px; }
+#menu li {
+  display: flex;
+  align-content: center;justify-content: space-around;
+  align-items: center;
+}
+
+#menu img {
+  width: 40px;
+  height: 40px; }
+
+/* Some individual tweaking to make the icons optically the same size*/
+
+#menu li:nth-child(2) img {
+  width: 45px;
+  height: 45px;
+}
+
+#menu li:nth-child(3) img {
+  width: 32px;
+  height: 32px;
+}
 
 header p {
   text-align: center;
@@ -279,16 +284,9 @@ li {
 .button a {
   color: #fff; }
 
-main {
-  /*font-size: 1.2em;*/ }
-
 #projects ul {
   column-fill: balance;
-   }
-
-.project-block {
-  /*font-size: .85em;*/
-   }
+}
 
 .project-block img {
   float: right;
@@ -296,7 +294,7 @@ main {
   width: 25%; }
 
 .project-block h4 {
-  color: dodgerblue;
+  color: #7c7c7c;
   font-size: .8em;
   text-align: left;
   text-transform: uppercase; }
@@ -317,8 +315,13 @@ main {
 
 
 /* FROSTED MENU EFFECT */
-@supports (backdrop-filter: blur(10px)) {
+@supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)){
   #menu {
-    background: rgba(241, 241, 241, 0.3) linear-gradient(0deg, #d1d1d1 0%, transparent 50%, transparent 90%, #d1d1d1 120%);
+    background: rgba(241, 241, 241, 0.3)
+      linear-gradient(0deg,
+            #d1d1d1 0%,
+            rgba(255, 255, 255, 0) 50%,
+            rgba(255, 255, 255, 0) 90%,
+            #d1d1d1 100%); !important;
   }
 }
