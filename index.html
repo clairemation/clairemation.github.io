@@ -4,8 +4,6 @@
 
   <head>
 
-<!--    <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One|Special+Elite" rel="stylesheet">-->
-
     <link type="text/css" rel="stylesheet" href="main.css">
     <link type="text/css" rel="stylesheet" href="hamburgers.css">
 
@@ -18,7 +16,7 @@
 
   <body>
 
-    <section id="main-pane">
+    <div id="main-pane">
 
       <header>
         <nav id="menu">
@@ -38,28 +36,24 @@
       </header>
 
       <main>
-
         <a name = "about"></a>
         <section id="about">
           <p>
-            I'm a software engineer working in games. I also do art on the side. This page is my personal noodlings in HTML5.
+            I'm a software engineer with experience in mobile games, front-end development, OTT devices, and more. I also do art on the side. This page is my personal noodlings in&nbsp;HTML5.
           </p>
           <p>
-            Everything on this page is written from scratch in vanilla JavaScript, using no existing engines or libraries. Why would I do that? For fun, and to learn.
-          </p>
-          <p>
-            Also, all graphics are by me except where otherwise noted.
+            Everything on this page is written from scratch in vanilla JavaScript, using no existing engines or&nbsp;libraries.
           </p>
         </section>
 
-        <section class="projects games">
-
-          <h2>Games</h2>
+        <a name = "projects"></a>
+        <section id="projects">
 
           <ul class="projects-ul">
 
             <li class="project-block mobile-big project-raptorquest">
               <a href="raptorquest/index.html">
+                <h4>Engine</h4>
                 <img src="imgs/ss-raptorquest.png"/>
                 <h3>Raptor Quest (WIP demo)</h3>
                 <p>
@@ -68,8 +62,20 @@
               </a>
             </li>
 
+
+            <li class="project-block mobile-small project-coolgebra">
+              <a href="http://github.com/clairemation/coolgebra-js">
+                <h4>Math</h4>
+                <h3>Coolgebra</h3>
+                <p>
+                  A performant, expressive JavaScript API for complex vector and matrix operations.
+                </p>
+              </a>
+            </li>
+
             <li class="project-block mobile-big project-raptorrun">
               <a href="raptorrun/index.html">
+                <h4>Game</h4>
                 <img src="imgs/rr-screenshot.png"/>
                 <h3>Raptor Run</h3>
                 <p>
@@ -80,6 +86,7 @@
 
             <li class="project-block mobile-big project-spritedemo">
               <a href="projects/tpv2/spritedemo.html">
+                <h4>Engine</h4>
                 <img src="imgs/ss-sprite-engine2.jpg"/>
                 <h3>Top-Down Adventure Game (WIP Demo)</h3>
                 <p>
@@ -90,6 +97,7 @@
 
             <li class="project-block mobile-small project-gamelevel">
               <a href="projects/timesprisoner/timesprisoner.html">
+                <h4>Game</h4>
                 <img src="imgs/tpscreenshot.jpg"/>
                 <h3>Game Level Prototype</h3>
                 <p>
@@ -98,20 +106,6 @@
               </a>
             </li>
 
-          </ul>
-
-        </section>
-
-        <br />
-
-        <section class="projects">
-
-         <h2>Experiments</h2>
-
-         <a name = "projects"></a>
-
-          <ul class="projects-ul">
-
             <li class="project-block mobile-small project-normals">
               <a href="projects/tpv2/tests/normals/hills.html">
                 <h4>etc.</h4>
@@ -119,16 +113,6 @@
                 <h3>2.5D terrain</h3>
                 <p>
                   Experimental 2D environment utilizing hand-painted normal maps to simulate 3D terrain. Aka a technique for making 3D terrain when you know how to paint but not how to model.
-                </p>
-              </a>
-            </li>
-
-            <li class="project-block mobile-small project-coolgebra">
-              <a href="http://github.com/clairemation/coolgebra-js">
-                <h4>Math</h4>
-                <h3>Coolgebra</h3>
-                <p>
-                  A performant, expressive JavaScript API for complex vector and matrix operations.
                 </p>
               </a>
             </li>
@@ -172,7 +156,7 @@
         </section>
 
       </main>
-    </section>
+    </div>
 
     <script>
 
