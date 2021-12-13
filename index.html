@@ -145,28 +145,27 @@
     </div>
 
     <script>
-      (function main() {
+      addMenuToggle()
+      // Wait for load so the viewport won't jump around as images pop in
+      window.addEventListener("load", navigateToDeepLink)
 
-        addMenuToggle()
-        navigateToDeepLink()
+      function addMenuToggle() {
+        let menu = document.getElementById("menu")
+        let button = document.getElementById("menu-toggle-button")
+        button.addEventListener("click", () => menu.classList.toggle('is-active'))
+      }
 
-        function addMenuToggle() {
-          let menu = document.getElementById("menu")
-          let button = document.getElementById("menu-toggle-button")
-          button.addEventListener("click", () => menu.classList.toggle('is-active'))
-        }
-        function navigateToDeepLink()
-        {
-          let link = new URLSearchParams(window.location.search).get("link")
-          if (link) {
-            let element = document.getElementById(link)
-            if (element) {
-              element.scrollIntoView({block: "center"})
-              element.classList.add("highlighted")
-            }
+      function navigateToDeepLink()
+      {
+        let link = new URLSearchParams(window.location.search).get("link")
+        if (link) {
+          let element = document.getElementById(link)
+          if (element) {
+            element.scrollIntoView({block: "center"})
+            element.classList.add("highlighted")
           }
         }
-      })()
+      }
     </script>
 
     <script>
