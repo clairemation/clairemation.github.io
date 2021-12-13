@@ -5,7 +5,6 @@
   <head>
 
     <link type="text/css" rel="stylesheet" href="main.css">
-    <link type="text/css" rel="stylesheet" href="hamburgers.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
@@ -52,104 +51,91 @@
 
           <ul class="projects-ul">
 
-            <li class="project-block mobile-big project-raptorquest">
-              <a href="raptorquest/index.html">
+            <a href="raptorquest/index.html">
+              <li class="project-block mobile-big" id="raptorquest">
                 <h4>Engine</h4>
                 <img src="imgs/ss-raptorquest.png"/>
                 <h3>Raptor Quest (WIP demo)</h3>
                 <p>
                   (Warning: features sound) A free-roaming platformer written from scratch in vanilla ES6. Includes a flexible component-based architecture, support for multiple scenes with async loading, tile-map levels, momenutum-based physics, an edit mode, and a few more bells and whistles.
                 </p>
-              </a>
-            </li>
+              </li>
+            </a>
 
-
-            <li class="project-block mobile-small project-coolgebra">
-              <a href="http://github.com/clairemation/coolgebra-js">
+            <a href="http://github.com/clairemation/coolgebra-js">
+              <li class="project-block mobile-small" id="coolgebra">
                 <h4>Math</h4>
                 <h3>Coolgebra</h3>
                 <p>
                   A performant, expressive JavaScript API for complex vector and matrix operations.
                 </p>
-              </a>
-            </li>
+              </li>
+            </a>
 
-            <li class="project-block mobile-big project-raptorrun">
-              <a href="raptorrun/index.html">
+            <a href="raptorrun/index.html">
+              <li class="project-block mobile-big" id="raptorrun">
                 <h4>Game</h4>
                 <img src="imgs/rr-screenshot.png"/>
                 <h3>Raptor Run</h3>
                 <p>
                   (Warning: features sound) A basic little "infinite flapper" HTML5 game about a scientifically-accurate feathered velociraptor. Yes, they had feathers and wings, folks!
                 </p>
-              </a>
-            </li>
+              </li>
+            </a>
 
-            <li class="project-block mobile-big project-spritedemo">
-              <a href="projects/tpv2/spritedemo.html">
+            <a href="projects/tpv2/spritedemo.html">
+              <li class="project-block mobile-big" id="spriteenginedemo">
                 <h4>Engine</h4>
                 <img src="imgs/ss-sprite-engine2.jpg"/>
                 <h3>Top-Down Adventure Game (WIP Demo)</h3>
                 <p>
                   Early attempt at a top-down action/adventure game engine. Features normal-mapped dynamic lighting on the main character but it's CPU-based and therefore kinda slow on some devices. Also subtle natural physics including inertia, collision, and wall "sliding."
                 </p>
-              </a>
-            </li>
+              </li>
+            </a>
 
-            <li class="project-block mobile-small project-normals">
-              <a href="projects/tpv2/tests/normals/hills.html">
+            <a href="projects/tpv2/tests/normals/hills.html">
+              <li class="project-block mobile-small" id="terrain">
                 <h4>etc.</h4>
                 <img src="imgs/hills-screenshot.jpg"/>
                 <h3>2.5D terrain</h3>
                 <p>
                   Experimental 2D environment utilizing hand-painted normal maps to simulate 3D terrain. Aka a technique for making 3D terrain when you know how to paint but not how to model.
                 </p>
-              </a>
-            </li>
+              </li>
+            </a>
 
-            <li class="project-block mobile-small project-particles">
-              <a href="projects/tpv2/tests/particles.html">
+            <a href="projects/tpv2/tests/particles.html">
+              <li class="project-block mobile-small" id="particles">
                 <h4>WebGL</h4>
                 <h3>Particle effects</h3>
                 <p>
                   Experiments with stateless, GPU-based flame, liquid, and smoke effects.
                 </p>
-              </a>
-            </li>
+              </li>
+            </a>
 
-            <li class="project-block mobile-small project-lightingtest">
-              <a href="projects/tpv2/tests/lightingtest/index.html">
+            <a href="projects/tpv2/tests/lightingtest/index.html">
+              <li class="project-block mobile-small" id="lighting">
                 <h4>WebGL</h4>
                 <img src="imgs/gl-lighting2.jpg"/>
                 <h3>Dynamic sprite lighting</h3>
                 <p>
                   Buttery-smooth GPU-based lighting in WebGL using hand-painted normal maps. Big upgrade over the CPU-based lighting in my current top-down game demo. The light follows your mouse or touch.
                 </p>
-              </a>
-            </li>
+              </li>
+            </a>
 
-            <li class="project-block mobile-small project-webgl">
-              <a href="http://clairemation.github.io/projects/tpv2/tests/webgltest.html">
+            <a href="http://clairemation.github.io/projects/tpv2/tests/webgltest.html">
+              <li class="project-block mobile-small" id="webglcube">
                 <h4>3D</h4>
                 <img src="imgs/ss-cube.jpg"/>
                 <h3>Fun with WebGL</h3>
                 <p>
                   Beginner dabbling with WebGL. A spinnable, lit, texture-mapped cube in different environments. Placeholder photos and rock texture not by me.
                 </p>
-              </a>
-            </li>
-
-            <li class="project-block mobile-small project-gamelevel">
-              <a href="projects/timesprisoner/timesprisoner.html">
-                <h4>Game</h4>
-                <img src="imgs/tpscreenshot.jpg"/>
-                <h3>Game Level Prototype</h3>
-                <p>
-                  (Warning: features sound) Babby's first HTML5 game. I think it has a certain naive charm. Desktop only. Placeholder photo background not by me.
-                </p>
-              </a>
-            </li>
-
+              </li>
+            </a>
 
           </ul>
 
@@ -159,21 +145,28 @@
     </div>
 
     <script>
+      (function main() {
 
-      const ACTIVE_CLASS_NAME = "is-active"
+        addMenuToggle()
+        navigateToDeepLink()
 
-      const menuToggleButton = document.getElementById("menu-toggle-button")
-      const menu = document.getElementById("menu")
-
-      const itemsToToggle = [menuToggleButton, menu]
-
-      menuToggleButton.addEventListener("click", toggleMenu)
-
-      function toggleMenu()
-      {
-        itemsToToggle.forEach(item => item.classList.toggle(ACTIVE_CLASS_NAME))
-      }
-
+        function addMenuToggle() {
+          let menu = document.getElementById("menu")
+          let button = document.getElementById("menu-toggle-button")
+          button.addEventListener("click", () => menu.classList.toggle('is-active'))
+        }
+        function navigateToDeepLink()
+        {
+          let link = new URLSearchParams(window.location.search).get("link")
+          if (link) {
+            let element = document.getElementById(link)
+            if (element) {
+              element.scrollIntoView({block: "center"})
+              element.classList.add("highlighted")
+            }
+          }
+        }
+      })()
     </script>
 
     <script>
