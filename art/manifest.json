@@ -1,0 +1,332 @@
+{
+  "tags": [
+    {
+      "name": "The Beau and the Beastess",
+      "type": "project name",
+      "description": "A story about a man who falls in love with a demoness."
+    },
+    {
+      "name": "Dinosaur Princess",
+      "type": "project name",
+      "description": "A story about a human girl raised by dinosaurs."
+    },
+    {
+      "name": "What Remains of Us",
+      "type": "project name",
+      "description": "A story about two lovers from the French Revolution, seeking each other in Paris 200 years after death, but dealing with royalist threats that are more dangerous than ever."
+    },
+    {
+      "name": "Fanart: Paris Olympics 2024",
+      "type": "project name",
+      "description": "Fan art of characters from the wonderful Paris Olympics opening ceremonies"
+    },
+    {
+      "name": "Fanart: Sandman",
+      "type": "project name",
+      "description": "Fan art of the Sandman TV adaptation"
+    },
+    {
+      "name": "Fanart: Star Wars",
+      "type": "project name",
+      "description": "Fan art of Star Wars"
+    },
+    {
+      "name": "Fanart: Zelda TOTK",
+      "type": "project name",
+      "description": "Fan art of The Legend of Zelda: Tears of the Kingdom"
+    },
+    {
+      "name": "sketch",
+      "type": "type",
+      "description": "Exploratory work without a high level of finish"
+    },
+    {
+      "name": "line drawing",
+      "type": "type",
+      "description": "Relatively clean or inked line art"
+    },
+    {
+      "name": "painting",
+      "type": "type",
+      "description": "More about shape than line."
+    },
+    {
+      "name": "Procreate",
+      "type": "medium",
+      "description": "Illustration app for iPad"
+    },
+    {
+      "name": "ballpoint pen",
+      "type": "medium",
+      "description": "Cheap and highly underrated art tool"
+    },
+    {
+      "name": "watercolor",
+      "type": "medium"
+    },
+    {
+      "name": "dinosaur",
+      "type": "other"
+    },
+    {
+      "name": "character",
+      "type": "other"
+    },
+    {
+      "name": "color",
+      "type": "other"
+    },
+    {
+      "name": "black and white",
+      "type": "other"
+    }
+  ],
+  "images": [
+    {
+      "imageName": "alligator-demoness-nice-clothes.jpg",
+      "title": "Alligator Demoness Nice Clothes",
+      "relativeFilePath": "alligator-demoness-nice-clothes.jpg",
+      "dateCreated": 20220615,
+      "tags": ["The Beau and the Beastess", "Procreate", "line drawing", "character", "black and white"]
+    },
+    {
+      "imageName": "alligator-demoness-outfit.jpg",
+      "title": "Alligator Demoness Outfit",
+      "relativeFilePath": "alligator-demoness-outfit.jpg",
+      "dateCreated": 20220622,
+      "tags": ["The Beau and the Beastess", "Procreate", "line drawing", "character", "black and white"]
+    },
+    {
+      "imageName": "alligator-demoness-wardrobe.jpg",
+      "title": "Alligator Demoness Wardrobe",
+      "relativeFilePath": "alligator-demoness-wardrobe.jpg",
+      "dateCreated": 20220728,
+      "tags": ["The Beau and the Beastess", "Procreate", "sketch", "character", "black and white"]
+    },
+    {
+      "imageName": "alligator-demoness-with-knives.jpg",
+      "title": "Alligator Demoness With Knives",
+      "relativeFilePath": "alligator-demoness-with-knives.jpg",
+      "dateCreated": 20220616,
+      "tags": ["The Beau and the Beastess", "Procreate", "line drawing", "character", "black and white"]
+    },
+    {
+      "imageName": "amargasaurus.jpg",
+      "title": "Amargasaurus",
+      "relativeFilePath": "amargasaurus.jpg",
+      "dateCreated": 20250523,
+      "description": "Sketch of Amargasaurus from the paleo flocking stream",
+      "tags": ["dinosaur", "sketch", "Procreate", "black and white"]
+    },
+    {
+      "imageName": "assassin-design.jpg",
+      "title": "Assassin Design",
+      "relativeFilePath": "assassin-design.jpg",
+      "dateCreated": 20250227,
+      "tags": ["What Remains of Us", "black and white", "character", "Procreate", "sketch", "line drawing"]
+    },
+    {
+      "imageName": "ballroom.jpg",
+      "title": "Ballroom",
+      "relativeFilePath": "ballroom.jpg",
+      "dateCreated": 20230210,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "painting"]
+    },
+    {
+      "imageName": "battle.jpg",
+      "title": "Battle",
+      "relativeFilePath": "battle.jpg",
+      "dateCreated": 20230201,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "painting"]
+    },
+    {
+      "imageName": "consort-early.jpg",
+      "title": "Consort Early",
+      "relativeFilePath": "consort-early.jpg",
+      "dateCreated": 20230203,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "defeated-maybe.jpg",
+      "title": "Defeated Maybe",
+      "relativeFilePath": "defeated-maybe.jpg",
+      "dateCreated": 20230110,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "painting", "line drawing"]
+    },
+    {
+      "imageName": "demoness-designs.jpg",
+      "title": "Demoness Designs",
+      "relativeFilePath": "demoness-designs.jpg",
+      "dateCreated": 20231219,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "painting", "sketch", "character"]
+    },
+    {
+      "imageName": "demoness-early-sketches.jpg",
+      "title": "Demoness Early Sketches",
+      "relativeFilePath": "demoness-early-sketches.jpg",
+      "dateCreated": 20231023,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "painting", "sketch", "character"]
+    },
+    {
+      "imageName": "demoness-expressions.jpg",
+      "title": "Demoness Expressions",
+      "relativeFilePath": "demoness-expressions.jpg",
+      "dateCreated": 20220704,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing", "character"]
+    },
+    {
+      "imageName": "demonologist-expressions.jpg",
+      "title": "Demonologist Expressions",
+      "relativeFilePath": "demonologist-expressions.jpg",
+      "dateCreated": 20220719,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing", "character"]
+    },
+    {
+      "imageName": "demonologist.jpg",
+      "title": "Demonologist",
+      "relativeFilePath": "demonologist.jpg",
+      "dateCreated": 20230201,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing", "character"]
+    },
+    {
+      "imageName": "discovery.jpg",
+      "title": "Discovery",
+      "relativeFilePath": "discovery.jpg",
+      "dateCreated": 20230201,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "painting"]
+    },
+    {
+      "imageName": "facing-villain.jpg",
+      "title": "Facing Villain",
+      "relativeFilePath": "facing-villain.jpg",
+      "dateCreated": 20250315,
+      "tags": ["What Remains of Us", "black and white", "line drawing", "Procreate"]
+    },
+    {
+      "imageName": "feu-et-pleuie.jpg",
+      "title": "Feu Et Pleuie",
+      "relativeFilePath": "feu-et-pleuie.jpg",
+      "dateCreated": 20241009,
+      "tags": ["Fanart: Paris Olympics 2024", "Procreate", "painting", "color"]
+    },
+    {
+      "imageName": "fly-with-me-if-you-must.jpg",
+      "title": "Fly With Me If You Must",
+      "relativeFilePath": "fly-with-me-if-you-must.jpg",
+      "dateCreated": 20220620,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "four-winged-demoness.jpg",
+      "title": "Four Winged Demoness",
+      "relativeFilePath": "four-winged-demoness.jpg",
+      "dateCreated": 20220604,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "giantess-by-moonlight.jpg",
+      "title": "Giantess By Moonlight",
+      "relativeFilePath": "giantess-by-moonlight.jpg",
+      "dateCreated": 20220520,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "painting"]
+    },
+    {
+      "imageName": "going-home.jpg",
+      "title": "Going Home",
+      "relativeFilePath": "going-home.jpg",
+      "dateCreated": 20250727,
+      "tags": ["Fanart: Paris Olympics 2024", "Procreate", "painting", "color"]
+    },
+    {
+      "imageName": "heart-could-burst.jpg",
+      "title": "Heart Could Burst",
+      "relativeFilePath": "heart-could-burst.jpg",
+      "dateCreated": 20230219,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "knight-designs.jpg",
+      "title": "Knight Designs",
+      "relativeFilePath": "knight-designs.jpg",
+      "dateCreated": 20250227,
+      "tags": ["What Remains of Us", "black and white", "sketch", "character"]
+    },
+    {
+      "imageName": "safe-with-me.jpg",
+      "title": "Safe With Me",
+      "relativeFilePath": "safe-with-me.jpg",
+      "dateCreated": 20240102,
+      "tags": ["Fanart: Sandman", "Procreate", "painting", "color"]
+    },
+    {
+      "imageName": "sexy-alligator-man.jpg",
+      "title": "Sexy Alligator Man",
+      "relativeFilePath": "sexy-alligator-man.jpg",
+      "dateCreated": 20230723,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "sketch", "line drawing"]
+    },
+    {
+      "imageName": "sexy-wip.jpg",
+      "title": "Sexy Wip",
+      "relativeFilePath": "sexy-wip.jpg",
+      "dateCreated": 20220121,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "sketch"]
+    },
+    {
+      "imageName": "shh.jpg",
+      "title": "Shh",
+      "relativeFilePath": "shh.jpg",
+      "dateCreated": 20230208,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "starwars-valentine.jpg",
+      "title": "Starwars Valentine",
+      "relativeFilePath": "starwars-valentine.jpg",
+      "dateCreated": 20230214,
+      "tags": ["Fanart: Star Wars", "Procreate", "line drawing", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "the-ex-sketches.jpg",
+      "title": "The Ex Sketches",
+      "relativeFilePath": "the-ex-sketches.jpg",
+      "dateCreated": 20230118,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing", "sketch", "character"]
+    },
+    {
+      "imageName": "transformation.jpg",
+      "title": "Transformation",
+      "relativeFilePath": "transformation.jpg",
+      "dateCreated": 20220401,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "unexpectedly-comfy.jpg",
+      "title": "Unexpectedly Comfy",
+      "relativeFilePath": "unexpectedly-comfy.jpg",
+      "dateCreated": 20240222,
+      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "sketch", "line drawing"]
+    },
+    {
+      "imageName": "very-polite.jpg",
+      "title": "Very Polite",
+      "relativeFilePath": "very-polite.jpg",
+      "dateCreated": 20250523,
+      "tags": ["dinosaur", "color", "painting", "sketch"]
+    },
+    {
+      "imageName": "whats-left-of-me.jpg",
+      "title": "Whats Left Of Me",
+      "relativeFilePath": "whats-left-of-me.jpg",
+      "dateCreated": 20250708,
+      "tags": ["What Remains of Us", "color", "painting"]
+    },
+    {
+      "imageName": "zelda-fanart-doodle.jpg",
+      "title": "Zelda Fanart Doodle",
+      "relativeFilePath": "zelda-fanart-doodle.jpg",
+      "dateCreated": 20230911,
+      "tags": ["Fanart: Zelda TOTK", "ballpoint pen", "line drawing"]
+    }
+  ]
+}

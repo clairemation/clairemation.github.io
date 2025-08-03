@@ -1,0 +1,179 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="art/art.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+
+    <title>clairemation</title>
+  </head>
+  <body>
+    <h1>clairemation</h1>
+
+    <p></p>
+    <ul id = "selectable-tags"></ul>
+    <p id="selected-tags"></p>
+    <fieldset>
+      <legend>Display order:</legend>
+      <input type="radio" id="date-ascending" name="order" value="0" checked />
+      <label for="date-ascending">Oldest to newest</label>
+      <input type="radio" id="date-descending" name="order" value="1" />
+      <label for="date-descending">Newest to oldest</label>
+    </fieldset>
+    <button id="show-button">Show</button>
+
+    <div><ul id="art-display"></ul></div>
+
+
+
+    <script>
+      const tagSelectionHtmlElement = document.getElementById("selectable-tags")
+      const selectedTagsDisplay = document.getElementById("selected-tags")
+      let tagSelectionOptionHtmlElements;
+      let imageDatas;
+      let selectedTags = []
+      let selectedImages = []
+
+      let sortFunction = sortOldestToNewest;
+
+      document.querySelector("input#date-ascending").onclick = e => sortFunction = sortOldestToNewest;
+      document.querySelector("input#date-descending").onclick = e => sortFunction = sortNewestToOldest;
+
+      fetch("art/manifest.json")
+        .then(response => response.json())
+        .then(data => {
+          const {mapOfTagTypeToTagInfosSet, imageInfos} = processManifest(data);
+          imageDatas = imageInfos;
+          const selector = renderTagSelectionHtml(mapOfTagTypeToTagInfosSet);
+          selector.onchange = updateSelectedTags;
+
+          tagSelectionOptionHtmlElements = document.querySelectorAll("option")
+
+          document.getElementById('show-button').onclick = displayImagesWithSelectedTags;
+        })
+
+      function updateSelector(ev)
+      {
+
+      }
+
+      function updateSelectedTags(ev)
+      {
+        const selector = ev.target;
+        const selectedOptions = Array.prototype.filter.call(selector.options, op => op.selected === true)
+        const selectedTags = selectedOptions.map(op => op.value)
+        selectedTagsDisplay.innerHTML = selectedTags.map(tag => {
+          // const tagDescription =
+          return `<span>${tag}<button onclick="console.log(${tag.description})">&#9432;</button></span>`
+        });
+
+      }
+
+      function processManifest(manifest) {
+        const tags = manifest.tags;
+        const images = manifest.images;
+
+        const tagSetsByTagType = Map.groupBy(tags, tag => tag.type)
+
+        images.forEach(imageDataItem => imageDataItem.tags = new Set(imageDataItem.tags))
+
+        return {
+            mapOfTagTypeToTagInfosSet: tagSetsByTagType, imageInfos: images
+        }
+      }
+
+      function renderTagSelectionHtml(mapOfTagTypeToTagInfosSet, alreadySelectedTags = []) {
+        const tagSelectorHtmlElementStrings = mapOfTagTypeToTagInfosSet.entries().map(tagTypeAndTagInfosSetPair => {
+          let tagType = tagTypeAndTagInfosSetPair[0];
+          let tagInfosSet = tagTypeAndTagInfosSetPair[1]
+
+          let tagNameOptionsHtmlString = tagInfosSet.map(tagInfo => `<option value = '${tagInfo.name}'>${tagInfo.name}</a></option>`).join('')
+
+          return `
+                <optgroup label="${tagType}">
+                    ${tagNameOptionsHtmlString}
+                </optgroup>
+            `
+        })
+
+        const selector = document.createElement("select");
+        selector.multiple = true;
+        selector.innerHTML = `<option value=''>any</option>` + tagSelectorHtmlElementStrings.toArray().join('')
+        tagSelectionHtmlElement.appendChild(selector);
+
+        return selector
+      }
+
+      function displayImagesWithSelectedTags() {
+        const selectedTagSet = getSelectedTagSet();
+        const selectedImages = imageDatas.filter(imageData => imageData.tags.isSupersetOf(selectedTagSet));
+
+        const imageHtmlElements = selectedImages.sort(sortFunction)
+          .map(imageData => {
+            const tagListHtmlString = imageData.tags.keys().map(tag => `<span class="image-tag" onclick="navigateToTag('${tag}')">${tag}</span>`).toArray().join(' ')
+
+            return `
+              <li>
+                  <a href="art/scaled/${imageData.relativeFilePath}"><img src="art/thumbnails/${imageData.relativeFilePath}"/></a>
+                  <p class="image-title">${imageData.title}</p>
+                  <p class="image-description">${imageData.description || ''}</p>
+                  <p class="image-tag-list">${tagListHtmlString}</p>
+              </li>`
+          });
+
+        if (selectedImages.length === 0)
+        {
+          document.querySelector("#art-display").innerHTML = `<p style="font-size: medium;">No images found matching all your selected tags. Try removing some tags to broaden your search.</p>`
+        }
+
+        else {
+          document.querySelector("#art-display").innerHTML = imageHtmlElements.join("")
+        }
+      }
+
+      function sortOldestToNewest(a, b)
+      {
+        return a.dateCreated - b.dateCreated;
+      }
+
+      function sortNewestToOldest(a, b)
+      {
+        return b.dateCreated - a.dateCreated;
+      }
+
+      function getSelectedTagSet() {
+        let allOptionElements = document.querySelectorAll('#selectable-tags select option')
+        let selectedOptionElementValues = Array.prototype.filter.call(allOptionElements, element => element.selected)
+                .map(element => element.value)
+                .filter(Boolean)
+        return new Set(selectedOptionElementValues)
+      }
+
+      function navigateToTag(tag)
+      {
+        console.log("navigate to tag: " + tag)
+
+        tagSelectionOptionHtmlElements.forEach(option => {
+          if (option.value === tag) {
+            option.selected = true;
+          }
+          else
+          {
+            option.selected = false;
+          }
+        })
+
+        displayImagesWithSelectedTags();
+      }
+
+      function TagCollectionNode(tag, parentTaggedImageDatas)
+      {
+        this.tag = tag
+        this.taggedImages = parentTaggedImageDatas.filter(data => data.tags.has(tag));
+        this.childTags = taggedImages.reduce((data, acc) => acc.add(data.tags), new Set());
+      }
+
+
+
+    </script>
+  </body>
+</html>
