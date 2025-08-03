@@ -1,6 +1,6 @@
 <html>
   <head>
-    <link type="text/css" rel="stylesheet" href="art/art.css">
+    <link type="text/css" rel="stylesheet" href="art.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
 
@@ -38,7 +38,7 @@
       document.querySelector("input#date-ascending").onclick = e => sortFunction = sortOldestToNewest;
       document.querySelector("input#date-descending").onclick = e => sortFunction = sortNewestToOldest;
 
-      fetch("art/manifest.json")
+      fetch("manifest.json")
         .then(response => response.json())
         .then(data => {
           const {mapOfTagTypeToTagInfosSet, imageInfos} = processManifest(data);
@@ -113,7 +113,7 @@
 
             return `
               <li>
-                  <a href="art/scaled/${imageData.relativeFilePath}"><img src="art/thumbnails/${imageData.relativeFilePath}"/></a>
+                  <a href="scaled/${imageData.relativeFilePath}"><img src="thumbnails/${imageData.relativeFilePath}"/></a>
                   <p class="image-title">${imageData.title}</p>
                   <p class="image-description">${imageData.description || ''}</p>
                   <p class="image-tag-list">${tagListHtmlString}</p>
