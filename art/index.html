@@ -4,36 +4,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
 
-    <title>clairemation</title>
+    <title>clairemation's art</title>
   </head>
   <body>
-    <h1>clairemation</h1>
 
-    <p></p>
-    <ul id = "selectable-tags"></ul>
-    <p id="selected-tags"></p>
-    <fieldset>
-      <legend>Display order:</legend>
-      <input type="radio" id="date-ascending" name="order" value="0" checked />
-      <label for="date-ascending">Oldest to newest</label>
-      <input type="radio" id="date-descending" name="order" value="1" />
-      <label for="date-descending">Newest to oldest</label>
-    </fieldset>
-    <button id="show-button">Show</button>
+    <div id="content">
+      <h1>clairemation's art</h1>
 
-    <div><ul id="art-display"></ul></div>
+      <p>Select category tags to view. Select multiple tags to find images that match <em>all</em> of those tags. Select nothing to show all images.</p>
+      <div id = "selectable-tags"></div>
+      <fieldset>
+        <legend>Display order:</legend>
+        <input type="radio" id="date-descending" name="order" value="1" checked />
+        <label for="date-descending">Newest to oldest</label>
+        <input type="radio" id="date-ascending" name="order" value="0" />
+        <label for="date-ascending">Oldest to newest</label>
+      </fieldset>
+      <button id="show-button">Show</button>
 
+      <div><ul id="art-display"></ul></div>
+
+    </div>
+
+    <div id="modal-background" class="hidden" onclick="this.className = 'hidden'">
+      <p id="modal"></p>
+    </div>
 
 
     <script>
       const tagSelectionHtmlElement = document.getElementById("selectable-tags")
-      const selectedTagsDisplay = document.getElementById("selected-tags")
-      let tagSelectionOptionHtmlElements;
-      let imageDatas;
-      let selectedTags = []
-      let selectedImages = []
+      let modalBackground = document.getElementById("modal-background")
+      let modalText = document.querySelector("p#modal");
 
-      let sortFunction = sortOldestToNewest;
+      let tagSelectionOptionHtmlElements;
+
+      let imageDatas;
+      let allTags;
+
+      let sortFunction = sortNewestToOldest;
 
       document.querySelector("input#date-ascending").onclick = e => sortFunction = sortOldestToNewest;
       document.querySelector("input#date-descending").onclick = e => sortFunction = sortNewestToOldest;
@@ -43,30 +51,16 @@
         .then(data => {
           const {mapOfTagTypeToTagInfosSet, imageInfos} = processManifest(data);
           imageDatas = imageInfos;
-          const selector = renderTagSelectionHtml(mapOfTagTypeToTagInfosSet);
-          selector.onchange = updateSelectedTags;
+          allTags = Array.prototype.flatMap.call([...mapOfTagTypeToTagInfosSet.values()], e => e);
 
-          tagSelectionOptionHtmlElements = document.querySelectorAll("option")
+          renderTagSelectionHtml(mapOfTagTypeToTagInfosSet);
 
+          const allTagTooltips = document.querySelectorAll(".tag-tooltip");
+          allTagTooltips.forEach(tooltip => tooltip.addEventListener("click", displayTagDescription));
+
+          tagSelectionOptionHtmlElements = document.querySelectorAll("#selectable-tags input");
           document.getElementById('show-button').onclick = displayImagesWithSelectedTags;
         })
-
-      function updateSelector(ev)
-      {
-
-      }
-
-      function updateSelectedTags(ev)
-      {
-        const selector = ev.target;
-        const selectedOptions = Array.prototype.filter.call(selector.options, op => op.selected === true)
-        const selectedTags = selectedOptions.map(op => op.value)
-        selectedTagsDisplay.innerHTML = selectedTags.map(tag => {
-          // const tagDescription =
-          return `<span>${tag}<button onclick="console.log(${tag.description})">&#9432;</button></span>`
-        });
-
-      }
 
       function processManifest(manifest) {
         const tags = manifest.tags;
@@ -81,23 +75,34 @@
         }
       }
 
-      function renderTagSelectionHtml(mapOfTagTypeToTagInfosSet, alreadySelectedTags = []) {
+      function renderTagSelectionHtml(mapOfTagTypeToTagInfosSet) {
         const tagSelectorHtmlElementStrings = mapOfTagTypeToTagInfosSet.entries().map(tagTypeAndTagInfosSetPair => {
-          let tagType = tagTypeAndTagInfosSetPair[0];
-          let tagInfosSet = tagTypeAndTagInfosSetPair[1]
+          const tagType = tagTypeAndTagInfosSetPair[0];
+          const tagInfosSet = tagTypeAndTagInfosSetPair[1];
 
-          let tagNameOptionsHtmlString = tagInfosSet.map(tagInfo => `<option value = '${tagInfo.name}'>${tagInfo.name}</a></option>`).join('')
+          const tagNameOptionsHtmlString = tagInfosSet.map(tagInfo => {
+            const infoButtonHtml = tagInfo.description ?
+                    `<span class="tag-tooltip" data-description="${tagInfo.description}">&#9432;</span>`
+                    : ''
+
+            return `
+            <div class="option">
+                <input type='checkbox' value='${tagInfo.name}' id='input-${tagInfo.name}' />
+                <label for='input-${tagInfo.name}'>${tagInfo.name}</label>
+                ${infoButtonHtml}
+            </div>`
+          }).join('');
 
           return `
-                <optgroup label="${tagType}">
-                    ${tagNameOptionsHtmlString}
-                </optgroup>
+                <fieldset>
+                  <legend>${tagType}</legend>
+                      <div class="options">${tagNameOptionsHtmlString}</div>
+                </fieldset>
             `
         })
 
-        const selector = document.createElement("select");
-        selector.multiple = true;
-        selector.innerHTML = `<option value=''>any</option>` + tagSelectorHtmlElementStrings.toArray().join('')
+        const selector = document.createElement('div')
+        selector.innerHTML = tagSelectorHtmlElementStrings.toArray().join('');
         tagSelectionHtmlElement.appendChild(selector);
 
         return selector
@@ -115,19 +120,16 @@
               <li>
                   <a href="scaled/${imageData.relativeFilePath}"><img src="thumbnails/${imageData.relativeFilePath}"/></a>
                   <p class="image-title">${imageData.title}</p>
+                  <p class="image-year">${imageData.dateCreated.toString().slice(0,4)}</p>
                   <p class="image-description">${imageData.description || ''}</p>
                   <p class="image-tag-list">${tagListHtmlString}</p>
               </li>`
           });
 
-        if (selectedImages.length === 0)
-        {
-          document.querySelector("#art-display").innerHTML = `<p style="font-size: medium;">No images found matching all your selected tags. Try removing some tags to broaden your search.</p>`
-        }
-
-        else {
-          document.querySelector("#art-display").innerHTML = imageHtmlElements.join("")
-        }
+        document.querySelector("#art-display").innerHTML =
+                selectedImages.length === 0 ?
+                        `<p style="font-size: medium;">No images found matching all your selected tags. Try removing some tags to broaden your search.</p>` :
+                        imageHtmlElements.join("");
       }
 
       function sortOldestToNewest(a, b)
@@ -141,8 +143,7 @@
       }
 
       function getSelectedTagSet() {
-        let allOptionElements = document.querySelectorAll('#selectable-tags select option')
-        let selectedOptionElementValues = Array.prototype.filter.call(allOptionElements, element => element.selected)
+        let selectedOptionElementValues = Array.prototype.filter.call(tagSelectionOptionHtmlElements, element => element.checked)
                 .map(element => element.value)
                 .filter(Boolean)
         return new Set(selectedOptionElementValues)
@@ -150,28 +151,23 @@
 
       function navigateToTag(tag)
       {
-        console.log("navigate to tag: " + tag)
-
-        tagSelectionOptionHtmlElements.forEach(option => {
-          if (option.value === tag) {
-            option.selected = true;
-          }
-          else
-          {
-            option.selected = false;
-          }
-        })
-
+        selectTag(tag);
         displayImagesWithSelectedTags();
       }
 
-      function TagCollectionNode(tag, parentTaggedImageDatas)
-      {
-        this.tag = tag
-        this.taggedImages = parentTaggedImageDatas.filter(data => data.tags.has(tag));
-        this.childTags = taggedImages.reduce((data, acc) => acc.add(data.tags), new Set());
+      function selectTag(tag) {
+        Array.prototype.forEach.call(tagSelectionOptionHtmlElements, option => {
+          option.selected = option.value === tag;
+        })
       }
 
+      function displayTagDescription(event)
+      {
+        modalBackground.className = "shown";
+        modalText.innerHTML = event.target.dataset.description;
+        modalText.style.left = event.clientX;
+        modalText.style.top = event.clientY;
+      }
 
 
     </script>
