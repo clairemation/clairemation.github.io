@@ -1,7 +1,7 @@
 {
   "tags": [
     {
-      "name": "What Remains of Us",
+      "name": "Death Masks",
       "type": "project name",
       "description": "A story about two French Revolutionary ex-lovers who must confront a renewed threat 200 years after death."
     },
@@ -37,22 +37,23 @@
     },
     {
       "name": "line drawing",
-      "type": "type",
+      "type": "image type",
       "description": "Relatively clean or inked line art"
     },
     {
       "name": "painting",
-      "type": "type",
-      "description": "More about shape or shading than line."
+      "type": "image type",
+      "description": "More about shape, color, or value than line."
     },
     {
       "name": "sketch",
-      "type": "type",
+      "type": "image type",
       "description": "Exploratory work without a high level of finish"
     },
     {
       "name": "pen",
-      "type": "medium"
+      "type": "medium",
+      "description": "Ballpoint, technical, nib, brush, etc."
     },
     {
       "name": "marker",
@@ -66,7 +67,8 @@
     },
     {
       "name": "watercolor",
-      "type": "medium"
+      "type": "medium",
+      "description": "Water-soluble media including classic watercolors and Derwent Inktense"
     },
     {
       "name": "black and white",
@@ -97,25 +99,33 @@
   ],
   "images": [
     {
+      "imageName": "but-i-frighten-you.jpg",
+      "title": "But I Frighten You, My Love",
+      "relativeFilePath": "but-i-frighten-you.jpg",
+      "dateCreated": 20250908,
+      "description": "Concpet of their first time meeting since they were living people 200 years ago.",
+      "tags": ["Death Masks", "black and white", "Procreate", "line drawing"]
+    },
+    {
       "imageName": "raptors-in-the-mist.jpg",
       "title": "Raptors in the Mist",
       "relativeFilePath": "raptors-in-the-mist.jpg",
       "dateCreated": 20240414,
-      "tags": ["dinosaur", "watercolor", "color"]
+      "tags": ["dinosaur", "watercolor", "color", "painting"]
     },
     {
       "imageName": "dino-princess-wc.jpg",
       "title": "Dinosaur princess watercolor sketch",
       "relativeFilePath": "dino-princess-wc.jpg",
       "dateCreated": 20191019,
-      "tags": ["Dinosaur Princess", "dinosaur", "watercolor", "color"]
+      "tags": ["Dinosaur Princess", "dinosaur", "watercolor", "color", "painting"]
     },
     {
       "imageName": "dino-princess-sleeping.jpg",
       "title": "Dinosaur princess asleep with siblings",
       "relativeFilePath": "dino-princess-sleeping.jpg",
       "dateCreated": 20191019,
-      "tags": ["Dinosaur Princess", "dinosaur", "pen", "black and white"]
+      "tags": ["Dinosaur Princess", "dinosaur", "pen", "black and white", "sketch"]
     },
     {
       "imageName": "birdie-pelham.jpg",
@@ -123,7 +133,7 @@
       "description": "Part of a series of Downton Abbey characters as dinosaurs",
       "relativeFilePath": "birdie-pelham.jpg",
       "dateCreated": 20190504,
-      "tags": ["dinosaur", "watercolor", "color"]
+      "tags": ["dinosaur", "watercolor", "color", "line drawing"]
     },
     {
       "imageName": "carnotaurusson.jpg",
@@ -131,7 +141,7 @@
       "description": "Part of a series of Downton Abbey characters as dinosaurs",
       "relativeFilePath": "carnotaurusson.jpg",
       "dateCreated": 20190423,
-      "tags": ["dinosaur", "watercolor", "color"]
+      "tags": ["dinosaur", "watercolor", "color", "line drawing"]
     },
     {
       "imageName": "edith-growly.jpg",
@@ -139,28 +149,28 @@
       "description": "Part of a series of Downton Abbey characters as dinosaurs",
       "relativeFilePath": "edith-growly.jpg",
       "dateCreated": 20190418,
-      "tags": ["dinosaur", "watercolor", "color"]
+      "tags": ["dinosaur", "watercolor", "color", "line drawing"]
     },
     {
       "imageName": "dinopensketch.jpg",
       "title": "Raptor portrait pen sketch",
       "relativeFilePath": "dinopensketch.jpg",
       "dateCreated": 20190227,
-      "tags": ["dinosaur", "pen", "black and white"]
+      "tags": ["dinosaur", "pen", "black and white", "line drawing", "sketch"]
     },
     {
       "imageName": "dinoprincessheadbump.jpg",
       "title": "Dinosaur princess head bump",
       "relativeFilePath": "dinoprincessheadbump.jpg",
       "dateCreated": 20190112,
-      "tags": ["Dinosaur Princess", "dinosaur", "marker", "color"]
+      "tags": ["Dinosaur Princess", "dinosaur", "marker", "color", "line drawing"]
     },
     {
       "imageName": "nom-nom.jpg",
       "title": "Nom nom",
       "relativeFilePath": "nom-nom.jpg",
       "dateCreated": 20190120,
-      "tags": ["Dinosaur Princess", "dinosaur", "marker", "color"]
+      "tags": ["Dinosaur Princess", "dinosaur", "marker", "color", "line drawing"]
     },
     {
       "imageName": "thomas-baryonyx.jpg",
@@ -168,7 +178,7 @@
       "description": "Part of a series of Downton Abbey characters as dinosaurs",
       "relativeFilePath": "thomas-baryonyx.jpg",
       "dateCreated": 20190419,
-      "tags": ["dinosaur", "watercolor", "color"]
+      "tags": ["dinosaur", "watercolor", "color", "line drawing"]
     },
     {
       "imageName": "alligator-demoness-nice-clothes.jpg",
@@ -211,7 +221,7 @@
       "title": "Assassin design",
       "relativeFilePath": "assassin-design.jpg",
       "dateCreated": 20250227,
-      "tags": ["What Remains of Us", "black and white", "character design", "Procreate", "sketch", "line drawing"]
+      "tags": ["Death Masks", "black and white", "character design", "Procreate", "sketch", "line drawing"]
     },
     {
       "imageName": "ballroom.jpg",
@@ -290,7 +300,7 @@
       "description": "Mockup of a situation from a prior story version",
       "relativeFilePath": "facing-villain.jpg",
       "dateCreated": 20250315,
-      "tags": ["What Remains of Us", "black and white", "line drawing", "Procreate", "lettering"]
+      "tags": ["Death Masks", "black and white", "line drawing", "Procreate", "lettering"]
     },
     {
       "imageName": "feu-et-pleuie.jpg",
@@ -341,7 +351,7 @@
       "title": "Knight designs",
       "relativeFilePath": "knight-designs.jpg",
       "dateCreated": 20250227,
-      "tags": ["What Remains of Us", "black and white", "sketch", "character design", "Procreate"]
+      "tags": ["Death Masks", "black and white", "sketch", "character design", "Procreate"]
     },
     {
       "imageName": "safe-with-me.jpg",
@@ -374,7 +384,7 @@
     },
     {
       "imageName": "starwars-valentine.jpg",
-      "title": "Starwars Valentine",
+      "title": "Star Wars Valentine featuring Kylo Ren",
       "relativeFilePath": "starwars-valentine.jpg",
       "dateCreated": 20230214,
       "tags": ["Fanart: Star Wars", "Procreate", "line drawing", "black and white", "line drawing", "lettering"]
@@ -414,7 +424,7 @@
       "title": "Whats Left Of Me",
       "relativeFilePath": "whats-left-of-me.jpg",
       "dateCreated": 20250708,
-      "tags": ["What Remains of Us", "color", "painting", "Procreate"]
+      "tags": ["Death Masks", "color", "painting", "Procreate"]
     },
     {
       "imageName": "zelda-fanart-doodle.jpg",
