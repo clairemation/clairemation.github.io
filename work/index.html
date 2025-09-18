@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link type="text/css" rel="stylesheet" href="work.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+  <header>
+    <nav id="menu">
+      <a href="..">Home</a> > personal work
+    </nav>
+  </header>
+
+  <section id="cv">
+    <h1>Professional work</h1>
+    <div id="jobs-parent"></div>
+
+
+  </section>
+
+  <script>
+    const dateSearchPattern = /(?<year>\d{4})(?<month>\d{2})/;
+    const dateReplacePattern = "$<month>/$<year>";
+
+    fetch("jobs.json")
+        .then(response => response.json())
+        .then(data => {
+            const jobs = data.jobs;
+
+            const jobsHtmlStrings = jobs.map(job =>
+                `
+                    <div class="job-info">
+                        <div class="job-info-title">
+                            <h1>${job.companyName}</h1>
+                            <h2>${job.position}</h2>
+                            <h3>${formatDate(job.startDate)} - ${formatDate(job.endDate)}</h3>
+                        </div>
+                        <div class="job-info-body">
+                            <div class="job-image">
+                                ${job.image ? '<img src="images/' + job.image + '"/>' : ''}
+                            </div>
+                            <div class="job-description">${job.description}</div>
+                        </div>
+                    </div>
+                `)
+            document.querySelector("#jobs-parent").innerHTML = jobsHtmlStrings.join('');
+        });
+
+    function formatDate(dateString) {
+        return dateString.replace(dateSearchPattern, dateReplacePattern);
+    }
+
+  </script>
+
+</body>
+</html>

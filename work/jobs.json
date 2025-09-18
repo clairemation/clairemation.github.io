@@ -1,0 +1,37 @@
+{
+  "summary": "Passionate game engineer with over 7 years of experience in Unity/C# and more. Proven track record in optimizing performance, increasing engagement, and leaving codebases more robust and maintainable than I found them. Cross-disciplinary background in both technical skills and visual arts. Strong communication and collaboration with both engineers and non-technical stakeholders.",
+  "jobs":
+          [
+            {
+              "companyName": "JamCity",
+              "position": "Senior Software Engineer",
+              "startDate": "202305",
+              "endDate": "202408",
+              "description": "<ul><li>Architected and improved gameplay systems in the Cookie Jam franchise in Unity/C#, enhancing gameplay experience and codebase maintainability.</li><li>Created an asynchronous job framework that runs allocation-free, improving performance and reliability for automated testing and error tracking.</li></ul>",
+              "image": "cookie-jam-gameplay.jpg"
+            },
+            {
+              "companyName": "BigBoxVR (part of Meta Reality Labs)",
+              "position": "Software Engineer",
+              "startDate": "202203",
+              "endDate": "202302",
+              "description": "<ul><li>Optimized custom multi-threaded physics system and live multiplayer systems using the Mirror networking framework, stabilizing client framerate and boosting server tickrate by 120%.</li><li>Enhanced game performance and user experience by addressing critical issues and implementing efficient solutions, improving overall gameplay quality.</li></ul>",
+              "image": "population-one.jpg"
+            },
+            {
+              "companyName": "Playdots (part of Take-Two Interactive)",
+              "position": "Software Engineer",
+              "startDate": "202009",
+              "endDate": "202112",
+              "description": "<ul><li>Engineered Unity/C# gameplay systems for TwoDots, a multimillion-player mobile puzzle game, enhancing user engagement and retention and reducing future development time.</li><li>Collaborated with designers to ensure perfect implementation of gameplay features, while minimizing bugs and technical debt.</li></ul>",
+              "image": "TD_Gameplay01.jpg"
+            },
+            {
+              "companyName": "Paramount Global",
+              "position": "Software Engineer",
+              "startDate": "201706",
+              "endDate": "202009",
+              "description": "<ul><li>Programmed AR games and prototypes in Unity/C# for Nickelodeon and Noggin/Nick. Jr.</li><li>Prototyped Roku and AppleTV apps using Swift and BrightScript for Noggin and Paramount+.</li><li>Maintained and improved Nickelodeon Web game platform HTML5/JavaScript build tools and SDKs. Supported and engineered solutions for third-party developers for the platform.</li></ul>"
+            }
+          ]
+}
