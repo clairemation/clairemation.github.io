@@ -1,0 +1,456 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, caption {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  vertical-align: text-top;
+  background: transparent;
+}
+
+body {
+  font-family: 'Avenir Next', Avenir, sans-serif;
+  text-align: center;
+  overflow: hidden;
+  background-size: 100%;
+  background: #fff fixed;
+}
+
+a, a:visited {
+  color: initial;
+  text-decoration: initial; }
+  a:hover li p, a:visited:hover li p {
+    /*content: "• • • • • • •";*/
+    /*position: absolute;*/
+    /*display: block;*/
+    /*bottom: 5px;*/
+    /*left: 0;*/
+    /*width: 100%;*/
+    /*margin: -0.5em 0;*/
+    /*text-align: center;*/
+    /*color: #7c7c7c;*/
+    /*color: #b45b3a !important;*/
+    /*margin-bottom: -2px;*/
+    /*border-bottom: 2px dotted #7c7c7c;*/
+    /*border-style: dotted;*/
+    /*transform: rotateZ(-2deg) translateY(-10px);*/
+  }
+
+p, h3 {
+  text-align: left; }
+
+p {
+  max-width: 44em;
+  text-align: left;
+  margin: 1em 0;
+}
+
+#work {
+  text-align: left;
+}
+
+#work li {
+  display: inline;
+  list-style: armenian;
+}
+
+.project-block {
+  text-align: left;
+}
+
+#projects ul.tags {
+  border: none;
+  display: flex;
+
+}
+
+.tags li {
+  text-align: left;
+  font-size: small;
+  color: #1e5072;
+  background: #a1c5df;
+  border: 1px solid #498aba;
+  border-radius: .3em;
+  display: inline-block;
+  margin-right: 1em;
+  padding: 0.2em .5em;
+}
+
+.tags li:last-child {
+  margin-right: 0;
+}
+
+/*-- HAMBURGER MENU BELOW 700 PX --*/
+@media screen and (max-width: 700px) {
+  header {
+    padding-bottom: 20px;
+    position: absolute; }
+
+  #menu {
+    text-align: left;
+  }
+
+  #menu-toggle-button {
+    transform: scale(0.7);
+  }
+
+  #menu-contents {
+    text-align: left;
+    width: 100%;
+    z-index: 100;
+    display: none;
+    margin: 0;
+    border-left: 0;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    left: 0;
+  }
+
+  #menu.is-active #menu-contents{
+    display: block;
+  }
+  #modal-overlay {
+    background: rgba(102, 102, 102, 0.5);
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    z-index: 1; }
+
+  #menu li {
+    text-align: center;
+    font-weight: lighter;
+    padding: 20px 70px; }
+  #menu.is-active {
+    display: block;
+  }
+}
+
+/*-- HIDE HAMBURGER MENU ABOVE 700 PX --*/
+@media screen and (min-width: 701px) {
+  #menu-toggle-button {
+    display: none;
+  }
+}
+
+/*-- SINGLE COLUMN AT LOW RESOLUTIONS --*/
+@media screen and (max-width: 750px) {
+  #projects ul {
+    columns: 1;
+    display: block;
+    height: initial;
+    padding-bottom: 2em; }
+  .project-block {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    padding-top: 50px;
+    position: relative;
+  }
+  .project-block.mobile-big a {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-block.mobile-big img {
+    align-self: center;
+  }
+
+  .project-block h4 {
+    order: 1;
+  }
+  .project-block h3 {
+    order: 2;
+    margin-bottom: 10px; }
+  .project-block img {
+    width: 100px;
+    order: 3;
+    height: auto; }
+  .project-block p {
+    order: 4;
+    padding-right: 20px; }
+  .project-block {
+    padding-left: 30px;
+    padding-right: 30px; }
+  .project-block.mobile-big a {
+    padding-right: 0; }
+  .project-block.mobile-big img {
+    display: block;
+    float: none;
+    height: auto;
+    margin: 0;
+    text-align: center;
+    width: 100%; }
+  .project-block.mobile-small img {
+    display: block;
+    float: right;
+    padding-left: 10px;
+    padding-bottom: 10px;
+  }
+  .project-block.mobile-no-pic {
+    padding-top: 25px; }
+  .project-block.mobile-no-pic p {
+    padding-right: 20px; }
+  .project-block.mobile-no-pic img {
+    display: none; }
+}
+
+/* TWO COLUMNS AT MIDDLE RESOLUTIONS */
+@media screen and (min-width: 751px){
+  #projects {
+    padding: 2em;
+  }
+
+  #projects ul {
+    border-top: 1px solid #a7a7a7;
+    columns: 2;
+    max-width: 100%;
+    width: 100%; }
+
+  .project-block {
+    border-top: 0;
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 2% 0;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 20px 30px;
+    width: 100%; }
+
+  .project-block h4 {
+    left: 0;
+    padding: 2px 30px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+/* THREE COLUMNS AT HIGH RESOLUTIONS*/
+@media screen and (min-width: 1500px){
+  #projects ul {
+    columns: 3;
+  }
+}
+
+strong {
+  font-weight: 600; }
+
+#main-pane {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: white; }
+
+header {
+  text-align: center;
+  padding-bottom: 1em;
+  position: relative; }
+
+#menu li {
+  display: flex;
+  align-content: center;justify-content: space-around;
+  align-items: center;
+}
+
+#menu img {
+  width: 40px;
+  height: 40px; }
+
+/* Some individual tweaking to make the icons optically the same size*/
+
+#menu li:nth-child(1) img {
+  width: 48px;
+  height: 48px;
+}
+
+#menu li:nth-child(2) img {
+  width: 32px;
+  height: 32px;
+}
+
+#menu li:nth-child(3) img {
+  width: 40px;
+  height: 40px;
+}
+
+#menu li:nth-child(4) img {
+  width: 38px;
+  height: 38px;
+}
+
+header p {
+  text-align: center;
+}
+
+h1 {
+  font-size: 2em; }
+
+#menu-contents {
+  margin: 10px;
+  font-weight: 700; }
+
+#header-buttons button a {
+  color: #fff; }
+
+#maintitle {
+  padding-top: 2.5em; }
+
+header h1, header #intro {
+  padding-left: 20px;
+  padding-right: 20px; }
+
+#menu-popup-controls {
+  text-align: left;
+  display: inline-block;
+  margin: 1em 0 1em 0; }
+
+li {
+  list-style-type: none;
+  position: relative; }
+
+.button a {
+  color: #fff; }
+
+#projects ul {
+  column-fill: balance;
+}
+
+.project-block img {
+  float: right;
+  margin-left: 10px;
+  width: 25%; }
+
+.project-block h4 {
+  color: #7c7c7c;
+  font-size: .8em;
+  text-align: left;
+  text-transform: uppercase; }
+
+.project-block.desktop-small img {
+  display: none; }
+
+.project-block h3 {
+  font-size: 1.2em; }
+
+#about {
+  display: inline-block;
+}
+
+#about p {
+  padding-left: 30px;
+  padding-right: 30px; }
+
+.highlighted {
+  animation-name: highlight;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+}
+
+@keyframes highlight {
+  0% {background: #ffef62;  box-shadow: #ffef62 0px 0 0px 0px}
+  2% {box-shadow: #ffef62 0px 0 5px 11px}
+  20% {background: #ffef62;  box-shadow: #ffef62 0px 0 20px 20px}
+  100% {background: rgba(0,0,0,0%);box-shadow: rgba(0,0,0,0%) 0px 0 40px 40px}
+}
+
+/* FROSTED MENU EFFECT */
+@supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)){
+  #menu {
+    background: rgba(241, 241, 241, 0.3)
+      linear-gradient(0deg,
+            #d1d1d1 0%,
+            rgba(255, 255, 255, 0) 50%,
+            rgba(255, 255, 255, 0) 90%,
+            #d1d1d1 100%); !important;
+  }
+}
+
+/*!
+ * Hamburgers
+ * @description Tasty CSS-animated hamburgers
+ * @author Jonathan Suh @jonsuh
+ * @site https://jonsuh.com/hamburgers
+ * @link https://github.com/jonsuh/hamburgers
+ */
+.hamburger {
+  padding: 15px 15px;
+  display: inline-block;
+  cursor: pointer;
+  transition-property: opacity, filter;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  background-color: transparent;
+  border: 0;
+  margin: 0;
+  overflow: visible; }
+.hamburger:hover {
+  opacity: 0.7; }
+.is-active .hamburger:hover {
+  opacity: 0.7; }
+.is-active .hamburger .hamburger-inner,
+.is-active .hamburger .hamburger-inner::before,
+.is-active .hamburger .hamburger-inner::after {
+  background-color: #000; }
+
+.hamburger-box {
+  width: 40px;
+  height: 24px;
+  display: inline-block;
+  position: relative; }
+
+.hamburger-inner {
+  display: block;
+  top: 50%;
+  margin-top: -2px; }
+.hamburger-inner, .hamburger-inner::before, .hamburger-inner::after {
+  width: 40px;
+  height: 4px;
+  background-color: #000;
+  border-radius: 4px;
+  position: absolute;
+  transition-property: transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease; }
+.hamburger-inner::before, .hamburger-inner::after {
+  content: "";
+  display: block; }
+.hamburger-inner::before {
+  top: -10px; }
+.hamburger-inner::after {
+  bottom: -10px; }
+
+/*
+   * Squeeze
+   */
+.hamburger--squeeze .hamburger-inner {
+  transition-duration: 0.075s;
+  transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19); }
+.hamburger--squeeze .hamburger-inner::before {
+  transition: top 0.075s 0.12s ease, opacity 0.075s ease; }
+.hamburger--squeeze .hamburger-inner::after {
+  transition: bottom 0.075s 0.12s ease, transform 0.075s cubic-bezier(0.55, 0.055, 0.675, 0.19); }
+
+.is-active .hamburger--squeeze .hamburger-inner {
+  transform: rotate(45deg);
+  transition-delay: 0.12s;
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); }
+.is-active .hamburger--squeeze .hamburger-inner::before {
+  top: 0;
+  opacity: 0;
+  transition: top 0.075s ease, opacity 0.075s 0.12s ease; }
+.is-active .hamburger--squeeze .hamburger-inner::after {
+  bottom: 0;
+  transform: rotate(-90deg);
+  transition: bottom 0.075s ease, transform 0.075s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1); }
+

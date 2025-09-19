@@ -1,0 +1,76 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, caption {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    vertical-align: text-top;
+    background: transparent;
+}
+
+body {
+    display: flex;
+    font-family: 'Avenir Next', Avenir, sans-serif;
+    text-align: center;
+    /*overflow: hidden;*/
+    background-size: 100%;
+    background: #fff fixed;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    width: 35em;
+    max-width: 85%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+}
+
+#about ul {
+    list-style-position: outside;
+    position: relative;
+    left: 1em;
+}
+
+nav ul {
+    list-style: none;
+    left: revert;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    font-size: larger;
+}
+
+nav li {
+    width: 15em;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+nav li img {
+    max-width: 6em;
+}
+
+nav li p {
+    text-align: center;
+    /* font-variant: petite-caps; */
+}
+
+p {
+    margin: 1em 0;
+    text-align: left;
+    /* font-variant: petite-caps; */
+}

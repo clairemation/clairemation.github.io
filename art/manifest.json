@@ -3,7 +3,7 @@
     {
       "name": "Death Masks",
       "type": "project name",
-      "description": "A story about two French Revolutionary ex-lovers who must confront a renewed threat 200 years after death."
+      "description": "A story about two undead French Revolutionary lovers who must confront a neo-techno-Royalist threat in modern Paris."
     },
     {
       "name": "The Beau and the Beastess",
@@ -18,7 +18,7 @@
     {
       "name": "Fanart: Paris Olympics 2024",
       "type": "project name",
-      "description": "Fan art of characters from the wonderful Paris Olympics opening ceremonies"
+      "description": "Fan art of characters from the Paris Olympics opening ceremonies"
     },
     {
       "name": "Fanart: Sandman",
@@ -72,28 +72,28 @@
     },
     {
       "name": "black and white",
-      "type": "other"
+      "type": "other tags"
     },
     {
       "name": "character design",
-      "type": "other"
+      "type": "other tags"
     },
     {
       "name": "creature",
-      "type": "other",
+      "type": "other tags",
       "description": "Fictional creatures"
     },
     {
       "name": "color",
-      "type": "other"
+      "type": "other tags"
     },
     {
       "name": "dinosaur",
-      "type": "other"
+      "type": "other tags"
     },
     {
       "name": "lettering",
-      "type": "other",
+      "type": "other tags",
       "description": "Incorporates words"
     }
   ],

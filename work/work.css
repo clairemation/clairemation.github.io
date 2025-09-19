@@ -19,14 +19,15 @@ body {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 1em;
     align-content: center;
     align-items: center;
     justify-content: center;
 }
 
 .job-info {
-    width: 80%;
+    width: 50%;
     text-align: left;
     margin-top: 4em;
 }
@@ -54,15 +55,15 @@ body {
     padding: 0 1em;
 }
 
-.job-info:nth-child(odd) .job-info-body {
-    display: flex;
-    flex-direction: row-reverse;
-    gap: 1em;
-}
+/*.job-info:nth-child(odd) .job-info-body {*/
+/*    display: flex;*/
+/*    flex-direction: row-reverse;*/
+/*    gap: 1em;*/
+/*}*/
 
-.job-info:nth-child(even) .job-info-body {
+.job-info .job-info-body {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 1em;
 }
 
@@ -73,6 +74,14 @@ body {
     position: relative;
     /*top: -0.75em;*/
     z-index: -1;
+}
+
+.job-image {
+    display: flex;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
 }
 
 .job-image img {

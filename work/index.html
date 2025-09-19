@@ -9,7 +9,7 @@
 
   <header>
     <nav id="menu">
-      <a href="..">Home</a> > personal work
+      <a href="..">Home</a> > professional work
     </nav>
   </header>
 
@@ -23,6 +23,7 @@
   <script>
     const dateSearchPattern = /(?<year>\d{4})(?<month>\d{2})/;
     const dateReplacePattern = "$<month>/$<year>";
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     fetch("jobs.json")
         .then(response => response.json())
@@ -49,7 +50,10 @@
         });
 
     function formatDate(dateString) {
-        return dateString.replace(dateSearchPattern, dateReplacePattern);
+        const yearNum = dateString.slice(0, 4);
+        const monthNum = dateString.slice(4, 6);
+        const monthName = monthNames[parseInt(monthNum) - 1];
+        return `${monthName} ${yearNum}`
     }
 
   </script>
