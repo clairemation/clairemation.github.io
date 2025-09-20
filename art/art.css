@@ -176,3 +176,8 @@ button:hover {
 #art-display button {
     margin: 1em 0 5em 0;
 }
+
+h2, #updated {
+    font-size: small;
+    font-weight: 400;
+}
