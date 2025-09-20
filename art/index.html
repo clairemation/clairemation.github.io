@@ -1,7 +1,7 @@
 <html>
   <head>
     <link type="text/css" rel="stylesheet" href="art.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
 
     <title>clairemation's art</title>
@@ -30,7 +30,7 @@
       </fieldset>
       <button id="show-button">Search</button>
 
-      <div><ul id="art-display"></ul></div>
+      <ul id="art-display"></ul>
 
     </div>
 
@@ -129,7 +129,7 @@
 
         selectedImageDatas = selectedImages.sort(sortFunction)
 
-        const imageHtmlElements = selectedImageDatas.map(mapImageDataToImageDisplayHtmlString);
+        const imageHtmlElements = selectedImageDatas.map(mapImageDataToLiNode);
 
         const parentNode = document.querySelector("#art-display");
         parentNode.innerHTML = '';
@@ -154,12 +154,15 @@
 
         const imagesInGroup = selectedImageDatas.slice(firstImageIndex, lastImageIndex);
 
-        const imageGroupHtmlString = imagesInGroup.map(mapImageDataToImageDisplayHtmlString).join('');
-        const imageGroupParentHtmlNode = document.createElement("div");
-        imageGroupParentHtmlNode.innerHTML = imageGroupHtmlString;
-        
-        parentNode.appendChild(imageGroupParentHtmlNode);
-        
+        const imageGroupLiNodes = imagesInGroup.map(mapImageDataToLiNode);
+        // const imageGroupParentHtmlNode = document.createElement("div");
+        // imageGroupParentHtmlNode.innerHTML = imageGroupLiNodes;
+
+        for (let node of imageGroupLiNodes)
+        {
+          parentNode.appendChild(node);
+        }
+
         if (!isLastGroup)
         {
           nextImageGroupIndex++;
@@ -178,18 +181,22 @@
       }
 
 
-      function mapImageDataToImageDisplayHtmlString(imageData)
+      function mapImageDataToLiNode(imageData)
       {
-        const tagListHtmlString = imageData.tags.keys().map(tag => `<span class="image-tag" onclick="navigateToTag('${tag}')">${tag}</span>`).toArray().join(' ')
+        const liNode = document.createElement("li");
 
-        return `
-              <li>
-                  <a href="scaled/${imageData.relativeFilePath}"><img src="thumbnails/${imageData.relativeFilePath}"/></a>
-                  <p class="image-title">${imageData.title}</p>
-                  <p class="image-year">${imageData.dateCreated.toString().slice(0,4)}</p>
-                  <p class="image-description">${imageData.description || ''}</p>
-                  <p class="image-tag-list">${tagListHtmlString}</p>
-              </li>`
+        const tagListItemsHtmlString = imageData.tags.keys().map(tag => `<li class="image-tag" onclick="navigateToTag('${tag}')">${tag}</li>`).toArray().join(' ')
+
+        liNode.innerHTML =
+          `
+            <a href="scaled/${imageData.relativeFilePath}"><img src="thumbnails/${imageData.relativeFilePath}"/></a>
+            <p class="image-title">${imageData.title}</p>
+            <p class="image-year">${imageData.dateCreated.toString().slice(0,4)}</p>
+            <p class="image-description">${imageData.description || ''}</p>
+            <ul class="image-tag-list">${tagListItemsHtmlString}</ul>
+          `;
+
+        return liNode;
       }
 
       function getImagesWithTagSet(tagSet)

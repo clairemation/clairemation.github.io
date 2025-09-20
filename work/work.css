@@ -12,7 +12,7 @@ body {
     text-align: center;
     overflow: scroll;
     background-size: 100%;
-    background: #eee fixed;
+    background: #fff fixed;
 }
 
 #jobs-parent {
@@ -27,7 +27,7 @@ body {
 }
 
 .job-info {
-    width: 50%;
+    max-width: 40em;
     text-align: left;
     margin-top: 1em;
 }
@@ -55,12 +55,6 @@ body {
     padding: 0 1em;
 }
 
-/*.job-info:nth-child(odd) .job-info-body {*/
-/*    display: flex;*/
-/*    flex-direction: row-reverse;*/
-/*    gap: 1em;*/
-/*}*/
-
 .job-info .job-info-body {
     display: flex;
     flex-direction: column;
@@ -68,11 +62,7 @@ body {
 }
 
 .job-description {
-    /*border: 1px solid #ccc;*/
-    /*border-radius: .3em;*/
-    /*padding: 0 2em 2em 2em;*/
     position: relative;
-    /*top: -0.75em;*/
     z-index: -1;
 }
 
@@ -103,7 +93,6 @@ section#intro {
 #intro ul {
     width: 80%;
     max-width: 40em;
-    list-style-position: unset;
     position: relative;
     left: 1em;
 }
@@ -126,19 +115,16 @@ section#intro {
     flex-direction: row;
     align-content: center;
     justify-content: center;
-    /* list-style-type: none; */
     gap: 0 2em;
-    /* position: relative; */
 }
 
 section#skills {
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* max-width: 40em; */
     align-content: center;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    /* text-align: center; */
+    margin: 1em 0 0 0;
 }
