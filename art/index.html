@@ -26,7 +26,7 @@
         <input type="radio" id="date-ascending" name="order" value="0" />
         <label for="date-ascending">Oldest to newest</label>
       </fieldset>
-      <button id="show-button">Show</button>
+      <button id="show-button">Search</button>
 
       <div><ul id="art-display"></ul></div>
 
@@ -39,15 +39,19 @@
 
     <script>
       const tagSelectionHtmlElement = document.getElementById("selectable-tags")
-      let modalBackground = document.getElementById("modal-background")
-      let modalText = document.querySelector("p#modal");
+      const modalBackground = document.getElementById("modal-background")
+      const modalText = document.querySelector("p#modal");
+
+      const numberOfImagesToDisplayAtOnce = 10;
 
       let tagSelectionOptionHtmlElements;
 
-      let imageDatas;
+      let allImageDatas;
+      let selectedImageDatas;
+      let nextImageGroupIndex = 0;
 
-      const getImageDatas = () => imageDatas;
-      const setImageDatas = value => imageDatas = value;
+      const getImageDatas = () => allImageDatas;
+      const setImageDatas = value => allImageDatas = value;
 
       let sortFunction = sortNewestToOldest;
 
@@ -58,7 +62,7 @@
         .then(response => response.json())
         .then(data => {
           const {mapOfTagTypeToTagInfosSet, imageInfos} = processManifest(data);
-          imageDatas = imageInfos;
+          allImageDatas = imageInfos;
 
           renderTagSelectionHtml(mapOfTagTypeToTagInfosSet);
 
@@ -67,6 +71,8 @@
 
           tagSelectionOptionHtmlElements = document.querySelectorAll("#selectable-tags input");
           document.getElementById('show-button').onclick = displayImagesWithSelectedTags;
+
+          displayImagesWithSelectedTags();
         })
 
       function processManifest(manifest) {
@@ -119,14 +125,56 @@
         const selectedTagSet = getSelectedTagSet();
         const selectedImages = getImagesWithTagSet(selectedTagSet);
 
-        const imageHtmlElements = selectedImages.sort(sortFunction)
-          .map(mapImageDataToImageDisplayHtmlString);
+        selectedImageDatas = selectedImages.sort(sortFunction)
 
-        document.querySelector("#art-display").innerHTML =
-                selectedImages.length === 0 ?
-                        `<p style="font-size: medium;">No images found matching all your selected tags. Try removing some tags to broaden your search.</p>` :
-                        imageHtmlElements.join("");
+        const imageHtmlElements = selectedImageDatas.map(mapImageDataToImageDisplayHtmlString);
+
+        const parentNode = document.querySelector("#art-display");
+        parentNode.innerHTML = '';
+        nextImageGroupIndex = 0;
+
+        if (selectedImageDatas.length === 0)
+        {
+          parentNode.innerHTML =
+                  `<p style="font-size: medium;">No images found matching all your selected tags. Try removing some tags to broaden your search.</p>`
+        }
+
+        else {
+          appendImageGroup(parentNode);
+        }
       }
+
+      function appendImageGroup(parentNode)
+      {
+        const firstImageIndex = nextImageGroupIndex * numberOfImagesToDisplayAtOnce;
+        const lastImageIndex = Math.min(firstImageIndex + numberOfImagesToDisplayAtOnce, selectedImageDatas.length);
+        const isLastGroup = lastImageIndex >= selectedImageDatas.length;
+
+        const imagesInGroup = selectedImageDatas.slice(firstImageIndex, lastImageIndex);
+
+        const imageGroupHtmlString = imagesInGroup.map(mapImageDataToImageDisplayHtmlString).join('');
+        const imageGroupParentHtmlNode = document.createElement("div");
+        imageGroupParentHtmlNode.innerHTML = imageGroupHtmlString;
+        
+        parentNode.appendChild(imageGroupParentHtmlNode);
+        
+        if (!isLastGroup)
+        {
+          nextImageGroupIndex++;
+
+          const showMoreButton = document.createElement("button");
+          showMoreButton.innerText = "Show more";
+          showMoreButton.onclick = () => onClickShowMoreButton(showMoreButton);
+          parentNode.appendChild(showMoreButton);
+        }
+
+        function onClickShowMoreButton(button)
+        {
+          button.remove();
+          appendImageGroup(parentNode);
+        }
+      }
+
 
       function mapImageDataToImageDisplayHtmlString(imageData)
       {
@@ -144,7 +192,7 @@
 
       function getImagesWithTagSet(tagSet)
       {
-        return imageDatas.filter(imageData => imageData.tags.isSupersetOf(tagSet));
+        return allImageDatas.filter(imageData => imageData.tags.isSupersetOf(tagSet));
       }
 
       function sortOldestToNewest(a, b)
@@ -172,7 +220,7 @@
 
       function selectTag(tag) {
         Array.prototype.forEach.call(tagSelectionOptionHtmlElements, option => {
-          option.selected = option.value === tag;
+          option.checked = option.value === tag;
         })
       }
 
