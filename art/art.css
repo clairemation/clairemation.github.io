@@ -34,10 +34,13 @@ body {
 }
 
 #selectable-tags > div {
-    width: 70%;
+    max-width: 40em;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: stretch;
 }
 
 fieldset {
@@ -149,4 +152,21 @@ p#modal {
     padding: 1em;
     border: 1px solid #ccc;
     border-radius: .25em;
+}
+
+#show-button {
+    font-size: x-large;
+    border-radius: .3em;
+    background: #fff;
+    box-shadow: 1px 1px 0px 0.5px #000;
+}
+
+button#show-button:hover {
+    background: #ccc;
+    cursor: pointer;
+}
+
+#instructions {
+    width: 80%;
+    max-width: 40em;
 }

@@ -22,10 +22,10 @@ body {
 }
 
 main {
-    width: 35em;
+    width: 50em;
     max-width: 85%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: nowrap;
     align-content: center;
     justify-content: center;
@@ -40,6 +40,7 @@ main {
 }
 
 nav ul {
+    /* height: 25em; */
     list-style: none;
     left: revert;
     display: flex;
@@ -47,16 +48,19 @@ nav ul {
     flex-wrap: wrap;
     align-content: center;
     justify-content: center;
-    align-items: center;
-    font-size: larger;
+    align-items: flex-start;
+    /* column-count: 2; */
+    width: 85%;
+    /* font-size: larger; */
 }
 
 nav li {
+    /* width: 50%; */
     width: 15em;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
+    /* display: flex; */
+    /* align-content: center; */
+    /* justify-content: center; */
+    /* align-items: center; */
     text-align: center;
 }
 
