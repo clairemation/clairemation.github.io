@@ -19,8 +19,9 @@ body {
 }
 
 a, a:visited {
-  color: initial;
-  text-decoration: initial; }
+  color: light-dark(#000, #ddd);
+  text-decoration: initial;
+}
 a:hover li p, a:visited:hover li p {
   /*content: "• • • • • • •";*/
   /*position: absolute;*/
