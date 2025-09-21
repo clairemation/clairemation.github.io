@@ -1,3 +1,7 @@
+:root {
+    color-scheme: light dark;
+}
+
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, caption {
     margin: 0;
     padding: 0;
@@ -10,9 +14,13 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 body {
     font-family: 'Avenir Next', Avenir, sans-serif;
     text-align: center;
-    /*overflow: scroll;*/
+    color: light-dark(#000, #ddd);
     background-size: 100%;
-    background: #eee fixed;
+    background: light-dark(#ccc, #222);
+}
+
+a, a:visited {
+    /*color: #b3dcff;*/
 }
 
 #content {
@@ -44,6 +52,7 @@ body {
 }
 
 fieldset {
+    border-color: light-dark(#888, #858585) !important;
     border: 1px solid #ccc;
     border-radius: .25em;
     margin: 1em;
@@ -121,9 +130,10 @@ ul#art-display div  {
 }
 
 .image-tag {
-    color: #888;
+    color: light-dark(#555, #ddd);
     display: block;
-    background-color: #fff;
+    background-color: light-dark(#fff, #3b3b3b);
+    border-color: light-dark(#888, transparent) !important;
     border: 1px solid #888;
     border-radius: .4em;
     font-size: small;
@@ -163,7 +173,8 @@ button {
     cursor: pointer;
     font-size: x-large;
     border-radius: .3em;
-    background: #fff;
+    background: light-dark(#fff, #3b3b3b);
+    color: light-dark(#000, #dddddd);
     box-shadow: 1px 1px 0px 0.5px #000;
 }
 
