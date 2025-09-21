@@ -8,36 +8,35 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   border: 0;
   outline: 0;
   vertical-align: text-top;
-  /*background: transparent;*/
 }
 
 body {
   font-family: 'Avenir Next', Avenir, sans-serif;
   text-align: center;
   overflow: hidden;
-  background-size: 100%;
-  /*background: #fff fixed;*/
+  background: light-dark(#fff, #222);
+  color: light-dark(#000, #ddd);
 }
 
 a, a:visited {
   color: initial;
   text-decoration: initial; }
-  a:hover li p, a:visited:hover li p {
-    /*content: "• • • • • • •";*/
-    /*position: absolute;*/
-    /*display: block;*/
-    /*bottom: 5px;*/
-    /*left: 0;*/
-    /*width: 100%;*/
-    /*margin: -0.5em 0;*/
-    /*text-align: center;*/
-    /*color: #7c7c7c;*/
-    /*color: #b45b3a !important;*/
-    margin-bottom: -2px;
-    border-bottom: 2px dotted #7c7c7c;
-    /*border-style: dotted;*/
-    /*transform: rotateZ(-2deg) translateY(-10px);*/
-  }
+a:hover li p, a:visited:hover li p {
+  /*content: "• • • • • • •";*/
+  /*position: absolute;*/
+  /*display: block;*/
+  /*bottom: 5px;*/
+  /*left: 0;*/
+  /*width: 100%;*/
+  /*margin: -0.5em 0;*/
+  /*text-align: center;*/
+  /*color: #7c7c7c;*/
+  /*color: #b45b3a !important;*/
+  margin-bottom: -2px;
+  border-bottom: 2px dotted #7c7c7c;
+  /*border-style: dotted;*/
+  /*transform: rotateZ(-2deg) translateY(-10px);*/
+}
 
 p, h3 {
   text-align: left; }
@@ -287,14 +286,15 @@ nav ul {
 
 #menu ul li {
   -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1; }
+  -ms-flex: 1;
+  flex: 1; }
 
 #menu ul li a, nav ul li a:visited, nav ul li a:hover {
   text-decoration: none; }
 
 #maintitle {
-  padding-top: 2.5em; }
+  padding-top: .5em;
+}
 
 header h1, header #intro {
   padding-left: 20px;
@@ -322,7 +322,7 @@ li {
   width: 25%; }
 
 .project-block h4 {
-  color: #7c7c7c;
+  /*color: #7c7c7c;*/
   font-size: .8em;
   text-align: left;
   text-transform: uppercase; }
@@ -358,7 +358,7 @@ li {
 @supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)){
   #menu {
     background: rgba(241, 241, 241, 0.3)
-      linear-gradient(0deg,
+    linear-gradient(0deg,
             #d1d1d1 0%,
             rgba(255, 255, 255, 0) 50%,
             rgba(255, 255, 255, 0) 90%,

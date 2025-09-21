@@ -16,7 +16,7 @@ body {
     text-align: center;
     color: light-dark(#000, #ddd);
     background-size: 100%;
-    background: light-dark(#ccc, #222);
+    background: light-dark(#ddd, #222);
 }
 
 a, a:visited {
@@ -138,6 +138,7 @@ ul#art-display div  {
     border-radius: .4em;
     font-size: small;
     padding: 0.1em 0.3em;
+    cursor: pointer;
 }
 
 #modal-background {
@@ -214,3 +215,13 @@ h2, #updated {
 }
 
 #art-display .alert {font-size: medium;margin: 2em;}
+
+@media (prefers-color-scheme: light) {
+    img {
+        box-shadow: #676767 0px 4px 7px 0px;
+    }
+
+    .image-title {
+        margin-top: 0.15em;
+    }
+}
