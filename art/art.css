@@ -201,3 +201,5 @@ h2, #updated {
     align-content: center;
     align-items: center;
 }
+
+#art-display .alert {font-size: medium;margin: 2em;}

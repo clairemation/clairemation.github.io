@@ -36,6 +36,11 @@
       "description": "Fan art of The Legend of Zelda: Tears of the Kingdom"
     },
     {
+      "name": "Dino-ton Abbey",
+      "type": "project name",
+      "description": "A watercolor doodle series of Downton Abbey characters as dinosaurs"
+    },
+    {
       "name": "line drawing",
       "type": "image type",
       "description": "Relatively clean or inked line art"
@@ -99,11 +104,18 @@
   ],
   "images": [
     {
+      "imageName": "dinoprincess-valuestudy.jpg",
+      "title": "Dino Princess value study",
+      "relativeFilePath": "dinoprincess-valuestudy.jpg",
+      "dateCreated": 20241114,
+      "tags": ["Dinosaur Princess", "black and white", "Procreate", "painting"]
+    },
+    {
       "imageName": "but-i-frighten-you.jpg",
       "title": "But I Frighten You, My Love",
       "relativeFilePath": "but-i-frighten-you.jpg",
       "dateCreated": 20250908,
-      "description": "Concept of their first time meeting since they were living people 200 years ago.",
+      "description": "Concept of the lead characters' first time meeting since they were living people 200 years ago.",
       "tags": ["Death Masks", "black and white", "Procreate", "line drawing"]
     },
     {
@@ -111,6 +123,7 @@
       "title": "Raptors in the Mist",
       "relativeFilePath": "raptors-in-the-mist.jpg",
       "dateCreated": 20240414,
+      "description": "Practice with granulating paints.",
       "tags": ["dinosaur", "watercolor", "color", "painting"]
     },
     {
@@ -133,7 +146,7 @@
       "description": "Part of a series of Downton Abbey characters as dinosaurs",
       "relativeFilePath": "birdie-pelham.jpg",
       "dateCreated": 20190504,
-      "tags": ["dinosaur", "watercolor", "color", "line drawing"]
+      "tags": ["Dino-ton Abbey", "dinosaur", "watercolor", "color", "line drawing"]
     },
     {
       "imageName": "carnotaurusson.jpg",
@@ -141,7 +154,7 @@
       "description": "Part of a series of Downton Abbey characters as dinosaurs",
       "relativeFilePath": "carnotaurusson.jpg",
       "dateCreated": 20190423,
-      "tags": ["dinosaur", "watercolor", "color", "line drawing"]
+      "tags": ["Dino-ton Abbey", "dinosaur", "watercolor", "color", "line drawing"]
     },
     {
       "imageName": "edith-growly.jpg",
@@ -149,7 +162,7 @@
       "description": "Part of a series of Downton Abbey characters as dinosaurs",
       "relativeFilePath": "edith-growly.jpg",
       "dateCreated": 20190418,
-      "tags": ["dinosaur", "watercolor", "color", "line drawing"]
+      "tags": ["Dino-ton Abbey", "dinosaur", "watercolor", "color", "line drawing"]
     },
     {
       "imageName": "dinopensketch.jpg",
@@ -178,7 +191,7 @@
       "description": "Part of a series of Downton Abbey characters as dinosaurs",
       "relativeFilePath": "thomas-baryonyx.jpg",
       "dateCreated": 20190419,
-      "tags": ["dinosaur", "watercolor", "color", "line drawing"]
+      "tags": ["Dino-ton Abbey", "dinosaur", "watercolor", "color", "line drawing"]
     },
     {
       "imageName": "alligator-demoness-nice-clothes.jpg",
@@ -424,6 +437,7 @@
       "title": "Whats Left Of Me",
       "relativeFilePath": "whats-left-of-me.jpg",
       "dateCreated": 20250708,
+      "description": "Mood painting of what it felt like for Rémi to be reanimated (not good)",
       "tags": ["Death Masks", "color", "painting", "Procreate"]
     },
     {
