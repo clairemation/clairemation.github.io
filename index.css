@@ -44,7 +44,7 @@ main {
     list-style-position: outside;
     position: relative;
     left: 1em;
-    /* padding-right: 1em; */
+    padding-right: 1em;
     margin: 0.5em 0 1.5em 0;
 }
 
@@ -65,7 +65,8 @@ nav ul {
     /* height: 25em; */
     list-style: none;
     left: revert;
-    display: flex;
+    display: grid;
+    grid-template: auto auto / auto auto;
     flex-direction: row;
     flex-wrap: wrap;
     align-content: center;
@@ -121,5 +122,12 @@ p {
 @media screen and (max-width: 686px) {
     nav li {
         width: 6em;
+    }
+}
+
+@media screen and (max-width: 686px) and (orientation: landscape) {
+
+    nav ul {
+        grid-template: auto / auto auto auto auto;
     }
 }
