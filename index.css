@@ -125,9 +125,12 @@ p {
     }
 }
 
-@media screen and (max-width: 686px) and (orientation: landscape) {
-
+@media screen and (max-height: 600px) and (min-width: 500px) {
     nav ul {
         grid-template: auto / auto auto auto auto;
+    }
+
+    nav li {
+        width: 6em;
     }
 }
