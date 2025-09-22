@@ -11,6 +11,9 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     background: transparent;
 }
 
+#about li {
+}
+
 body {
     display: flex;
     font-family: 'Avenir Next', Avenir, sans-serif;
@@ -41,7 +44,8 @@ main {
     list-style-position: outside;
     position: relative;
     left: 1em;
-    margin: 1.5e 0 1.5em 0;
+    /* padding-right: 1em; */
+    margin: 0.5em 0 1.5em 0;
 }
 
 nav {
@@ -65,10 +69,11 @@ nav ul {
     flex-direction: row;
     flex-wrap: wrap;
     align-content: center;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: flex-start;
     /* column-count: 2; */
     width: 85%;
+    max-width: 35em;
     /* font-size: larger; */
     gap: 1em;
     padding: 2em;
@@ -110,5 +115,11 @@ p {
 @media (prefers-color-scheme: dark) {
     img.invert-in-dark-mode {
         filter: invert(100%);
+    }
+}
+
+@media screen and (max-width: 686px) {
+    nav li {
+        width: 6em;
     }
 }
