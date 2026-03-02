@@ -3,7 +3,7 @@
     {
       "name": "Death Masks",
       "type": "project name",
-      "description": "A story about two undead French Revolutionary lovers who must confront a neo-techno-Royalist threat in modern Paris."
+      "description": "A story about two former French Revolutionary lovers who must reunite after death to confront a Royalist threat in techno-Paris."
     },
     {
       "name": "The Beau and the Beastess",
@@ -104,6 +104,14 @@
   ],
   "images": [
     {
+      "imageName": "but-i-frighten-pt2.jpg",
+      "title": "But I Frighten You, My Love - part 2",
+      "relativeFilePath": "but-i-frighten-pt2.jpg",
+      "dateCreated": 20260228,
+      "description": "Expanding on the earlier drawing",
+      "tags": ["Death Masks", "black and white", "Procreate", "line drawing"]
+    },
+    {
       "imageName": "dinoprincess-valuestudy.jpg",
       "title": "Dino Princess value study",
       "relativeFilePath": "dinoprincess-valuestudy.jpg",
@@ -111,9 +119,9 @@
       "tags": ["Dinosaur Princess", "black and white", "Procreate", "painting"]
     },
     {
-      "imageName": "but-i-frighten-you.jpg",
+      "imageName": "but-i-frighten.jpg",
       "title": "But I Frighten You, My Love",
-      "relativeFilePath": "but-i-frighten-you.jpg",
+      "relativeFilePath": "but-i-frighten.jpg",
       "dateCreated": 20250908,
       "description": "Concept of the lead characters' first time meeting since they were living people 200 years ago.",
       "tags": ["Death Masks", "black and white", "Procreate", "line drawing"]

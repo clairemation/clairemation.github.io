@@ -141,14 +141,17 @@ ul#art-display div  {
     cursor: pointer;
 }
 
-#modal-background {
+#modal-background, #art-zoom-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: 2;
-    /*backdrop-filter: blur(4px);*/
+}
+
+#art-zoom-modal {
+    display: flex;
 }
 
 #modal-background.shown {
@@ -158,7 +161,17 @@ ul#art-display div  {
     justify-content: center;
 }
 
-#modal-background.hidden {
+#art-zoom-modal.shown {
+    display: flex;
+    align-content: center;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    background: #000d;
+    /* align-items: center; */
+    /* flex-direction: row; */
+}
+
+#modal-background.hidden, #art-zoom-modal.hidden {
     display: none;
 }
 
@@ -224,4 +237,35 @@ h2, #updated {
     .image-title {
         margin-top: 0.15em;
     }
+}
+
+#art-zoom-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: xxx-large;
+}
+
+#art-zoom-back, #art-zoom-forward {
+    font-size: xxx-large;
+    align-self: center;
+}
+
+#art-zoom-modal {
+    color: #ddd;
+}
+
+#art-zoom-modal img {
+    box-shadow: none;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#art-zoom-display {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
 }
