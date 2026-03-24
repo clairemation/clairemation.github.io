@@ -26,7 +26,7 @@ body {
     flex-direction: row;
     gap: 1em;
     align-content: center;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 }
 
@@ -34,6 +34,7 @@ body {
     max-width: 40em;
     text-align: left;
     margin-top: 1em;
+    padding: 0 1em;
 }
 
 .job-info h1 {

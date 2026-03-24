@@ -7,7 +7,7 @@
               "position": "Senior Software Engineer",
               "startDate": "202305",
               "endDate": "202408",
-              "description": "<ul><li>Architected and improved gameplay systems in the Cookie Jam franchise in Unity/C#, enhancing gameplay experience and codebase maintainability.</li><li>Created an asynchronous job framework that runs allocation-free, improving performance and reliability for automated testing and error tracking.</li></ul>",
+              "description": "<ul><li>Rebuilt and modernized core engine systems for “Cookie Jam,” a large-scale live ops game, removing legacy tech debt and enabling scalable, data-driven gameplay.</li><li>Designed deterministic gameplay architecture with stable, well-documented APIs.</li><li>Partnered closely with design and product to translate high-level requirements into scalable technical solutions.</li><li>Applied profiling and optimization techniques (CPU, GPU, memory) to maintain smooth performance across low- and high-end devices.</li></ul>",
               "image": "cookie-jam-gameplay.jpg"
             },
             {
@@ -15,7 +15,7 @@
               "position": "Software Engineer",
               "startDate": "202203",
               "endDate": "202302",
-              "description": "<ul><li>Optimized custom multi-threaded physics system and live multiplayer systems using the Mirror networking framework, stabilizing client framerate and boosting server tickrate by 120%.</li><li>Enhanced game performance and user experience by addressing critical issues and implementing efficient solutions, improving overall gameplay quality.</li></ul>",
+              "description": "<ul><li>Engineered performance-critical gameplay systems for “Population: One,” a flagship Meta VR title.</li><li>Optimized live multiplayer networking systems, boosting server performance by 120%.</li><li>Enhanced custom multi-threaded physics systems to improve performance and collision accuracy.</li><li>Investigated rendering and gameplay performance issues, applying GPU/CPU profiling techniques to reduce frame hitches on low-end hardware.</li></ul>\n",
               "image": "population-one.jpg"
             },
             {
@@ -23,15 +23,15 @@
               "position": "Software Engineer",
               "startDate": "202009",
               "endDate": "202112",
-              "description": "<ul><li>Engineered Unity/C# gameplay systems for TwoDots, a multimillion-player mobile puzzle game, enhancing user engagement and retention and reducing future development time.</li><li>Collaborated with designers to ensure perfect implementation of gameplay features, while minimizing bugs and technical debt.</li></ul>",
+              "description": "<ul><li>Led engineering of new interaction mechanics for TwoDots (multi-million DAU title), owning development end-to-end.</li><li>Refactored legacy systems for maintainability, reliability, and rapid iteration on live content.</li><li>Mentored junior engineers, raised engineering standards, and contributed to long-term technical direction.</li></ul>",
               "image": "TD_Gameplay01.jpg"
             },
             {
-              "companyName": "Paramount Global",
+              "companyName": "Paramount Skydance",
               "position": "Software Engineer",
               "startDate": "201706",
               "endDate": "202009",
-              "description": "<ul><li>Programmed AR games and prototypes in Unity/C# for Nickelodeon and Noggin/Nick. Jr.</li><li>Prototyped Roku and AppleTV apps using Swift and BrightScript for Noggin and Paramount+.</li><li>Maintained and improved Nickelodeon Web game platform HTML5/JavaScript build tools and SDKs. Supported and engineered solutions for third-party developers for the platform.</li></ul>"
+              "description": "<ul><li>Built XR games, interactive prototypes, and engineering tools for Nickelodeon and Noggin, emphasizing physics simulation, rendering, and performance.</li><li>Developed build tools, SDK components, and pipelines supporting internal and external developers.</li><li>Prototyped applications for Roku and Apple TV, providing early technical feasibility and architectural guidance.</li></ul>\n"
             }
           ]
 }
