@@ -44,10 +44,9 @@ a, a:visited {
 }
 
 #selectable-tags {
-    /*width: 100%;*/
     display: flex;
     justify-content: center;
-    margin: 1em;
+    margin: 1em 1em 0 1em;
     flex-wrap: wrap;
     align-content: center;
     align-items: center;
@@ -92,6 +91,18 @@ fieldset {
 
 legend {
     padding: 0 0.5em;
+}
+
+#display-order {
+    display: flex;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+#display-order fieldset {
+    margin: 0 0 1em 0;
 }
 
 .tag-tooltip {

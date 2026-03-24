@@ -21,15 +21,17 @@
 
       <details id="search">
         <summary>Search images by tag</summary>
-        <p id="instructions">Select multiple tags to see images with ALL those tags. Deselect all tags to see ALL images.</p>
+        <p id="instructions">Select multiple tags to get more specific. Deselect all to show all images.</p>
         <div id = "selectable-tags"></div>
-        <fieldset>
-          <legend>Display order:</legend>
-          <input type="radio" id="date-descending" name="order" value="1" checked />
-          <label for="date-descending">Newest to oldest</label>
-          <input type="radio" id="date-ascending" name="order" value="0" />
-          <label for="date-ascending">Oldest to newest</label>
-        </fieldset>
+        <div id="display-order">
+          <fieldset>
+            <legend>Display order:</legend>
+            <input type="radio" id="date-descending" name="order" value="1" checked />
+            <label for="date-descending">Newest to oldest</label>
+            <input type="radio" id="date-ascending" name="order" value="0" />
+            <label for="date-ascending">Oldest to newest</label>
+          </fieldset>
+        </div>
         <button id="show-button">Show</button>
       </details>
 
@@ -39,15 +41,6 @@
 
     <div id="modal-background" class="hidden" onclick="this.className = 'hidden'">
       <p id="modal"></p>
-    </div>
-
-    <div id="art-zoom-modal" class="hidden">
-      <div id="art-zoom-close">&#x2715;</div>
-      <div id="art-zoom-back">&larr;</div>
-      <div id="art-zoom-display">
-<!--        <img src="./scaled/dinoprincess-valuestudy.jpg"/>-->
-      </div>
-      <div id ="art-zoom-forward">&rarr;</div>
     </div>
 
 
@@ -167,8 +160,6 @@
         const imagesInGroup = selectedImageDatas.slice(firstImageIndex, lastImageIndex);
 
         const imageGroupLiNodes = imagesInGroup.map(mapImageDataToLiNode);
-        // const imageGroupParentHtmlNode = document.createElement("div");
-        // imageGroupParentHtmlNode.innerHTML = imageGroupLiNodes;
 
         for (let node of imageGroupLiNodes)
         {
