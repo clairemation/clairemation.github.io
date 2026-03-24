@@ -31,8 +31,20 @@ a, a:visited {
     align-items: center;
 }
 
+#search {
+    display: flex;
+    margin-top: 1em;
+    padding: 0.5em;
+    border-radius: .3em;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
 #selectable-tags {
-    width: 100%;
+    /*width: 100%;*/
     display: flex;
     justify-content: center;
     margin: 1em;
@@ -82,10 +94,6 @@ legend {
     padding: 0 0.5em;
 }
 
-#selected-tags button {
-    border: none;
-}
-
 .tag-tooltip {
     cursor: pointer;
 }
@@ -95,9 +103,6 @@ ul#art-display div  {
     display: flex;
     list-style: none;
     flex-wrap: wrap;
-    /* align-content: stretch; */
-    /* justify-content: space-evenly; */
-    /* align-items: center; */
     gap: 3em;
     flex-direction: column;
     text-align: center;
@@ -183,7 +188,11 @@ p#modal {
     border-radius: .25em;
 }
 
-button {
+#search summary {
+    font-size: x-large;
+}
+
+button, #search:not([open]) summary {
     cursor: pointer;
     font-size: x-large;
     border-radius: .3em;
@@ -192,13 +201,26 @@ button {
     box-shadow: 1px 1px 0px 0.5px #000;
 }
 
+#search:not([open]) summary {
+    padding: 0 0.5em;
+}
+
+#search[open] summary {
+    width: 100%;
+    background: #ddd;
+}
+
+#search[open] {
+    background: #fff;
+}
+
 button:hover {
     background: #ccc;
 }
 
 #instructions {
-    width: 80%;
     max-width: 40em;
+    margin-top: 1em;
 }
 
 #art-display button {
