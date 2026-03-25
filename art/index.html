@@ -16,12 +16,14 @@
 
     <div id="content">
       <h1>clairemation's art</h1>
-      <h2>viewer v. 1.2 by clairemation</h2>
+      <h2>viewer v. 2.0 by clairemation</h2>
       <p id="updated">images updated 3/1/2026</p>
 
       <details id="search">
-        <summary>Search images by tag</summary>
-        <p id="instructions">Select multiple tags to get more specific. Deselect all to show all images.</p>
+        <summary>Search images</summary>
+        <label for="search-term">Search title</label>
+        <input name="search-term" type="text" id="search-term" placeholder="Any"/>
+        <p id="instructions">Filter by tag(s):</p>
         <div id = "selectable-tags"></div>
         <div id="display-order">
           <fieldset>
@@ -56,9 +58,6 @@
       let allImageDatas;
       let selectedImageDatas;
       let nextImageGroupIndex = 0;
-
-      const getImageDatas = () => allImageDatas;
-      const setImageDatas = value => allImageDatas = value;
 
       let sortFunction = sortNewestToOldest;
 
@@ -129,6 +128,9 @@
       }
 
       function displayImagesWithSelectedTags() {
+        console.log(document.querySelector("#search-term").value);
+
+
         const selectedTagSet = getSelectedTagSet();
         const selectedImages = getImagesWithTagSet(selectedTagSet);
 
@@ -140,13 +142,9 @@
         parentNode.innerHTML = '';
         nextImageGroupIndex = 0;
 
-        if (selectedImageDatas.length === 0)
+        parentNode.innerHTML = `<p class="alert">${selectedImageDatas.length} images found.</p>`
+        if (selectedImageDatas.length > 0)
         {
-          parentNode.innerHTML =
-                  `<p class="alert">No images found matching all your selected tags. Try removing some tags to broaden your search.</p>`
-        }
-
-        else {
           appendImageGroup(parentNode);
         }
       }
@@ -204,7 +202,10 @@
 
       function getImagesWithTagSet(tagSet)
       {
-        return allImageDatas.filter(imageData => imageData.tags.isSupersetOf(tagSet));
+        let searchTerm = document.querySelector("#search-term").value.toLowerCase();
+        return allImageDatas.filter(imageData =>
+                imageData.title.toLowerCase().search(searchTerm) >= 0
+                && imageData.tags.isSupersetOf(tagSet));
       }
 
       function sortOldestToNewest(a, b)

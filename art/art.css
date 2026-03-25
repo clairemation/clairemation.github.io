@@ -43,10 +43,15 @@ a, a:visited {
     align-items: center;
 }
 
+#search-term {
+    margin: 1em 0 0 0;
+    font-size: large;
+}
+
 #selectable-tags {
     display: flex;
     justify-content: center;
-    margin: 1em 1em 0 1em;
+    margin: 0 1em;
     flex-wrap: wrap;
     align-content: center;
     align-items: center;
@@ -107,6 +112,10 @@ legend {
 
 .tag-tooltip {
     cursor: pointer;
+}
+
+#art-display {
+    margin-bottom: 3em;
 }
 
 ul#art-display div  {
