@@ -20,7 +20,7 @@ body {
 canvas {
   background: #fff;
   image-rendering: pixelated;
-  display: flex;
+  /*display: flex;*/
 }
 
 #score {
