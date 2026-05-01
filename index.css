@@ -65,7 +65,7 @@ nav ul {
     /* height: 25em; */
     list-style: none;
     left: revert;
-    display: grid;
+    display: flex;
     grid-template: auto auto / auto auto;
     flex-direction: row;
     flex-wrap: wrap;
@@ -88,6 +88,14 @@ nav li {
     /* justify-content: center; */
     /* align-items: center; */
     text-align: center;
+}
+
+nav li:not(:last-child) {
+    width: 45%;
+}
+
+nav li:last-child {
+    width: 100%;
 }
 
 nav li img {
