@@ -1,0 +1,80 @@
+:root {
+    color-scheme: light dark;
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, caption {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    vertical-align: text-top;
+    background: transparent;
+}
+
+body {
+    font-family: 'Avenir Next', Avenir, sans-serif;
+    text-align: center;
+    overflow: scroll;
+    background-size: 100%;
+    background: light-dark(#fff, #222);
+}
+
+p {
+    margin: 0.5em;
+    max-width: 40em;
+}
+
+section#images {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: space-around;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2em;
+}
+
+#images * {
+    max-height: 20em;
+}
+
+#description {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#stuff {
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 1em;
+}
+
+#stuff img {
+    max-height: 17em;
+    max-width: 50%;
+}
+
+ul {
+    list-style-type: square;
+    list-style-position: inside;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+#download {
+    font-size: x-large;
+    margin-top: 0.5em;
+}
