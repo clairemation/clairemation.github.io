@@ -1,0 +1,235 @@
+{
+  "tags": [
+    {
+      "name": "Death Masks",
+      "type": "project name",
+      "description": "A story about two former French Revolutionary lovers who must reunite after death to confront a Royalist threat in techno-Paris."
+    },
+    {
+      "name": "The Beau and the Beastess",
+      "type": "project name",
+      "description": "A story about a Victorian-era man who falls in love with a bloodthirsty demoness."
+    },
+    {
+      "name": "Dinosaur Princess",
+      "type": "project name",
+      "description": "A story about a resourceful human girl who is lost in time and raised by a flock of Utahraptors."
+    },
+    {
+      "name": "Fanart: Paris Olympics 2024",
+      "type": "project name",
+      "description": "Fan art of characters from the Paris Olympics opening ceremonies"
+    },
+    {
+      "name": "Fanart: Sandman",
+      "type": "project name",
+      "description": "Fan art of the Sandman TV adaptation"
+    },
+    {
+      "name": "Fanart: Star Wars",
+      "type": "project name",
+      "description": "Fan art of Star Wars"
+    },
+    {
+      "name": "Fanart: Zelda TOTK",
+      "type": "project name",
+      "description": "Fan art of The Legend of Zelda: Tears of the Kingdom"
+    },
+    {
+      "name": "Dino-ton Abbey",
+      "type": "project name",
+      "description": "A watercolor doodle series of Downton Abbey characters as dinosaurs"
+    },
+    {
+      "name": "line drawing",
+      "type": "image type",
+      "description": "Relatively clean or inked line art"
+    },
+    {
+      "name": "painting",
+      "type": "image type",
+      "description": "More about shape, color, or value than line."
+    },
+    {
+      "name": "sketch",
+      "type": "image type",
+      "description": "Exploratory work without a high level of finish"
+    },
+    {
+      "name": "pen",
+      "type": "medium",
+      "description": "Ballpoint, technical, nib, brush, etc."
+    },
+    {
+      "name": "marker",
+      "type": "medium",
+      "description": "Copic and Prismacolor alcohol markers"
+    },
+    {
+      "name": "Procreate",
+      "type": "medium",
+      "description": "Painting and drawing app for iPad"
+    },
+    {
+      "name": "watercolor",
+      "type": "medium",
+      "description": "Water-soluble media including classic watercolors and Derwent Inktense"
+    },
+    {
+      "name": "black and white",
+      "type": "other tags"
+    },
+    {
+      "name": "character design",
+      "type": "other tags"
+    },
+    {
+      "name": "creature",
+      "type": "other tags",
+      "description": "Fictional creatures"
+    },
+    {
+      "name": "color",
+      "type": "other tags"
+    },
+    {
+      "name": "dinosaur",
+      "type": "other tags"
+    },
+    {
+      "name": "lettering",
+      "type": "other tags",
+      "description": "Incorporates words"
+    }
+  ],
+  "images": [
+    {
+      "imageName": "giantess-by-moonlight.jpg",
+      "title": "Giantess by Moonlight",
+      "description": "Concept art for my comics project The Beau and the Beastess",
+      "relativeFilePath": "giantess-by-moonlight.jpg",
+      "dateCreated": 20220520,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "painting"]
+    },
+    {
+      "imageName": "dinoprincess-valuestudy.jpg",
+      "title": "Dinosaur Princess value study",
+      "description": "Study for my comics project Dinosaur Princess",
+      "relativeFilePath": "dinoprincess-valuestudy.jpg",
+      "dateCreated": 20241114,
+      "tags": ["Dinosaur Princess", "dinosaur", "black and white", "Procreate", "painting"]
+    },
+    {
+      "imageName": "defeated-maybe.jpg",
+      "title": "Pinned by the Demoness on the Basalt Causeway",
+      "description": "Concept art for my comics project The Beau and the Beastess",
+      "relativeFilePath": "defeated-maybe.jpg",
+      "dateCreated": 20230110,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "painting"]
+    },
+    {
+      "imageName": "shh.jpg",
+      "title": "SHHHH",
+      "description": "Concept art for my comics project The Beau and the Beastess",
+      "relativeFilePath": "shh.jpg",
+      "dateCreated": 20230208,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "line drawing", "lettering"]
+    },
+    {
+      "imageName": "safe-with-me.jpg",
+      "title": "Safe with Me",
+      "description": "Fanart of Netflix's adaptation of The Sandman (alas)",
+      "relativeFilePath": "safe-with-me.jpg",
+      "dateCreated": 20240102,
+      "tags": ["Fanart: Sandman", "Procreate", "painting", "color"]
+    },
+    {
+      "imageName": "feu-et-pleuie.jpg",
+      "title": "Feu Et Pleuie",
+      "description": "Fanart of the masked parkour torchbearer from the 2024 Paris Olympics opening ceremony",
+      "relativeFilePath": "feu-et-pleuie.jpg",
+      "dateCreated": 20241009,
+      "tags": ["Fanart: Paris Olympics 2024", "Procreate", "painting", "color"]
+    },
+    {
+      "imageName": "raptors-in-the-mist.jpg",
+      "title": "Raptors in the Mist",
+      "relativeFilePath": "raptors-in-the-mist.jpg",
+      "dateCreated": 20240414,
+      "description": "A dinosaur study with granulating watercolors",
+      "tags": ["dinosaur", "watercolor", "color", "painting"]
+    },
+    {
+      "imageName": "dino-princess-wc.jpg",
+      "title": "Dinosaur princess watercolor sketch",
+      "description": "A study in watercolor for my comics project Dinosaur Princess",
+      "relativeFilePath": "dino-princess-wc.jpg",
+      "dateCreated": 20191019,
+      "tags": ["Dinosaur Princess", "dinosaur", "watercolor", "color", "painting"]
+    },
+    {
+      "imageName": "assassin-design.jpg",
+      "title": "Assassin design",
+      "description": "Character design from my comics project Death Masks",
+      "relativeFilePath": "assassin-design.jpg",
+      "dateCreated": 20250227,
+      "tags": ["Death Masks", "black and white", "character design", "Procreate", "sketch", "line drawing"]
+    },
+    {
+      "imageName": "transformation.jpg",
+      "title": "Transformation",
+      "description": "Design from my comics project The Beau and the Beastess",
+      "relativeFilePath": "transformation.jpg",
+      "dateCreated": 20220401,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "fly-with-me-if-you-must.jpg",
+      "title": "If We Must",
+      "description": "Concept art from my comics project The Beau and the Beastess",
+      "relativeFilePath": "fly-with-me-if-you-must.jpg",
+      "dateCreated": 20220620,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "sexy-alligator-man.jpg",
+      "title": "The Beastess's Ex",
+      "description": "Character design from my comics project The Beau and the Beastess",
+      "relativeFilePath": "sexy-alligator-man.jpg",
+      "dateCreated": 20230723,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "character design","black and white", "sketch", "line drawing"]
+    },
+    {
+      "imageName": "discovery.jpg",
+      "title": "Discovery",
+      "description": "Concept art from my comics project The Beau and the Beastess",
+      "relativeFilePath": "discovery.jpg",
+      "dateCreated": 20230201,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "painting"]
+    },
+    {
+      "imageName": "facing-villain.jpg",
+      "title": "Already Dead",
+      "description": "Concept art from my comics project Death Masks",
+      "relativeFilePath": "facing-villain.jpg",
+      "dateCreated": 20250315,
+      "tags": ["Death Masks", "black and white", "line drawing", "Procreate", "lettering"]
+    },
+    {
+      "imageName": "consort-early.jpg",
+      "title": "Consort to the Demoness",
+      "description": "Concept art from my comics project The Beau and the Beastess",
+      "relativeFilePath": "consort-early.jpg",
+      "dateCreated": 20230203,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "line drawing", "lettering"]
+    },
+    {
+      "imageName": "whats-left-of-me.jpg",
+      "title": "Whats Left of Me",
+      "description": "Concept art from my comics project Death Masks",
+      "relativeFilePath": "whats-left-of-me.jpg",
+      "dateCreated": 20250708,
+      "tags": ["Death Masks", "color", "painting", "Procreate"]
+    }
+  ]
+}
