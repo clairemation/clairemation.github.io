@@ -30,6 +30,7 @@
     const params = new URLSearchParams(window.location.search)
     const imageName = params.get("imageName")
     const image = new Image()
+    //TODO: sanitize input
     image.src = `scaled/${imageName}`
     document.querySelector("#content").appendChild(image)
 
