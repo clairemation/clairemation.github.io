@@ -16,7 +16,7 @@
 
     <div id="content">
       <h1>Claire Samuels dark fantasy portfolio</h1>
-      <h2>viewer v. 2.0 by clairemation</h2>
+      <h2>viewer v. 2.1 by clairemation</h2>
 
 <!--      <details id="search">-->
 <!--        <summary>Search images</summary>-->
@@ -178,7 +178,7 @@
 
         liNode.innerHTML =
           `
-            <a href="scaled/${imageData.relativeFilePath}"><img src="thumbnails/${imageData.relativeFilePath}"/></a>
+            <a href="imagezoom.html?imageName=${imageData.relativeFilePath}"><img src="thumbnails/${imageData.relativeFilePath}"/></a>
             <p class="image-title">${imageData.title}</p>
             <p class="image-description">${imageData.description || ''}</p>
           `;
