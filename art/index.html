@@ -190,7 +190,7 @@
 
         liNode.innerHTML =
           `
-            <a href="scaled/${imageData.relativeFilePath}"><img src="thumbnails/${imageData.relativeFilePath}"/></a>
+            <a href="imagezoom.html?imageName=${imageData.relativeFilePath}"><img src="thumbnails/${imageData.relativeFilePath}"/></a>
             <p class="image-title">${imageData.title}</p>
             <p class="image-year">${imageData.dateCreated.toString().slice(0,4)}</p>
             <p class="image-description">${imageData.description || ''}</p>
