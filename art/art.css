@@ -221,6 +221,14 @@ button, #search:not([open]) summary {
     box-shadow: 1px 1px 0px 0.5px #000;
 }
 
+button#clear-all-tags {
+    font-size: medium;
+    box-shadow: none;
+    border-radius: 0.75em;
+    border: 1px solid black;
+    margin-top: 0.5em;
+}
+
 #search:not([open]) summary {
     padding: 0 0.5em;
 }

@@ -24,6 +24,7 @@
         <label for="search-term">Search title</label>
         <input name="search-term" type="text" id="search-term" placeholder="Any"/>
         <p id="instructions">Filter by tag(s):</p>
+        <button id="clear-all-tags">Clear all</button>
         <div id = "selectable-tags"></div>
         <div id="display-order">
           <fieldset>
@@ -77,6 +78,7 @@
 
           tagSelectionOptionHtmlElements = document.querySelectorAll("#selectable-tags input");
           document.getElementById('show-button').onclick = displayImagesWithSelectedTags;
+          document.getElementById('clear-all-tags').onclick = clearAllTags;
 
           displayImagesWithSelectedTags();
         })
@@ -236,6 +238,13 @@
         document.querySelector("#search").open = true;
         Array.prototype.forEach.call(tagSelectionOptionHtmlElements, option => {
           option.checked =  option.checked || option.value === tag;
+        })
+      }
+
+      function clearAllTags()
+      {
+        Array.prototype.forEach.call(tagSelectionOptionHtmlElements, option => {
+          option.checked =  false;
         })
       }
 

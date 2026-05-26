@@ -3,7 +3,7 @@
     {
       "name": "Death Masks",
       "type": "project name",
-      "description": "A story about two former French Revolutionary lovers who must reunite after death to confront a Royalist threat in techno-Paris."
+      "description": "A story about two former French Revolutionary lovers who find themselves resurrected in a sinister future techno-Paris."
     },
     {
       "name": "The Beau and the Beastess",
@@ -123,11 +123,10 @@
     },
     {
       "imageName": "but-i-frighten-pt2.jpg",
-      "title": "But I Frighten You, My Love - part 2",
+      "title": "But I Frighten You, My Love, pg 2",
       "relativeFilePath": "but-i-frighten-pt2.jpg",
       "dateCreated": 20260228,
-      "description": "Expanding on the earlier drawing",
-      "tags": ["Death Masks", "black and white", "Procreate", "line drawing"]
+      "tags": ["Death Masks", "black and white", "Procreate", "line drawing", "comics page"]
     },
     {
       "imageName": "dinoprincess-valuestudy.jpg",
@@ -138,11 +137,10 @@
     },
     {
       "imageName": "but-i-frighten.jpg",
-      "title": "But I Frighten You, My Love",
+      "title": "But I Frighten You, My Love, pg 1",
       "relativeFilePath": "but-i-frighten.jpg",
       "dateCreated": 20250908,
-      "description": "Concept of the lead characters' first time meeting since they were living people 200 years ago.",
-      "tags": ["Death Masks", "black and white", "Procreate", "line drawing"]
+      "tags": ["Death Masks", "black and white", "Procreate", "line drawing", "comics page"]
     },
     {
       "imageName": "raptors-in-the-mist.jpg",
@@ -234,25 +232,11 @@
       "tags": ["The Beau and the Beastess", "Procreate", "sketch", "character design", "creature", "black and white"]
     },
     {
-      "imageName": "alligator-demoness-with-knives.jpg",
-      "title": "Alligator demoness with knives",
-      "relativeFilePath": "alligator-demoness-with-knives.jpg",
-      "dateCreated": 20220616,
-      "tags": ["The Beau and the Beastess", "Procreate", "line drawing", "character design", "creature", "black and white"]
-    },
-    {
       "imageName": "assassin-design.jpg",
       "title": "Assassin design",
       "relativeFilePath": "assassin-design.jpg",
       "dateCreated": 20250227,
       "tags": ["Death Masks", "black and white", "character design", "Procreate", "sketch", "line drawing"]
-    },
-    {
-      "imageName": "ballroom.jpg",
-      "title": "Demoness in the ballroom",
-      "relativeFilePath": "ballroom.jpg",
-      "dateCreated": 20230210,
-      "tags": ["The Beau and the Beastess", "Procreate", "black and white", "painting", "creature"]
     },
     {
       "imageName": "battle.jpg",
@@ -271,7 +255,7 @@
     },
     {
       "imageName": "defeated-maybe.jpg",
-      "title": "Man vs. demoness",
+      "title": "Pinned by the Demoness on the Basalt Cliffs",
       "relativeFilePath": "defeated-maybe.jpg",
       "dateCreated": 20230110,
       "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "painting"]
@@ -320,16 +304,15 @@
     },
     {
       "imageName": "facing-villain.jpg",
-      "title": "Oops",
-      "description": "Mockup of a situation from a prior story version",
+      "title": "Already Dead",
       "relativeFilePath": "facing-villain.jpg",
       "dateCreated": 20250315,
-      "tags": ["Death Masks", "black and white", "line drawing", "Procreate", "lettering"]
+      "tags": ["Death Masks", "black and white", "line drawing", "Procreate", "lettering", "comics page"]
     },
     {
       "imageName": "feu-et-pleuie.jpg",
       "title": "Feu Et Pleuie",
-      "description": "This character in the Olympics opening ceremony grabbed the torch and parkoured straight into my heart.",
+      "description": "This masked character in the Olympics opening ceremony grabbed the torch and parkoured straight into my heart.",
       "relativeFilePath": "feu-et-pleuie.jpg",
       "dateCreated": 20241009,
       "tags": ["Fanart: Paris Olympics 2024", "Procreate", "painting", "color"]
@@ -343,7 +326,7 @@
     },
     {
       "imageName": "four-winged-demoness.jpg",
-      "title": "Chimeric demoness",
+      "title": "Chimeric demoness design",
       "relativeFilePath": "four-winged-demoness.jpg",
       "dateCreated": 20220604,
       "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "line drawing"]
@@ -433,7 +416,6 @@
       "title": "Whats Left Of Me",
       "relativeFilePath": "whats-left-of-me.jpg",
       "dateCreated": 20250708,
-      "description": "Mood painting of what it felt like for Rémi to be reanimated (not good)",
       "tags": ["Death Masks", "color", "painting", "Procreate"]
     },
     {
