@@ -1,0 +1,239 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="art.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <title>Claire Samuels creature portfolio</title>
+  </head>
+  <body>
+
+    <header>
+      <nav id="menu">
+        <a href="..">Home</a>
+      </nav>
+    </header>
+
+    <div id="content">
+      <h1>Claire Samuels creature portfolio</h1>
+      <h2>viewer v. 2.1 by clairemation</h2>
+
+<!--      <details id="search">-->
+<!--        <summary>Search images</summary>-->
+<!--        <label for="search-term">Search title</label>-->
+<!--        <input name="search-term" type="text" id="search-term" placeholder="Any"/>-->
+<!--        <p id="instructions">Filter by tag(s):</p>-->
+<!--        <div id = "selectable-tags"></div>-->
+<!--        <div id="display-order">-->
+<!--          <fieldset>-->
+<!--            <legend>Display order:</legend>-->
+<!--            <input type="radio" id="date-descending" name="order" value="1" checked />-->
+<!--            <label for="date-descending">Newest to oldest</label>-->
+<!--            <input type="radio" id="date-ascending" name="order" value="0" />-->
+<!--            <label for="date-ascending">Oldest to newest</label>-->
+<!--          </fieldset>-->
+<!--        </div>-->
+<!--        <button id="show-button">Show</button>-->
+<!--      </details>-->
+
+      <ul id="art-display"></ul>
+
+    </div>
+
+    <div id="modal-background" class="hidden" onclick="this.className = 'hidden'">
+      <p id="modal"></p>
+    </div>
+
+
+    <script>
+      const numberOfImagesToDisplayAtOnce = 20;
+
+      let tagSelectionOptionHtmlElements;
+
+      let allImageDatas;
+      let selectedImageDatas;
+      let nextImageGroupIndex = 0;
+
+      fetch("creature-manifest.json")
+        .then(response => response.json())
+        .then(data => {
+          const imageInfos = processManifest(data);
+          allImageDatas = imageInfos;
+
+          // renderTagSelectionHtml(mapOfTagTypeToTagInfosSet);
+
+          // const allTagTooltips = document.querySelectorAll(".tag-tooltip");
+          // allTagTooltips.forEach(tooltip => tooltip.addEventListener("click", displayTagDescription));
+          //
+          // tagSelectionOptionHtmlElements = document.querySelectorAll("#selectable-tags input");
+          // document.getElementById('show-button').onclick = displayImagesWithSelectedTags;
+
+          displayImagesWithSelectedTags();
+        })
+
+      function processManifest(manifest) {
+        // const tags = manifest.tags;
+        const images = manifest.images;
+
+        // const tagSetsByTagType = Map.groupBy(tags, tag => tag.type)
+
+        // images.forEach(imageDataItem => imageDataItem.tags = new Set(imageDataItem.tags))
+
+        return images
+      }
+
+      // function renderTagSelectionHtml(mapOfTagTypeToTagInfosSet) {
+      //   const tagSelectorHtmlElementStrings = mapOfTagTypeToTagInfosSet.entries().map(tagTypeAndTagInfosSetPair => {
+      //     const tagType = tagTypeAndTagInfosSetPair[0];
+      //     const tagInfosSet = tagTypeAndTagInfosSetPair[1];
+      //
+      //     const tagNameOptionsHtmlString = tagInfosSet.map(tagInfo => {
+      //       const infoButtonHtml = tagInfo.description ?
+      //               `<span class="tag-tooltip" data-description="${tagInfo.description}">&#9432;</span>`
+      //               : ''
+      //
+      //       return `
+      //       <div class="option">
+      //           <input type='checkbox' value='${tagInfo.name}' id='input-${tagInfo.name}' />
+      //           <label for='input-${tagInfo.name}'>${tagInfo.name}</label>
+      //           ${infoButtonHtml}
+      //       </div>`
+      //     }).join('');
+      //
+      //     return `
+      //           <fieldset>
+      //             <legend>${tagType}</legend>
+      //                 <div class="options">${tagNameOptionsHtmlString}</div>
+      //           </fieldset>
+      //       `
+      //   })
+      //
+      //   const selector = document.createElement('div')
+      //   selector.innerHTML = tagSelectorHtmlElementStrings.toArray().join('');
+      //   tagSelectionHtmlElement.appendChild(selector);
+      //
+      //   return selector
+      // }
+
+      function displayImagesWithSelectedTags() {
+
+
+
+        // const selectedTagSet = getSelectedTagSet();
+        // const selectedImages = getImagesWithTagSet(selectedTagSet);
+
+        selectedImageDatas = allImageDatas
+
+        const imageHtmlElements = allImageDatas.map(mapImageDataToLiNode);
+
+        const parentNode = document.querySelector("#art-display");
+        parentNode.innerHTML = '';
+        nextImageGroupIndex = 0;
+
+        // parentNode.innerHTML = `<p class="alert">${selectedImageDatas.length} images found.</p>`
+        if (selectedImageDatas.length > 0)
+        {
+          appendImageGroup(parentNode);
+        }
+      }
+
+      function appendImageGroup(parentNode)
+      {
+        const firstImageIndex = nextImageGroupIndex * numberOfImagesToDisplayAtOnce;
+        const lastImageIndex = Math.min(firstImageIndex + numberOfImagesToDisplayAtOnce, selectedImageDatas.length);
+        const isLastGroup = lastImageIndex >= selectedImageDatas.length;
+
+        const imagesInGroup = selectedImageDatas.slice(firstImageIndex, lastImageIndex);
+
+        const imageGroupLiNodes = imagesInGroup.map(mapImageDataToLiNode);
+
+        for (let node of imageGroupLiNodes)
+        {
+          parentNode.appendChild(node);
+        }
+
+        if (!isLastGroup)
+        {
+          nextImageGroupIndex++;
+
+          const showMoreButton = document.createElement("button");
+          showMoreButton.innerText = "Show more";
+          showMoreButton.onclick = () => onClickShowMoreButton(showMoreButton);
+          parentNode.appendChild(showMoreButton);
+        }
+
+        function onClickShowMoreButton(button)
+        {
+          button.remove();
+          appendImageGroup(parentNode);
+        }
+      }
+
+
+      function mapImageDataToLiNode(imageData)
+      {
+        const liNode = document.createElement("li");
+
+        const tagListItemsHtmlString = imageData.tags.keys().map(tag => `<li class="image-tag" onclick="navigateToTag('${tag}')">${tag}</li>`).toArray().join(' ')
+
+        liNode.innerHTML =
+          `
+            <a href="imagezoom.html?imageName=${imageData.relativeFilePath}"><img src="thumbnails/${imageData.relativeFilePath}"/></a>
+            <p class="image-title">${imageData.title}</p>
+            <p class="image-description">${imageData.description || ''}</p>
+          `;
+
+        return liNode;
+      }
+
+      // function getImagesWithTagSet(tagSet)
+      // {
+      //   let searchTerm = document.querySelector("#search-term").value.toLowerCase();
+      //   return allImageDatas.filter(imageData =>
+      //           imageData.title.toLowerCase().search(searchTerm) >= 0
+      //           && imageData.tags.isSupersetOf(tagSet));
+      // }
+      //
+      // function sortOldestToNewest(a, b)
+      // {
+      //   return a.dateCreated - b.dateCreated;
+      // }
+      //
+      // function sortNewestToOldest(a, b)
+      // {
+      //   return b.dateCreated - a.dateCreated;
+      // }
+
+      // function getSelectedTagSet() {
+      //   let selectedOptionElementValues = Array.prototype.filter.call(tagSelectionOptionHtmlElements, element => element.checked)
+      //           .map(element => element.value)
+      //           .filter(Boolean)
+      //   return new Set(selectedOptionElementValues)
+      // }
+
+      // function navigateToTag(tag)
+      // {
+      //   selectTag(tag);
+      //   displayImagesWithSelectedTags();
+      //   window.scrollTo(0, 0);
+      // }
+      //
+      // function selectTag(tag) {
+      //   document.querySelector("#search").open = true;
+      //   Array.prototype.forEach.call(tagSelectionOptionHtmlElements, option => {
+      //     option.checked =  option.checked || option.value === tag;
+      //   })
+      // }
+      //
+      // function displayTagDescription(event)
+      // {
+      //   modalBackground.className = "shown";
+      //   modalText.innerHTML = event.target.dataset.description;
+      //   modalText.style.left = event.clientX;
+      //   modalText.style.top = event.clientY;
+      // }
+
+
+    </script>
+  </body>
+</html>

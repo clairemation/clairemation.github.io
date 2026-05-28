@@ -1,0 +1,211 @@
+{
+  "tags": [
+    {
+      "name": "Death Masks",
+      "type": "project name",
+      "description": "A story about two former French Revolutionary lovers who find themselves resurrected in a sinister future techno-Paris."
+    },
+    {
+      "name": "The Beau and the Beastess",
+      "type": "project name",
+      "description": "A story about a Victorian-era man who falls in love with a bloodthirsty demoness."
+    },
+    {
+      "name": "Dinosaur Princess",
+      "type": "project name",
+      "description": "A story about a resourceful human girl who is lost in time and raised by a flock of Utahraptors."
+    },
+    {
+      "name": "Fanart: Paris Olympics 2024",
+      "type": "project name",
+      "description": "Fan art of characters from the Paris Olympics opening ceremonies"
+    },
+    {
+      "name": "Fanart: Sandman",
+      "type": "project name",
+      "description": "Fan art of the Sandman TV adaptation"
+    },
+    {
+      "name": "Fanart: Star Wars",
+      "type": "project name",
+      "description": "Fan art of Star Wars"
+    },
+    {
+      "name": "Fanart: Zelda TOTK",
+      "type": "project name",
+      "description": "Fan art of The Legend of Zelda: Tears of the Kingdom"
+    },
+    {
+      "name": "Dino-ton Abbey",
+      "type": "project name",
+      "description": "A watercolor doodle series of Downton Abbey characters as dinosaurs"
+    },
+    {
+      "name": "line drawing",
+      "type": "image type",
+      "description": "Relatively clean or inked line art"
+    },
+    {
+      "name": "painting",
+      "type": "image type",
+      "description": "More about shape, color, or value than line."
+    },
+    {
+      "name": "sketch",
+      "type": "image type",
+      "description": "Exploratory work without a high level of finish"
+    },
+    {
+      "name": "pen",
+      "type": "medium",
+      "description": "Ballpoint, technical, nib, brush, etc."
+    },
+    {
+      "name": "marker",
+      "type": "medium",
+      "description": "Copic and Prismacolor alcohol markers"
+    },
+    {
+      "name": "Procreate",
+      "type": "medium",
+      "description": "Painting and drawing app for iPad"
+    },
+    {
+      "name": "watercolor",
+      "type": "medium",
+      "description": "Water-soluble media including classic watercolors and Derwent Inktense"
+    },
+    {
+      "name": "black and white",
+      "type": "other tags"
+    },
+    {
+      "name": "character design",
+      "type": "other tags"
+    },
+    {
+      "name": "creature",
+      "type": "other tags",
+      "description": "Fictional creatures"
+    },
+    {
+      "name": "color",
+      "type": "other tags"
+    },
+    {
+      "name": "dinosaur",
+      "type": "other tags"
+    },
+    {
+      "name": "lettering",
+      "type": "other tags",
+      "description": "Incorporates words"
+    },
+    {
+      "name": "comics page",
+      "type": "other tags"
+    }
+  ],
+  "images": [
+    {
+      "imageName": "fly-with-me-if-you-must.jpg",
+      "title": "If We Must",
+      "relativeFilePath": "fly-with-me-if-you-must.jpg",
+      "dateCreated": 20220620,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "demoness-expressions.jpg",
+      "title": "Alligator demoness expressions",
+      "relativeFilePath": "demoness-expressions.jpg",
+      "dateCreated": 20220704,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "line drawing", "character design"]
+    },
+    {
+      "imageName": "unexpectedly-comfy.jpg",
+      "title": "Unexpectedly Comfy",
+      "relativeFilePath": "unexpectedly-comfy.jpg",
+      "dateCreated": 20240222,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "sketch", "line drawing"]
+    },
+    {
+      "imageName": "lovemethen01.jpg",
+      "title": "Love Me Then, pg 1",
+      "relativeFilePath": "lovemethen01.jpg",
+      "dateCreated": 20260506,
+      "tags": ["The Beau and the Beastess", "comics page", "Procreate", "line drawing", "creature", "black and white"]
+    },
+    {
+      "imageName": "lovemethen02.jpg",
+      "title": "Love Me Then, pg 2",
+      "relativeFilePath": "lovemethen02.jpg",
+      "dateCreated": 20260506,
+      "tags": ["The Beau and the Beastess", "comics page", "Procreate", "line drawing", "creature", "black and white"]
+    },
+    {
+      "imageName": "giantess-by-moonlight.jpg",
+      "title": "Giantess by Moonlight",
+      "relativeFilePath": "giantess-by-moonlight.jpg",
+      "dateCreated": 20220520,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "painting"]
+    },
+    {
+      "imageName": "thomas-baryonyx.jpg",
+      "title": "Dino-ton Abbey: Thomas Baryonyx",
+      "description": "Part of a series of Downton Abbey characters as dinosaurs",
+      "relativeFilePath": "thomas-baryonyx.jpg",
+      "dateCreated": 20190419,
+      "tags": ["Dino-ton Abbey", "dinosaur", "watercolor", "color", "line drawing"]
+    },
+    {
+      "imageName": "carnotaurusson.jpg",
+      "title": "Dino-ton Abbey: Mr. Car-notaurus-son",
+      "description": "Part of a series of Downton Abbey characters as dinosaurs",
+      "relativeFilePath": "carnotaurusson.jpg",
+      "dateCreated": 20190423,
+      "tags": ["Dino-ton Abbey", "dinosaur", "watercolor", "color", "line drawing"]
+    },
+    {
+      "imageName": "dinoprincess-valuestudy.jpg",
+      "title": "Dino Princess value study",
+      "relativeFilePath": "dinoprincess-valuestudy.jpg",
+      "dateCreated": 20241114,
+      "tags": ["Dinosaur Princess", "dinosaur", "black and white", "Procreate", "painting"]
+    },
+    {
+      "imageName": "dino-princess-sleeping.jpg",
+      "title": "Dinosaur princess asleep with siblings",
+      "relativeFilePath": "dino-princess-sleeping.jpg",
+      "dateCreated": 20191019,
+      "tags": ["Dinosaur Princess", "dinosaur", "pen", "black and white", "sketch"]
+    },
+    {
+      "imageName": "alligator-demoness-nice-clothes.jpg",
+      "title": "Felid skull face demoness design",
+      "relativeFilePath": "alligator-demoness-nice-clothes.jpg",
+      "dateCreated": 20220615,
+      "tags": ["The Beau and the Beastess", "Procreate", "line drawing", "character design", "creature", "black and white"]
+    },
+    {
+      "imageName": "sexy-alligator-man.jpg",
+      "title": "The beastess's ex, wild form",
+      "relativeFilePath": "sexy-alligator-man.jpg",
+      "dateCreated": 20230723,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "character design","black and white", "sketch", "line drawing"]
+    },
+    {
+      "imageName": "transformation.jpg",
+      "title": "Transformation",
+      "relativeFilePath": "transformation.jpg",
+      "dateCreated": 20220401,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "line drawing"]
+    },
+    {
+      "imageName": "demoness-designs.jpg",
+      "title": "Avian demoness designs",
+      "relativeFilePath": "demoness-designs.jpg",
+      "dateCreated": 20231219,
+      "tags": ["The Beau and the Beastess", "Procreate", "creature", "black and white", "painting", "sketch", "character design"]
+    }
+  ]
+}
