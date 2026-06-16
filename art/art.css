@@ -215,10 +215,10 @@ p#modal {
 button, #search:not([open]) summary {
     cursor: pointer;
     font-size: x-large;
-    border-radius: .3em;
+    border-radius: .5em;
+    border: 1px solid black;
     background: light-dark(#fff, #3b3b3b);
     color: light-dark(#000, #dddddd);
-    box-shadow: 1px 1px 0px 0.5px #000;
 }
 
 button#clear-all-tags {
