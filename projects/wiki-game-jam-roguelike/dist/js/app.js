@@ -722,7 +722,7 @@ async function loadAllImages()
   {
     const image = images[imageName];
     imagePromises.push(new Promise((resolve) => image.addEventListener("load", resolve)))
-    image.src = `../img/${imageName}.png`;
+    image.src = `img/${imageName}.png`;
   }
 
   await Promise.all(imagePromises);
