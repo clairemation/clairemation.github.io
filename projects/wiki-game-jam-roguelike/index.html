@@ -5,7 +5,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
-  <link rel="stylesheet" href="css/style.css">
   <meta name="description" content="">
 
   <meta property="og:title" content="">
@@ -20,30 +19,42 @@
 
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#fafafa">
+
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    #container {
+      display: grid;
+      grid-auto-flow: column;
+      padding: 2em;
+      gap: 2em;
+    }
+
+    button {
+      font-size: 2em;
+    }
+  </style>
 </head>
 
 <body>
 
-  <h1 id="roomtitle"></h1>
-  <p id="time-remaining"></p>
-  <div id="mainlayout">
-    <canvas id="main-canvas" width = 800 height = 600></canvas>
-    <div id="collectedinfo">
-      <h1>Gems collected:</h1>
-      <ul id="collected-gems-display"></ul>
+  <h1>Wiki Wander</h1>
+  <img src="img/chara1.png"/>
+  <p>Wander Wikipedia in graphical roguelike form, collecting gems (citation needed reports) before time runs out!</p>
+
+  <div id="container">
+    <div id="curated">
+      <a href="game.html?mode=curated"><button>Curated mode</button></a>
+      <p>The starting room is selected from a curated list sure to net you some gems.</p>
+    </div>
+    <div id="random">
+      <a href="game.html"><button>Random mode</button></a>
+      <p>The starting room is selected truly randomly! Who knows where you'll go?</p>
     </div>
   </div>
-  <p id ="linkinfo">Mouse over a doorway or gem to see more info</p>
-  <div id="modalbg" class="hidden">
-    <div id="modal">
-      <h1></h1>
-      <p>Treasures found:</p>
-      <ul id="treasure-list"></ul>
-      <button id="restart-button">Restart</button>
-    </div>
-  </div>
-  <script src="dist/js/app.js"></script>
-<!--  <script src="js/app.js"></script>-->
 
 </body>
 
