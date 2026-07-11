@@ -108,31 +108,45 @@
   ],
   "images": [
     {
+      "imageName": "beauandbeastesspg06.jpg",
+      "title": "The Beau and the Beastess, pg 6",
+      "relativeFilePath": "beauandbeastesspg06.jpg",
+      "dateCreated": 20260708,
+      "tags": ["The Beau and the Beastess", "comics page", "Procreate", "line drawing", "creature", "black and white"]
+    },
+    {
+      "imageName": "beauandbeastesspg05.jpg",
+      "title": "The Beau and the Beastess, pg 5",
+      "relativeFilePath": "beauandbeastesspg05.jpg",
+      "dateCreated": 20260623,
+      "tags": ["The Beau and the Beastess", "comics page", "Procreate", "line drawing", "creature", "black and white"]
+    },
+    {
       "imageName": "lovemethen04.jpg",
-      "title": "Love Me Then, pg 4",
+      "title": "The Beau and the Beastess, pg 4",
       "relativeFilePath": "lovemethen04.jpg",
-      "dateCreated": 20260506,
+      "dateCreated": 20260612,
       "tags": ["The Beau and the Beastess", "comics page", "Procreate", "line drawing", "creature", "black and white"]
     },
     {
       "imageName": "lovemethen03.jpg",
-      "title": "Love Me Then, pg 3",
+      "title": "The Beau and the Beastess, pg 3",
       "relativeFilePath": "lovemethen03.jpg",
-      "dateCreated": 20260506,
+      "dateCreated": 20260603,
       "tags": ["The Beau and the Beastess", "comics page", "Procreate", "line drawing", "creature", "black and white"]
     },
     {
       "imageName": "lovemethen02.jpg",
-      "title": "Love Me Then, pg 2",
+      "title": "The Beau and the Beastess, pg 2",
       "relativeFilePath": "lovemethen02.jpg",
-      "dateCreated": 20260506,
+      "dateCreated": 20260516,
       "tags": ["The Beau and the Beastess", "comics page", "Procreate", "line drawing", "creature", "black and white"]
     },
     {
       "imageName": "lovemethen01.jpg",
-      "title": "Love Me Then, pg 1",
+      "title": "The Beau and the Beastess, pg 1",
       "relativeFilePath": "lovemethen01.jpg",
-      "dateCreated": 20260506,
+      "dateCreated": 20260515,
       "tags": ["The Beau and the Beastess", "comics page", "Procreate", "line drawing", "creature", "black and white"]
     },
     {
